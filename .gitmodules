@@ -1,0 +1,9 @@
+[submodule "notmine/notmine/awesome-jammin"]
+	path = notmine/notmine/awesome-jammin
+	url = https://github.com/thekrampus/awesome-jammin.git
+[submodule "notmine/awesome-jammin"]
+	path = notmine/awesome-jammin
+	url = https://github.com/thekrampus/awesome-jammin.git
+[submodule "notmine/awesome-nifty"]
+	path = notmine/awesome-nifty
+	url = https://github.com/thekrampus/awesome-nifty.git
