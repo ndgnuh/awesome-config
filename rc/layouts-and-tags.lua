@@ -18,4 +18,9 @@ awful.layout.layouts = {
 	-- awful.layout.suit.corner.sw,
 	-- awful.layout.suit.corner.se,
 }
+
+awful.screen.connect_for_each_screen(function(s)
+	awful.tag({"www", "term", "media", "document", "beyond"}, s, awful.layout.layouts[1])
+end)
+
 return true

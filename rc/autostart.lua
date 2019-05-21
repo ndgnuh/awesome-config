@@ -1,6 +1,8 @@
-local autostart = require("autostart")
+local spawnonce = require("awful").spawn.once
 -- not an built in module of awesome
-autostart("ibus-daemon -rdx")
-autostart("compton")
-autostart("nm-applet")
-autostart("xfce4-power-manager")
+spawnonce("ibus-daemon -rdx")
+spawnonce("compton")
+spawnonce("nm-applet")
+spawnonce("xfce4-power-manager")
+-- spawnonce("redshift -l 21.0472686:105.8583874")
+spawnonce("xrandr --output HDMI1 --auto --left-of eDP1")
