@@ -12,7 +12,7 @@ local icons        = os.getenv("HOME") .. "/.config/awesome/themes/material-dark
 local theme        = {}
 
 theme.wallpaper = os.getenv("HOME") .. "/pictures/wallpaper.jpg"
-theme.font      = "Roboto 11"
+theme.font      = "Latin Modern Sans 11"
 
 theme.color_bg            = "#21282f"
 theme.color_accent        = "#03A9F4"
