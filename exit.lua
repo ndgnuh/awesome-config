@@ -33,11 +33,11 @@ local s = awful.screen.focused()
 	})
 
 	s.goodbye.buttons = {}
-	s.goodbye.buttons[0] = mkbtn("<u>s</u>hutdown"	, "loginctl poweroff")
-	s.goodbye.buttons[1] = mkbtn("<u>r</u>eboot"	, "loginctl reboot")
+	s.goodbye.buttons[0] = mkbtn("<u>s</u>hutdown"	, "systemctl poweroff")
+	s.goodbye.buttons[1] = mkbtn("<u>r</u>eboot"	, "systemctl reboot")
 	s.goodbye.buttons[2] = mkbtn("<u>l</u>ogout"	, awesome.quit)
-	s.goodbye.buttons[3] = mkbtn("<u>h</u>ibernate"	, "loginctl hibernate")
-	s.goodbye.buttons[4] = mkbtn("sus<u>p</u>end"	, "loginctl suspend")
+	s.goodbye.buttons[3] = mkbtn("<u>h</u>ibernate"	, "systemctl hibernate")
+	s.goodbye.buttons[4] = mkbtn("sus<u>p</u>end"	, "systemctl suspend")
 	s.goodbye.buttons[5] = mkbtn("<u>c</u>ancel"	, function() s.goodbye.visbile = false end)
 
 	s.goodbye:setup({

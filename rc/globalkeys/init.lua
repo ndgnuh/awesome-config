@@ -3,11 +3,12 @@ local gears = require("gears")
 local beautiful = require("beautiful")
 
 local mod = "Mod1"
-local terminal = "sakura"
+local terminal = "terminal"
 
 require("rc.globalkeys.media")
 
 local globalkeys = gears.table.join(
+	awful.key({ "Mod4" }, "space", function() awful.spawn("ibus-engine-switch") end),
 	awful.key({ mod, }, "s", function() awful.screen.focus_relative(1) end),
 	awful.key({ mod, }, "Left", 	awful.tag.viewprev,
 		{description = "view previous", group = "tag"}),
@@ -49,7 +50,7 @@ local globalkeys = gears.table.join(
 		{description = "go back", group = "client"}),
 
 -- Standard program
-	awful.key({ mod, }, "Return", 		function () 	awful.spawn("sakura") end,
+	awful.key({ mod, }, "Return", 		function () 	awful.spawn("terminal") end,
 		{description = "open a config.term", group = "launcher"}),
 	awful.key({ mod, "Shift" }, "r", awesome.restart,
 		{description = "reload awesome", group = "awesome"}),

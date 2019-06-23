@@ -11,7 +11,7 @@ local gears        = require("gears")
 local icons        = os.getenv("HOME") .. "/.config/awesome/themes/material-dark/icons/"
 local theme        = {}
 
-theme.wallpaper = os.getenv("HOME") .. "/pictures/wallpaper.jpg"
+theme.wallpaper = os.getenv("HOME") .. "/Pictures/wallpaper.jpg"
 theme.font      = "Latin Modern Sans 11"
 
 theme.color_bg            = "#21282f"
