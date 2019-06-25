@@ -1,21 +1,18 @@
 local color = require("gears.color")
 local notify = require("naughty").notify
 local awful = require("awful")
-local config_file = os.getenv("HOME") .. '/.config/awesome/configset.lua'
+
 -- change the awesome configset 
 function change_config_set(name)
-	update_cmd = "cat " .. config_file .. " | sed 's/.*/require(\""..name.."\")/g' | tee " .. config_file
-	notify{ text = update_cmd }
-	awful.spawn.easy_async_with_shell(update_cmd, function ()
+	config_file = os.getenv("HOME") .. '/.config/awesome/rc.lua'
+	awful.spawn.easy_async_with_shell("cat " .. config_file .. " | sed s/^local configset = require(.*)/local configset = require('".. name .. "')/g | tee " .. config_file, function ()
 		awesome.restart()
 	end)
 end
 
 -- configset 
-configsets = {
-	{ "Basic", function () change_config_set("basic") end },
-	{ "Friendly", function () change_config_set("friendly") end },
-	{ "Default", function () change_config_set("default") end }
+changemode = {
+	{ "friendly", function () change_config_set("friendly") end }
 }
 
 dpi = require("beautiful.xresources").apply_dpi
@@ -68,8 +65,7 @@ function colorinvert(c)
 	})
 end
 
-require("configset")
--- require("friendly")
+local configset = require("friendly")
 require("mediakeys")
 require("mediapopup")
 
