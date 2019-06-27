@@ -58,10 +58,8 @@ end)
 awesome.connect_signal(media.signal.light, function()
 	awful.spawn.easy_async(media.cmd.brn_get, function(o)
 		-- Sample output: 43.33
-		naughty.notify({ text = "stdout" .. tostring(o) })
 		o = string.match(o, "(%d%d?%d?).*")
-		naughty.notify({ text = o })
-		popup.text:set_markup_sliently("Brightness " .. tostring(o) .. "%")
-		-- triggerwibox()
+		triggerwibox()
+		popup.text.markup = "Brightness " .. tostring(o) .. "%"
 	end)
 end)

@@ -2,7 +2,12 @@ local color = require("gears.color")
 local notify = require("naughty").notify
 local awful = require("awful")
 local config_file = os.getenv("HOME") .. '/.config/awesome/configset.lua'
--- change the awesome configset 
+require("constant")
+dpi = require("beautiful.xresources").apply_dpi
+
+-------------------------
+--  Change config set  --
+-------------------------
 function change_config_set(name)
 	update_cmd = "cat " .. config_file .. " | sed 's/.*/require(\""..name.."\")/g' | tee " .. config_file
 	notify{ text = update_cmd }
@@ -14,13 +19,16 @@ end
 -- configset 
 configsets = {
 	{ "Basic", function () change_config_set("basic") end },
+	{ "Guns girl", function () change_config_set("ggz") end },
 	{ "Friendly", function () change_config_set("friendly") end },
 	{ "Default", function () change_config_set("default") end }
-}
+} -- config set
 
-dpi = require("beautiful.xresources").apply_dpi
 
-function rgbToHex(rgb)
+----------------------------------
+--  color processing functions  --
+----------------------------------
+function rgbtohex(rgb)
 	local hexadecimal = '#'
 
 	for key, value in pairs(rgb) do
@@ -42,7 +50,7 @@ function rgbToHex(rgb)
 		hexadecimal = hexadecimal .. hex
 	end
 	return hexadecimal
-end
+end -- rgb_to_hex
 
 function colormix(c1, c2, lv)
 	local r1, g1, b1 = color.parse_color(c1)
@@ -50,26 +58,36 @@ function colormix(c1, c2, lv)
 	local r = math.floor((255 * r1 * (1 - lv) + 255 * r2 * lv) + 0.5)
 	local g = math.floor((255 * g1 * (1 - lv) + 255 * g2 * lv) + 0.5)
 	local b = math.floor((255 * b1 * (1 - lv) + 255 * b2 * lv) + 0.5)
-	return rgbToHex({r, g, b})
-end
+	return rgbtohex({r, g, b})
+end -- color mixer
 
 function colorcontrast(c)
 	local r,g,b = color.parse_color(c)
 	local luminate = 0.3*r + 0.587*g + 0.144*b
 	if luminate > 0.5 then return "#32323D" else return "#fff5ee" end
-end
+end -- find contrast color
 
 function colorinvert(c)
 	local r,g,b = color.parse_color(c)
-	return rgbToHex({
+	return rgbtohex({
 		math.floor(255 - r*255 + 0.5),
 		math.floor(255 - g*255 + 0.5),
 		math.floor(255 - b*255 + 0.5),
 	})
-end
+end -- find invert color
 
 require("configset")
--- require("friendly")
+
+-------------------------------------
+--  volume and brightness binding  --
+-------------------------------------
 require("mediakeys")
 require("mediapopup")
 
+------------
+--  misc  --
+------------
+
+function colormarkup(s, c)
+	return '<span color=\'' .. c .. '\'>' .. s .. '</span>'
+end --colour markup

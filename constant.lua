@@ -1,0 +1,14 @@
+SIG_AUDIO          = 'audio::changed'
+SIG_BRIGHTNESS     = 'brightness::changed'
+DIR_CONFIG         = os.getenv("HOME") .. '/.config/awesome/'
+CMD_MIC_TOG        = "amixer sset Capture toggle"
+CMD_VOL_TOG        = "amixer sset Master toggle"
+CMD_VOL_INC        = "amixer sset Master 4.99%+ unmute"
+CMD_VOL_DEC        = "amixer sset Master 4.99%- unmute"
+CMD_VOL_GET        = "amixer sget Master | grep %"
+CMD_BRIGHTNESS_INC = "light -A 10"
+CMD_BRIGHTNESS_DEC = "light -U 10"
+CMD_BRIGHTNESS_GET = "light"
+CMD_DISPLAY        = "arandr"
+CMD_SCREENSHOT     = "gscreenshot"
+CMD_FCURSOR        = "find-cursor --color '#03A9F4'"
