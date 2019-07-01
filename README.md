@@ -85,14 +85,15 @@ If i don't mention them, they are either one of the setups, trash files or wip.
 
 ## Some config set(s)
 I haven't done much yet
-----------------------
+
 | setup name | description |
+| ----------| ---------|
 | default | the default of awesomewm |
 | basic | nearly default, but some configs are changed |
 | friendly | mouse orientated, just in case some borrow my laptop? |
 | guns girl | a setup based on a mobile game by [Mihoyo](https://www.mihoyo.com/) |
 
 The 3 first setup is really default, and the latter two use `gtk` theme that came with `awesome`, so i'm only posting previews of other setup(s).
-### Guns girl schooldayz
-Based on a mobile game by Mihoyo.
+### Guns girl - Schooldayz
+Based on a [mobile game](https://www.youtube.com/watch?v=Rk1cIG1iC8o) by Mihoyo. (
 ![preview](https://raw.githubusercontent.com/ndgnuh/awesome-config/gh-resources/awesome-ggz.png)
