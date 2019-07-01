@@ -1,6 +1,14 @@
 # awesome-config
 Config set(s) for awesomewm
-## Structure
+
+Table of contents:
+- [Usage](#usage)
+    - [Directory structure](#the-directory-structure)
+    - [The "api" module](#volume-battery-and-brightness-widget-with-api-module)
+    - [Fast switching between setups](#quick-switching-between-setups)
+- [Some setups](#some-setups)
+    - [Guns girl - Schooldayz](#guns-girl-schooldayz)
+## Usage
 ### The directory tree:
 ```sh
 ├── api
@@ -83,7 +91,7 @@ If you want to migrate your setup to this kind of structure: backup your setup, 
 ### Other files
 If i don't mention them, they are either one of the setups, trash files or wip.
 
-## Some config set(s)
+## Some setups
 I haven't done much yet
 
 | setup name | description |
