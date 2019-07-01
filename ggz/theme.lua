@@ -6,6 +6,11 @@ beautiful.font = 'Segoe UI 11'
 beautiful.boldfont = 'Segoe UI Bold 11'
 beautiful.boldfontsmall = 'Segoe UI Bold 9'
 beautiful.icon_dir = os.getenv("HOME") .. "/.config/awesome/ggz/icons/"
+beautiful.font = beautiful.boldfont
+beautiful.fonts = {
+   normal = "Segoe UI ",
+   bold = "Segoe UI bold "
+}
 -------------------------------------------------
 --  everything shaped this way in the game ui  --
 -------------------------------------------------
@@ -27,8 +32,8 @@ end
 --  color from ggz ui  --
 -------------------------
 beautiful.blue = '#34A1DF'
-beautiful.white = '#F3F4EF'
-beautiful.yellow = '#F3C819'
+beautiful.white = '#F3F4F5'
+beautiful.yellow = '#FFD35C'
 beautiful.orange = '#F19408'
 beautiful.shade = '#212121b3'
 beautiful.bg_normal = beautiful.white
@@ -37,12 +42,27 @@ beautiful.fg_normal = beautiful.blue
 beautiful.fg_focus = beautiful.blue
 
 ----------------
+--  titlebar  --
+----------------
+beautiful.titlebar_bg_normal = beautiful.shade
+beautiful.titlebar_fg_normal = beautiful.white
+beautiful.titlebar_bg_focus = beautiful.white
+beautiful.titlebar_fg_focus = beautiful.blue
+beautiful.titlebar_font = beautiful.boldfont
+beautiful.titlebar_close_button_normal = beautiful.icon_dir .. "close.png"
+beautiful.titlebar_close_button_normal_hover = beautiful.icon_dir .. "close.png"
+beautiful.titlebar_close_button_normal_press = beautiful.icon_dir .. "close.png"
+beautiful.titlebar_close_button_focus = beautiful.icon_dir .. "close.png"
+beautiful.titlebar_close_button_focus_hover = gears.color.recolor_image(beautiful.icon_dir .. "close.png", beautiful.white .. "71")
+beautiful.titlebar_close_button_focus_press = gears.color.recolor_image(beautiful.icon_dir .. "close.png", beautiful.white .. "b3")
+
+----------------
 --  tasklist  --
 ----------------
 beautiful.tasklist_bg_normal = beautiful.shade
 beautiful.tasklist_fg_normal = beautiful.white
-beautiful.tasklist_bg_focus = beautiful.blue
-beautiful.tasklist_fg_focus = beautiful.white
+beautiful.tasklist_bg_focus = beautiful.white
+beautiful.tasklist_fg_focus = beautiful.blue
 beautiful.tasklist_shape = beautiful.common_shape(dpi(8))
 beautiful.tasklist_shape_border_color = beautiful.white
 beautiful.tasklist_shape_border_width = dpi(2)
@@ -51,14 +71,16 @@ beautiful.tasklist_shape_border_width = dpi(2)
 --  spacing and borders  --
 ---------------------------
 beautiful.useless_gap = dpi(4)
-beautiful.border_width = dpi(2)
+beautiful.border_width = dpi(4)
+beautiful.border_normal = beautiful.shade
+beautiful.border_focus = beautiful.blue
 
 -----------------------
 --   wibar theming   --
 -----------------------
 beautiful.wibar_bg = gears.color.transparent
 beautiful.wibar_height = dpi(64)
-beautiful.wibar_border_width = beautiful.useless_gap
+beautiful.wibar_border_width = dpi(2)
 beautiful.wibar_border_color = nil
 
 ------------
@@ -170,3 +192,26 @@ end
 function beautiful.blacktext(txt)
    return beautiful.colortext(txt, beautiful.shade)
 end
+
+--------------------
+--  layout icons  --
+--------------------
+local themes_path = os.getenv("HOME").."/.config/awesome/themes/"
+beautiful.layout_fairh      = themes_path.."default/layouts/fairhw.png"
+beautiful.layout_fairv      = themes_path.."default/layouts/fairvw.png"
+beautiful.layout_floating   = themes_path.."default/layouts/floatingw.png"
+beautiful.layout_magnifier  = themes_path.."default/layouts/magnifierw.png"
+beautiful.layout_max        = themes_path.."default/layouts/maxw.png"
+beautiful.layout_fullscreen = themes_path.."default/layouts/fullscreenw.png"
+beautiful.layout_tilebottom = themes_path.."default/layouts/tilebottomw.png"
+beautiful.layout_tileleft   = themes_path.."default/layouts/tileleftw.png"
+beautiful.layout_tile       = themes_path.."default/layouts/tilew.png"
+beautiful.layout_tiletop    = themes_path.."default/layouts/tiletopw.png"
+beautiful.layout_spiral     = themes_path.."default/layouts/spiralw.png"
+beautiful.layout_dwindle    = themes_path.."default/layouts/dwindlew.png"
+beautiful.layout_cornernw   = themes_path.."default/layouts/cornernww.png"
+beautiful.layout_cornerne   = themes_path.."default/layouts/cornernew.png"
+beautiful.layout_cornersw   = themes_path.."default/layouts/cornersww.png"
+beautiful.layout_cornerse   = themes_path.."default/layouts/cornersew.png"
+
+

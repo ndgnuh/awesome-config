@@ -14,23 +14,27 @@ require("awful.hotkeys_popup.keys")
 local api = require("api")
 api.audio.set_step(5)
 
+-------------------
+--  some config  --
+-------------------
+ign = os.getenv("USER") .. "@ArchBtw" -- this will be displayed on the info panel
+iglevel = 373 -- this will be displayed on the info panel
+
 ------------------------------------------------------------------------
 --                           theming stuffs                           --
 ------------------------------------------------------------------------
-beautiful.init(gears.filesystem.get_themes_dir() .. "gtk/theme.lua")
+-- beautiful.init(gears.filesystem.get_themes_dir() .. "gtk/theme.lua")
 require("ggz.theme")
-beautiful.wallpaper = os.getenv("HOME") .. "/Pictures/wallpaper"
+beautiful.wallpaper = beautiful.icon_dir .. "wallpaper.png"
 
 ------------------------------------------------------------------------
 --                           custom widgets                           --
 ------------------------------------------------------------------------
 local ggz_layoutbox = require("ggz.widgets.layoutbox")
-local widget_volume = require("ggz.widgets.volume")
-local widget_battery = require("ggz.widgets.battery")
-local battery = require("upower_battery");
-local mybattery = battery();
 require("ggz.mediapopup")
-
+require("ggz.widgets.tasklist")
+require("ggz.widgets.taglist")
+require("ggz.widgets.info")
 
 ------------------------------------------------------------------------
 --                          auto start stuff                          --
@@ -125,39 +129,6 @@ local button_root = gears.table.join(
    awful.button({}, 3, function () menu:toggle() end),
    awful.button({}, 4, awful.tag.viewnext),
    awful.button({}, 5, awful.tag.viewprev)
-)
-
-local button_taglist = gears.table.join(
-   awful.button({}, 1, function(t)
-      t:view_only()
-      for _, tag in ipairs(awful.screen.focused().tags) do
-         if tag.selected then
-            tag.icon = gears.color.recolor_image(tag.icon, beautiful.blue)
-         else
-            tag.icon = gears.color.recolor_image(tag.icon, beautiful.white)
-         end
-      end
-   end),
-   awful.button({}, 3, awful.tag.viewtoggle)
-)
-
-local button_tasklist = gears.table.join(
-   awful.button({}, 1, function (c)
-      if c == client.focus then
-         c.minimized = true
-      else
-         c:emit_signal("request::activate", "tasklist", {raise = true})
-      end
-   end),
-   awful.button({}, 3, function()
-      awful.menu.client_list({ theme = { width = 250 } })
-   end),
-   awful.button({}, 4, function ()
-      awful.client.focus.byidx(1)
-   end),
-   awful.button({}, 5, function ()
-      awful.client.focus.byidx(-1)
-   end)
 )
 
 root.buttons(button_root)
@@ -396,14 +367,21 @@ awful.rules.rules = {
 ------------------------------------------------------------------------
 --                           handle signals                           --
 ------------------------------------------------------------------------
+local clientshape = beautiful.common_shape(dpi(16))
+client.connect_signal("tagged", function(c)
+   c.shape                 = clientshape
+   c.shape_bounding        = clientshape
+   c.shape_clip            = clientshape
+   c.shape_input           = clientshape
+   c.client_shape_bounding = clientshape
+   c.client_shape_clip     = clientshape
+end)
 -- when a new client appears
 client.connect_signal("manage", function (c)
    -- Set the windows at the slave,
    -- i.e. put it at the end of others instead of setting it master.
    -- if not awesome.startup then awful.client.setslave(c) end
-   if not c.icon then
-      c.icon = gears.surface(os.getenv("HOME") .. "/.config/awesome/defaulticon.svg")._native
-   end
+   c.icon = gears.surface(beautiful.icon_dir.."homu.png")._native
 
    if awesome.startup
       and not c.size_hints.user_position
@@ -427,12 +405,52 @@ client.connect_signal("request::titlebars", function(c)
       end)
    ) -- title bar buttons
 
-   awful.titlebar(c):setup({
-      { -- Left
-         awful.titlebar.widget.iconwidget(c),
-         buttons = buttons,
-         layout  = wibox.layout.fixed.horizontal
+   local ttb = awful.titlebar(c, {
+      height = dpi(16),
+      font = beautiful.boldfont
+   })
+
+   c.titlebar_icon = wibox.widget({ -- Left
+      {
+         {
+            awful.titlebar.widget.iconwidget(c),
+            wibox.widget.textbox(''),
+            spacing = dpi(16),
+            layout = wibox.layout.fixed.horizontal,
+         },
+         margins = dpi(4),
+         widget = wibox.container.margin,
       },
+      widget = wibox.container.background,
+      buttons = buttons,
+      shape = function(cr, w, h)
+         cr:new_path()
+         cr:move_to(0,0)
+         cr:line_to(w - h/2, 0)
+         cr:line_to(w, h/2)
+         cr:line_to(w - h/2, h)
+         cr:line_to(0, h)
+         cr:line_to(0,0)
+         cr:close_path()
+      end,
+      bg = beautiful.blue,
+   })
+
+   c.titlebar_buttons = wibox.widget({
+      {
+         -- awful.titlebar.widget.floatingbutton(c),
+         -- awful.titlebar.widget.maximizedbutton(c),
+         -- awful.titlebar.widget.stickybutton(c),
+         -- awful.titlebar.widget.ontopbutton(c),
+         awful.titlebar.widget.closebutton(c),
+         layout = wibox.layout.fixed.horizontal()
+      },
+      margins = dpi(4),
+      widget = wibox.container.margin
+   })
+
+   ttb:setup({
+      c.titlebar_icon,
       { -- Middle
          { -- Title
             align  = "center",
@@ -441,14 +459,7 @@ client.connect_signal("request::titlebars", function(c)
          buttons = buttons,
          layout  = wibox.layout.flex.horizontal
       },
-      { -- Right
-         awful.titlebar.widget.floatingbutton(c),
-         awful.titlebar.widget.maximizedbutton(c),
-         awful.titlebar.widget.stickybutton(c),
-         awful.titlebar.widget.ontopbutton(c),
-         awful.titlebar.widget.closebutton(c),
-         layout = wibox.layout.fixed.horizontal()
-      },
+      c.titlebar_buttons,
       layout = wibox.layout.align.horizontal
    })
 end) -- handle title bar
@@ -459,8 +470,19 @@ client.connect_signal("mouse::enter", function(c)
 end)
 
 -- border when focus and unfocus
-client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
-client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+client.connect_signal("focus", function(c)
+   c.border_color = beautiful.border_focus
+   if c.titlebar_icon then
+      c.titlebar_icon.bg = beautiful.blue
+   end
+   c.titlebar_buttons.visible = true
+end)
+
+client.connect_signal("unfocus", function(c)
+   c.border_color = beautiful.border_normal
+   c.titlebar_icon.bg = gears.color.transparent
+   c.titlebar_buttons.visible = false
+end)
 
 -- wallpaper request
 screen.connect_signal("request::wallpaper", function(s)
@@ -496,193 +518,51 @@ screen.connect_signal("request::desktop_decoration", function(s)
    end)
    s.tags[1]:view_only()
 
-   s.info = wibox.widget({
-      {
-         layout = wibox.layout.fixed.horizontal,
-         {
-            forced_width = beautiful.wibar_height,
-            forced_height = beautiful.wibar_height,
-            widget = wibox.container.radialprogressbar,
-            color = beautiful.orange,
-            border_color = beautiful.orange,
-            border_width = dpi(4),
-            padding = dpi(4),
-            {
-               widget = wibox.widget.imagebox,
-               image = beautiful.icon_dir .. "hakase.png",
-            },
-         },
-         {
-            {
-               {
-                  markup = '<span color=\'' .. beautiful.white .. '\'>' .. os.getenv("USER")  .. '@arch</span>',
-                  font = 'Segoe UI bold 11',
-                  align = 'center',
-                  widget = wibox.widget.textbox,
-               },
-               {
-                  {
-                     widget = wibox.widget.textbox,
-                     markup = '<span color=\'' .. beautiful.white .. '\'>BAT</span>',
-                     font = 'Segoe UI bold 11',
-                  },
-                  widget_battery,
-                  layout = wibox.layout.fixed.horizontal
-               },
-               {
-                  {
-                     {
-                        widget = wibox.widget.imagebox,
-                        image = gears.color.recolor_image(beautiful.icon_dir .. "time.png", beautiful.yellow),
-                     },
-                     widget_textclock,
-                     spacing = dpi(8),
-                     layout = wibox.layout.fixed.horizontal,
-                  },
-                  {
-                     {
-                        widget = wibox.widget.imagebox,
-                        image = gears.color.recolor_image(beautiful.taglist_icon["Media"], beautiful.blue),
-                     },
-                     widget_volume,
-                     spacing = dpi(8),
-                     layout = wibox.layout.fixed.horizontal,
-                  },
-                  layout = wibox.layout.flex.horizontal
-               },
-               layout = wibox.layout.ratio.vertical
-            },
-            margins = {
-               left = dpi(16),
-               right = dpi(16),
-               top = dpi(4),
-               bottom = dpi(4)
-            },
-            widget = wibox.container.margin
-         },
-      },
-      bg = beautiful.shade,
-      widget = wibox.container.background,
-      border_width = beautiful.taglist_shape_border_width,
-      border_color = beautiful.taglist_shape_border_color,
-      shape = function(cr, w, h)
-         local r = dpi(16)
-         local mr = r/2.5
-         local br = h/2
-         cr:arc(br, br, br, math.pi, 3*math.pi/2)
-         cr:arc(w-mr, mr, mr, 3*math.pi/2, 0)
-         -- cr:line_to(w, 0)
-         cr:arc(w-r, h-r, r, math.pi*2 , math.pi/2)
-         cr:arc(br, h-br, br, math.pi/2, math.pi)
-         -- cr:line_to(0, h)
-         cr:line_to(0, br)
-         cr:close_path()
-      end,
-      forced_width = dpi(256) * 1.5,
-      forced_height = beautiful.wibar_height,
-   })
 
-   -- Create a promptbox for each screen
    s.mypromptbox = awful.widget.prompt()
 
    s.layoutbox = ggz_layoutbox(s)
-   -- require("ggz.widget_layoutbox")
-   -- Create an imagebox widget which will contain an icon indicating which layout we're using.
-   -- We need one layoutbox per screen.
 
-   -- Create a taglist widget
-   s.mytaglist = awful.widget.taglist({
-      screen  = s,
-      filter  = awful.widget.taglist.filter.all,
-      buttons = button_taglist,
-      widget_template = {
-         {
-            {
-               {
-                  widget = wibox.container.place,
-                  {
-                     widget = wibox.widget.imagebox,
-                     resize = true,
-                     id = 'icon_role',
-                  },
-               },
-               {
-                  widget = wibox.widget.textbox,
-                  id = 'text_role',
-                  align = 'center'
-               },
-            layout = wibox.layout.flex.vertical,
-            },
-            widget = wibox.container.margin,
-            left = beautiful.taglist_shape_border_width,
-            right = beautiful.taglist_shape_border_width,
-            top = dpi(8),
-            bottom = dpi(8),
+   -- Create the wiboxes
+   s.wibox_top_left = awful.popup({
+      type = 'dock', -- no shadow
+      screen = s,
+      height = beautiful.wibar_height,
+      visible = true,
+      bg = gears.color.transparent,
+      widget = wibox.widget({
+         margins = {
+            top = beautiful.wibar_border_width,
+            left = beautiful.wibar_border_width
          },
-         forced_width = beautiful.wibar_height,
-         forced_height = beautiful.wibar_height,
-         id = 'background_role',
-         widget = wibox.container.background,
-         -- update_callback = function(self, c3, index, objects) --luacheck: no unused args
-         --    self:get_children_by_id('index_role')[1].markup = '<b> '..index..' </b>'
-         -- end,
-      }
-   })
-
-   -- Create a tasklist widget
-   s.mytasklist = awful.widget.tasklist({
-      screen  = s,
-      filter  = awful.widget.tasklist.filter.focused,
-      buttons = button_tasklist,
-      widget_template = {
-         {
-            {
-               widget = wibox.widget.imagebox,
-               id = 'icon_role'
-            },
-            {
-               align = 'center',
-               widget = wibox.widget.textbox,
-               id = 'text_role',
-            },
-            layout = wibox.layout.align.horizontal
-         },
-         widget = wibox.container.background,
-         id = 'background_role'
-      }
-   })
-
-   -- Create the wibox
-   s.mywibox = awful.wibar({ position = "top", screen = s })
-
-   -- Add widgets to the wibox
-   s.mywibox:setup({
-      layout = wibox.layout.align.horizontal,
-      spacing = beautiful.taglist_spacing,
-      { -- Left widgets
-         wibox.widget.textbox(),
          s.info,
-         layout = wibox.layout.fixed.horizontal,
-         mylauncher,
-         -- widget_textclock,
-         s.mypromptbox,
-         -- wibox.widget.systray(),
-      },
-      { -- center widget
-         -- s.mytasklist,
+         widget = wibox.container.margin
+      })
+   })
+
+   s.wibox_top_right = awful.popup({
+      screen = s,
+      placement = awful.placement.top_right,
+      type = 'dock',
+      bg = gears.color.transparent,
+      widget = wibox.widget({
          widget = wibox.container.margin,
          margins = {
-            left = dpi(8),
-            right = dpi(8),
-            top = beautiful.wibar_height/2,
-            bottom = beautiful.wibar_border_width,
+            top = beautiful.wibar_border_width,
+            right = beautiful.wibar_border_width,
+         },
+         {
+            spacing = beautiful.taglist_spacing,
+            layout = wibox.layout.fixed.horizontal,
+            s.mytaglist,
+            s.layoutbox
          }
-      },
-      { -- Right widgets
-         spacing = beautiful.taglist_spacing,
-         layout = wibox.layout.fixed.horizontal,
-         s.mytaglist,
-         s.layoutbox
-      },
+      }),
+      visible = true,
    })
+
+   -- set padding screen
+   s.padding = {
+      top = beautiful.wibar_height + beautiful.wibar_border_width * 2
+   }
 end) -- connect for each screen?

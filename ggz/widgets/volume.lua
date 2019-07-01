@@ -6,15 +6,15 @@ local api = require("api")
 
 local widget_volume = wibox.widget({
    widget = wibox.widget.textbox,
-   font = beautiful.boldfont,
    markup = '  ',
 })
 
+local markup = beautiful.whitetext
 widget_volume:connect_signal(api.audio.signal.vol_update, function(_, status)
    if status.vol_muted then
-      widget_volume.markup = beautiful.whitetext("Muted")
+      widget_volume.markup = markup("Muted")
    else
-      widget_volume.markup = beautiful.whitetext(status.vol_level .. "%")
+      widget_volume.markup = markup(status.vol_level .. "%")
    end
 end)
 api.audio.attach(widget_volume)

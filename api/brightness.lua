@@ -20,9 +20,9 @@ function brightness.set_step(step)
 	BRIGHTNESS_DOWN = "light -U " .. step
 end
 
-function brightness.udpate()
+function brightness.update()
 	awful.spawn.easy_async(BRIGHTNESS_GET, function(stdout)
-		brightness.level = tonumber(stdout)
+		brightness.level = math.floor(tonumber(stdout) + 0.5)
 		for i=1,#brightness.widget do
 			brightness.widget[i]:emit_signal(brightness.signal.update, brightness.level)
 		end
