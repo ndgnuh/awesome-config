@@ -103,5 +103,7 @@ I haven't done much yet
 
 The 3 first setup is really default, and the latter two use `gtk` theme that came with `awesome`, so i'm only posting previews of other setup(s).
 ### Guns girl - Schooldayz
-Based on a [mobile game](https://www.youtube.com/watch?v=Rk1cIG1iC8o) by Mihoyo. (
+Based on a [mobile game](https://www.youtube.com/watch?v=Rk1cIG1iC8o) by Mihoyo. 
+Change the `ign`, `iglevel` in the `ggz/init.lua` to whatever username and level you want. 
+Replace `ggz/icons/avatar.png` and `ggz/icons/wallpaper.png` for the user image and the background (too lazy so i those in the `icons` folder :P should have changed the name to `resources`)
 ![preview](https://raw.githubusercontent.com/ndgnuh/awesome-config/gh-resources/awesome-ggz.png)
