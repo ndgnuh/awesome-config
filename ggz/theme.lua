@@ -4,6 +4,7 @@ local transparent = "#FFFFFF00"
 
 beautiful.font = 'Segoe UI 11'
 beautiful.boldfont = 'Segoe UI Bold 11'
+beautiful.boldfontsmall = 'Segoe UI Bold 9'
 beautiful.icon_dir = os.getenv("HOME") .. "/.config/awesome/ggz/icons/"
 -------------------------------------------------
 --  everything shaped this way in the game ui  --
@@ -76,30 +77,31 @@ beautiful.menu_width = dpi(256)
 -----------------------------
 --  taglist as ui buttons  --
 -----------------------------
-beautiful.taglist_font                     = "Segoe UI Bold 11"
-beautiful.taglist_fg_empty                 = beautiful.white
-beautiful.taglist_fg_urgent                = beautiful.white
-beautiful.taglist_fg_occupied              = beautiful.white
-beautiful.taglist_fg_focus                 = beautiful.blue
-beautiful.taglist_fg_volatile              = beautiful.white
-beautiful.taglist_bg_empty                 = beautiful.shade
-beautiful.taglist_bg_urgent                = beautiful.shade
-beautiful.taglist_bg_occupied              = beautiful.shade
-beautiful.taglist_bg_focus                 = beautiful.white
-beautiful.taglist_bg_volatile              = beautiful.shade
-beautiful.taglist_shape                    = beautiful.common_shape(dpi(16))
-beautiful.taglist_shape_border_width       = dpi(2)
-beautiful.taglist_shape_border_color       = beautiful.blue .. 'b3'
+beautiful.tags                       = {"Web", "Term", "Doc", "Media", "Extra"}
+beautiful.taglist_font               = "Segoe UI Bold 11"
+beautiful.taglist_fg_empty           = beautiful.white
+beautiful.taglist_fg_urgent          = beautiful.white
+beautiful.taglist_fg_occupied        = beautiful.white
+beautiful.taglist_fg_focus           = beautiful.blue
+beautiful.taglist_fg_volatile        = beautiful.white
+beautiful.taglist_bg_empty           = beautiful.shade
+beautiful.taglist_bg_urgent          = beautiful.shade
+beautiful.taglist_bg_occupied        = beautiful.shade
+beautiful.taglist_bg_focus           = beautiful.white
+beautiful.taglist_bg_volatile        = beautiful.shade
+beautiful.taglist_shape              = beautiful.common_shape(dpi(16))
+beautiful.taglist_shape_border_width = dpi(2)
+beautiful.taglist_shape_border_color = beautiful.blue .. 'b3'
 -- beautiful.taglist_shape_border_color_focus = beautiful.white .. 'b3'
-beautiful.taglist_spacing                  = dpi(16)
-beautiful.taglist_border_width             = dpi(2)
-beautiful.taglist_border_color             = beautiful.white
-beautiful.taglist_icon = {
-   term = os.getenv("HOME") .. '/.config/awesome/ggz/icons/term.png',
-   web = os.getenv("HOME") .. '/.config/awesome/ggz/icons/web.png',
-   doc = os.getenv("HOME") .. '/.config/awesome/ggz/icons/doc.png',
-   media = os.getenv("HOME") .. '/.config/awesome/ggz/icons/media.png',
-   extra = os.getenv("HOME") .. '/.config/awesome/ggz/icons/extra.png',
+beautiful.taglist_spacing            = dpi(16)
+beautiful.taglist_border_width       = dpi(2)
+beautiful.taglist_border_color       = beautiful.white
+beautiful.taglist_icon               = {
+   Term  = os.getenv("HOME") .. '/.config/awesome/ggz/icons/term.png',
+   Web   = os.getenv("HOME") .. '/.config/awesome/ggz/icons/web.png',
+   Doc   = os.getenv("HOME") .. '/.config/awesome/ggz/icons/doc.png',
+   Media = os.getenv("HOME") .. '/.config/awesome/ggz/icons/media.png',
+   Extra = os.getenv("HOME") .. '/.config/awesome/ggz/icons/extra.png',
 }
 
 ------------
@@ -145,3 +147,26 @@ beautiful.taglist_squares_unsel = beautiful.theme_assets.taglist_squares_unsel(
    dpi(4),
    beautiful.blue
 )
+
+------------------------
+--  markup functions  --
+------------------------
+function beautiful.colortext(s, c)
+   return "<span color='" .. c .. "'>".. s .."</span>"
+end
+
+function beautiful.whitetext(txt)
+   return beautiful.colortext(txt, beautiful.white)
+end
+
+function beautiful.bluetext(txt)
+   return beautiful.colortext(txt, beautiful.blue)
+end
+
+function beautiful.yellowtext(txt)
+   return beautiful.colortext(txt, beautiful.yellow)
+end
+
+function beautiful.blacktext(txt)
+   return beautiful.colortext(txt, beautiful.shade)
+end

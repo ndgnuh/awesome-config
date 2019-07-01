@@ -11,6 +11,8 @@ local menubar = require("menubar")
 local popup_hotkeys = require("awful.hotkeys_popup")
 require("awful.autofocus")
 require("awful.hotkeys_popup.keys")
+local api = require("api")
+api.audio.set_step(5)
 
 ------------------------------------------------------------------------
 --                           theming stuffs                           --
@@ -22,8 +24,13 @@ beautiful.wallpaper = os.getenv("HOME") .. "/Pictures/wallpaper"
 ------------------------------------------------------------------------
 --                           custom widgets                           --
 ------------------------------------------------------------------------
-local ggz_layoutbox = require("ggz.widget_layoutbox")
-local widget_volume = require("ggz.widget_volume")
+local ggz_layoutbox = require("ggz.widgets.layoutbox")
+local widget_volume = require("ggz.widgets.volume")
+local widget_battery = require("ggz.widgets.battery")
+local battery = require("upower_battery");
+local mybattery = battery();
+require("ggz.mediapopup")
+
 
 ------------------------------------------------------------------------
 --                          auto start stuff                          --
@@ -36,12 +43,11 @@ awful.spawn.once("compton")
 --                            handle error                            --
 ------------------------------------------------------------------------
 if awesome.startup_errors then
-   naughty.notification({
-      preset = naughty.config.presets.critical,
-      title = "Unknown error has occured",
+   naughty.notification {
+      preset  = naughty.config.presets.critical,
+      title   = "Oops, there were errors during startup!",
       message = awesome.startup_errors
-   })
-   awful.spawn.with_shell("echo " .. awesome.startup_errors .. " | tee ~/awesome$(date).log")
+   }
 end
 
 do
@@ -54,7 +60,7 @@ do
       naughty.notification({
          preset = naughty.config.presets.critical,
          title = "Unknown error has occured",
-         message = awesome.startup_errors
+         message = tostring(err)
       })
    end)
 end
@@ -82,6 +88,7 @@ menu_awesome = {
 menu = awful.menu({
    { "Awesome", menu_awesome, beautiful.awesome_icon },
    { "Set config", configsets },
+   { "Session", powermenu },
    { "Terminal", terminal },
    { "Cancel", 'echo &' }
 }) -- context menu, the main one
@@ -159,6 +166,8 @@ root.buttons(button_root)
 --                         binding: keyboard                          --
 ------------------------------------------------------------------------
 key_root = gears.table.join(
+   api.audio.key,
+   api.brightness.key,
    awful.key({mod}, '/', function() popup_hotkeys.show_help(nil, awful.screen.focused()) end, {
       description = 'Show/hide help',
       group = 'Awesome'
@@ -235,13 +244,6 @@ for i = 1,9 do
          if tag then
             tag:view_only()
          end
-         for _, tag in ipairs(screen.tags) do
-            if tag.selected then
-               tag.icon = gears.color.recolor_image(tag.icon, beautiful.blue)
-            else
-               tag.icon = gears.color.recolor_image(tag.icon, beautiful.white)
-            end
-         end
       end, {
          description = "view tag #"..i,
          group = "tag"
@@ -254,13 +256,6 @@ for i = 1,9 do
          local tag = screen.tags[i]
          if tag then
             awful.tag.viewtoggle(tag)
-         end
-         for _, tag in ipairs(screen.tags) do
-            if tag.selected then
-               tag.icon = gears.color.recolor_image(tag.icon, beautiful.blue)
-            else
-               tag.icon = gears.color.recolor_image(tag.icon, beautiful.white)
-            end
          end
       end, {
          description = "toggle tag #" .. i,
@@ -480,38 +475,26 @@ screen.connect_signal("request::wallpaper", function(s)
    end
 end)
 
--- require("ggz.ggz_layoutbox")
--- connect_for_each_screen
-
 
 screen.connect_signal("request::desktop_decoration", function(s)
-
    -- Each screen has its own tag table.
-   awful.tag.add("Web", {
-      screen = s,
-      layout = awful.layout.suit.tile,
-      icon = gears.color.recolor_image(beautiful.taglist_icon.web, beautiful.white)
-   })
-   awful.tag.add("Term", {
-      screen = s,
-      layout = awful.layout.suit.tile,
-      icon = gears.color.recolor_image(beautiful.taglist_icon.term, beautiful.white)
-   })
-   awful.tag.add("Docs", {
-      screen = s,
-      layout = awful.layout.suit.tile,
-      icon = gears.color.recolor_image(beautiful.taglist_icon.doc, beautiful.white)
-   })
-   awful.tag.add("Media", {
-      screen = s,
-      layout = awful.layout.suit.float,
-      icon = gears.color.recolor_image(beautiful.taglist_icon.media, beautiful.white)
-   })
-   awful.tag.add("Extra", {
-      screen = s,
-      layout = awful.layout.suit.tile,
-      icon = gears.color.recolor_image(beautiful.taglist_icon["extra"], beautiful.white)
-   })
+   for _,tag in pairs(beautiful.tags) do
+      awful.tag.add(tag, {
+         screen = s,
+         layout = awful.layout.suit.tile,
+         icon = gears.color.recolor_image(beautiful.taglist_icon[tag], beautiful.white)
+      })
+   end
+   s:connect_signal("tag::history::update", function()
+      for _, tag in ipairs(s.tags) do
+         if tag.selected then
+            tag.icon = gears.color.recolor_image(tag.icon, beautiful.blue)
+         else
+            tag.icon = gears.color.recolor_image(tag.icon, beautiful.white)
+         end
+      end
+   end)
+   s.tags[1]:view_only()
 
    s.info = wibox.widget({
       {
@@ -543,22 +526,7 @@ screen.connect_signal("request::desktop_decoration", function(s)
                      markup = '<span color=\'' .. beautiful.white .. '\'>BAT</span>',
                      font = 'Segoe UI bold 11',
                   },
-                  {
-                     {
-                        widget = wibox.widget.progressbar,
-                        shape = gears.shape.rounded_bar,
-                        forced_height = dpi(8),
-                        max_value = 100,
-                        value = 80,
-                     },
-                     {
-                        markup = '<span color=\'' .. beautiful.white .. '\'>80/100</span>',
-                        widget = wibox.widget.textbox,
-                        align = 'center',
-                        font = 'Segoe UI bold 8'
-                     },
-                     layout = wibox.layout.stack
-                  },
+                  widget_battery,
                   layout = wibox.layout.fixed.horizontal
                },
                {
@@ -574,7 +542,7 @@ screen.connect_signal("request::desktop_decoration", function(s)
                   {
                      {
                         widget = wibox.widget.imagebox,
-                        image = gears.color.recolor_image(beautiful.taglist_icon.media, beautiful.blue),
+                        image = gears.color.recolor_image(beautiful.taglist_icon["Media"], beautiful.blue),
                      },
                      widget_volume,
                      spacing = dpi(8),
@@ -718,14 +686,3 @@ screen.connect_signal("request::desktop_decoration", function(s)
       },
    })
 end) -- connect for each screen?
-
-local function taglist_update()
-   local screen = awful.screen.focused()
-   for _, tag in ipairs(screen.tags) do
-      if tag.selected then
-         tag.icon = gears.color.recolor_image(tag.icon, beautiful.blue)
-      else
-         tag.icon = gears.color.recolor_image(tag.icon, beautiful.white)
-      end
-   end
-end

@@ -1,7 +1,8 @@
 local color = require("gears.color")
-local notify = require("naughty").notify
+notify = require("naughty").notify
 local awful = require("awful")
 local config_file = os.getenv("HOME") .. '/.config/awesome/configset.lua'
+
 require("constant")
 dpi = require("beautiful.xresources").apply_dpi
 
@@ -16,7 +17,9 @@ function change_config_set(name)
 	end)
 end
 
--- configset 
+------------------------
+--  some global meno  --
+------------------------
 configsets = {
 	{ "Basic", function () change_config_set("basic") end },
 	{ "Guns girl", function () change_config_set("ggz") end },
@@ -24,7 +27,13 @@ configsets = {
 	{ "Default", function () change_config_set("default") end }
 } -- config set
 
-
+powermenu = {
+	{ "Shutdown", "systemctl poweroff" },
+	{ "Reboot", "systemctl reboot" },
+	{ "Hibernate", "systemctl hibernate" },
+	{ "Suspend", "systemctl suspend" },
+	{ "Logout", function() awesome.quit() end },
+}
 ----------------------------------
 --  color processing functions  --
 ----------------------------------
@@ -81,8 +90,8 @@ require("configset")
 -------------------------------------
 --  volume and brightness binding  --
 -------------------------------------
-require("mediakeys")
-require("mediapopup")
+-- require("mediakeys")
+-- require("mediapopup")
 
 ------------
 --  misc  --
@@ -91,3 +100,5 @@ require("mediapopup")
 function colormarkup(s, c)
 	return '<span color=\'' .. c .. '\'>' .. s .. '</span>'
 end --colour markup
+
+-- require("draft")
