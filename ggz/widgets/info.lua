@@ -66,7 +66,7 @@ local avatar_image = wibox.widget({
 
 for s in screen do
    s.info = wibox.widget({
-      -- forced_width = dpi(256)*1.5,
+      forced_width = dpi(256)*1.3 + dpi(12), -- percise width of the widget
       forced_height = beautiful.wibar_height,
       layout = wibox.layout.manual
    })

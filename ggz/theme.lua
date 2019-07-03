@@ -214,4 +214,10 @@ beautiful.layout_cornerne   = themes_path.."default/layouts/cornernew.png"
 beautiful.layout_cornersw   = themes_path.."default/layouts/cornersww.png"
 beautiful.layout_cornerse   = themes_path.."default/layouts/cornersew.png"
 
-
+------------------
+--  prompt box  --
+------------------
+beautiful.prompt_bg = gears.color.transparent
+beautiful.prompt_fg = beautiful.shade
+beautiful.prompt_fg_cursor = beautiful.white
+beautiful.prompt_bg_cursor = beautiful.prompt_fg

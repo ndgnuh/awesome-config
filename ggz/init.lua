@@ -25,15 +25,17 @@ iglevel = 373 -- this will be displayed on the info panel
 ------------------------------------------------------------------------
 -- beautiful.init(gears.filesystem.get_themes_dir() .. "gtk/theme.lua")
 require("ggz.theme")
-beautiful.wallpaper = beautiful.icon_dir .. "wallpaper.png"
+beautiful.wallpaper = "/home/hung/Pictures/wallpaper"
+-- beautiful.wallpaper = beautiful.icon_dir .. "wallpaper.png"
 
 ------------------------------------------------------------------------
 --                           custom widgets                           --
 ------------------------------------------------------------------------
 local ggz_layoutbox = require("ggz.widgets.layoutbox")
-require("ggz.mediapopup")
+-- require("ggz.mediapopup")
 require("ggz.widgets.tasklist")
 require("ggz.widgets.taglist")
+require("ggz.widgets.promptbox")
 require("ggz.widgets.info")
 
 ------------------------------------------------------------------------
@@ -143,7 +145,7 @@ key_root = gears.table.join(
       description = 'Show/hide help',
       group = 'Awesome'
    }),
-   awful.key({mod}, 'd', function() awful.spawn("rofi -show run") end, {
+   awful.key({mod}, 'd', function() awful.screen.focused().mypromptbox:run() end, {
       description = 'Show/hide help',
       group = 'Awesome'
    }),
@@ -519,46 +521,31 @@ screen.connect_signal("request::desktop_decoration", function(s)
    s.tags[1]:view_only()
 
 
-   s.mypromptbox = awful.widget.prompt()
 
    s.layoutbox = ggz_layoutbox(s)
 
-   -- Create the wiboxes
-   s.wibox_top_left = awful.popup({
-      type = 'dock', -- no shadow
-      screen = s,
+   s.bar = wibox({
+      type = 'dock',
+      x = 2*beautiful.useless_gap + s.geometry.x,
+      y = beautiful.useless_gap + s.geometry.y,
+      width = s.geometry.width - 4 * beautiful.useless_gap,
       height = beautiful.wibar_height,
       visible = true,
       bg = gears.color.transparent,
       widget = wibox.widget({
-         margins = {
-            top = beautiful.wibar_border_width,
-            left = beautiful.wibar_border_width
-         },
-         s.info,
-         widget = wibox.container.margin
-      })
-   })
-
-   s.wibox_top_right = awful.popup({
-      screen = s,
-      placement = awful.placement.top_right,
-      type = 'dock',
-      bg = gears.color.transparent,
-      widget = wibox.widget({
-         widget = wibox.container.margin,
-         margins = {
-            top = beautiful.wibar_border_width,
-            right = beautiful.wibar_border_width,
-         },
+         layout = wibox.layout.align.horizontal,
          {
-            spacing = beautiful.taglist_spacing,
+            s.info,
             layout = wibox.layout.fixed.horizontal,
+         },
+         s.mypromptbox,
+         {
+            layout = wibox.layout.fixed.horizontal,
+            spacing = beautiful.taglist_spacing,
             s.mytaglist,
             s.layoutbox
          }
-      }),
-      visible = true,
+      })
    })
 
    -- set padding screen
