@@ -174,7 +174,7 @@ beautiful.taglist_squares_unsel = beautiful.theme_assets.taglist_squares_unsel(
 --  markup functions  --
 ------------------------
 function beautiful.colortext(s, c)
-   return "<span color='" .. c .. "'>".. s .."</span>"
+   return "<span color='" .. c .. "'>".. tostring(s) .."</span>"
 end
 
 function beautiful.whitetext(txt)

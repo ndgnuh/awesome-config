@@ -85,6 +85,7 @@ function colorinvert(c)
 	})
 end -- find invert color
 
+require("draft")
 require("configset")
 
 -------------------------------------
@@ -100,5 +101,3 @@ require("configset")
 function colormarkup(s, c)
 	return '<span color=\'' .. c .. '\'>' .. s .. '</span>'
 end --colour markup
-
--- require("draft")

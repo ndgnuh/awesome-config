@@ -96,7 +96,8 @@ menu = awful.menu({
    { "Set config", configsets },
    { "Session", powermenu },
    { "Terminal", terminal },
-   { "Cancel", 'echo &' }
+   { "Cancel", 'echo &' },
+   { "Test", test }
 }) -- context menu, the main one
 
 -- textclock widget
@@ -538,7 +539,7 @@ screen.connect_signal("request::desktop_decoration", function(s)
             s.info,
             layout = wibox.layout.fixed.horizontal,
          },
-         s.mypromptbox,
+         nil,
          {
             layout = wibox.layout.fixed.horizontal,
             spacing = beautiful.taglist_spacing,
