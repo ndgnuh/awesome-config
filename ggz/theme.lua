@@ -221,3 +221,18 @@ beautiful.prompt_bg = gears.color.transparent
 beautiful.prompt_fg = beautiful.shade
 beautiful.prompt_fg_cursor = beautiful.white
 beautiful.prompt_bg_cursor = beautiful.prompt_fg
+
+----------------
+--  calendar  --
+----------------
+beautiful.calendar_style = {
+   border_width = 0,
+   padding = dpi(16)
+}
+beautiful.calendar_focus_shape = beautiful.common_shape(dpi(8))
+beautiful.calendar_focus_border_width = dpi(4)
+beautiful.calendar_focus_border_color = beautiful.blue
+beautiful.calendar_focus_bg_color = beautiful.blue
+beautiful.calendar_focus_fg_color = beautiful.white
+beautiful.calendar_weekday_fg_color = beautiful.shade
+beautiful.calendar_header_fg_color = beautiful.shade

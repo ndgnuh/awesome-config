@@ -18,7 +18,7 @@ api.audio.set_step(5)
 --  some config  --
 -------------------
 ign = os.getenv("USER") .. "@ArchBtw" -- this will be displayed on the info panel
-iglevel = 373 -- this will be displayed on the info panel
+iglevel = 374 -- this will be displayed on the info panel
 
 ------------------------------------------------------------------------
 --                           theming stuffs                           --
