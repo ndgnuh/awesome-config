@@ -37,6 +37,39 @@ require("ggz.widgets.tasklist")
 require("ggz.widgets.taglist")
 require("ggz.widgets.promptbox")
 require("ggz.widgets.info")
+local Testprompt = require("awesome-prompt")
+local prompt = Testprompt()
+local powermenu = Testprompt({
+   prompt = "What to do? ",
+   execs = {
+      {
+         label = "Logout",
+         command = "echo 'quit awesome exit'",
+         func = awesome.quit,
+      },
+      {
+         label = "Reboot",
+         command = "systemctl reboot"
+      },
+      {
+         label = "Shutdown",
+         command = "systemctl poweroff"
+      },
+      {
+         label = "Hibernate",
+         command = "systemctl hibernate"
+      },
+      {
+         label = "Suspend",
+         command = "systemctl suspend"
+      },
+      {
+         label = "Restart Awesome",
+         func = awesome.restart,
+      },
+   }
+})
+-- testprompt:run()
 
 ------------------------------------------------------------------------
 --                          auto start stuff                          --
@@ -146,7 +179,7 @@ key_root = gears.table.join(
       description = 'Show/hide help',
       group = 'Awesome'
    }),
-   awful.key({mod}, 'd', function() awful.screen.focused().mypromptbox:run() end, {
+   awful.key({mod}, 'd', function() prompt:run() end, {
       description = 'Show/hide help',
       group = 'Awesome'
    }),
@@ -190,7 +223,7 @@ key_root = gears.table.join(
       description = 'Restart awesome',
       group = 'Awesome',
    }),
-   awful.key({mod, 'Shift'}, 'e', awesome.quit, {
+   awful.key({mod, 'Shift'}, 'e', function() powermenu:run() end, {
       description = 'Quit awesome',
       group = 'Awesome',
    }),

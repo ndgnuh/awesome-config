@@ -7,3 +7,6 @@
 [submodule "notmine/awesome-nifty"]
 	path = notmine/awesome-nifty
 	url = https://github.com/thekrampus/awesome-nifty.git
+[submodule "awesome-prompt"]
+	path = awesome-prompt
+	url = https://github.com/ndgnuh/awesome-prompt.git

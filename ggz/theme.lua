@@ -221,6 +221,23 @@ beautiful.prompt_bg = gears.color.transparent
 beautiful.prompt_fg = beautiful.shade
 beautiful.prompt_fg_cursor = beautiful.white
 beautiful.prompt_bg_cursor = beautiful.prompt_fg
+beautiful.prompt_selected_bg = beautiful.blue
+beautiful.prompt_selected_fg = beautiful.white
+beautiful.prompt_prompt_fg = beautiful.shade
+beautiful.prompt_prompt_bg = beautiful.white
+beautiful.prompt_margins = dpi(8)
+beautiful.prompt_wibox_margins = dpi(8)
+-- beautiful.prompt_wibox_bg = beautiful.shade
+-- beautiful.prompt_wibox_shape = beautiful.common_shape(dpi(16))
+-- beautiful.prompt_wibox_border_width = dpi(2)
+-- beautiful.prompt_wibox_border_color = beautiful.shade
+beautiful.prompt_normal_fg = {
+   beautiful.shade
+}
+beautiful.prompt_normal_bg = {
+   "#dedede",
+   beautiful.white
+}
 
 ----------------
 --  calendar  --

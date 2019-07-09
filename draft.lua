@@ -4,16 +4,16 @@ local beautiful = require("beautiful")
 local awful = require("awful")
 local naughty = require("naughty")
 
-beautiful.prompt_selected_fg = "#fffffff"
-beautiful.prompt_selected_bg = "#2d9"
-beautiful.prompt_normal_bg_1 = "#323232"
-beautiful.prompt_normal_bg_2 = "#424242"
-beautiful.prompt_normal_fg_1 = "#fff"
-beautiful.prompt_normal_fg_2 = "#fff"
-beautiful.prompt_normal_padding = dpi(8)
-beautiful.prompt_prompt_padding = dpi(8)
-beautiful.prompt_selected_padding = dpi(4)
-beautiful.prompt_wibox_padding = dpi(4)
+-- beautiful.prompt_selected_fg = "#fffffff"
+-- beautiful.prompt_selected_bg = "#2d9"
+-- beautiful.prompt_normal_bg_1 = "#323232"
+-- beautiful.prompt_normal_bg_2 = "#424242"
+-- beautiful.prompt_normal_fg_1 = "#fff"
+-- beautiful.prompt_normal_fg_2 = "#fff"
+-- beautiful.prompt_normal_padding = dpi(8)
+-- beautiful.prompt_prompt_padding = dpi(8)
+-- beautiful.prompt_selected_padding = dpi(4)
+-- beautiful.prompt_wibox_padding = dpi(4)
 
 local function colormarkup(s, c)
 	return '<span color=\'' .. c .. '\'>' .. s .. '</span>'
