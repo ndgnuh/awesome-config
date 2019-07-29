@@ -11,7 +11,6 @@ dpi = require("beautiful.xresources").apply_dpi
 -------------------------
 function change_config_set(name)
 	update_cmd = "cat " .. config_file .. " | sed 's/.*/require(\""..name.."\")/g' | tee " .. config_file
-	notify{ text = update_cmd }
 	awful.spawn.easy_async_with_shell(update_cmd, function ()
 		awesome.restart()
 	end)

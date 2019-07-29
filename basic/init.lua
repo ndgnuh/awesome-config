@@ -292,6 +292,18 @@ local key_client = gears.table.join(
    end, {
       description = "Toggle maximize horizontally",
       group = "Client"
+   }),
+   awful.key({mod, "Shift"}, "j", function()
+      awful.client.swap.byidx(1)
+   end, {
+      description = "swap with next client by index",
+      group = "client"
+   }),
+   awful.key({mod, "Shift"}, "k", function()
+      awful.client.swap.byidx(-1)
+   end, {
+      description = "swap with previous client by index",
+      group = "client"
    })
 ) --key_client
 root.keys(key_root)
