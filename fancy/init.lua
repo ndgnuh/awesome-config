@@ -83,7 +83,7 @@ local powermenu = Prompt(gears.table.join(
 ------------------------------------------------------------------------
 awful.spawn.once("xrandr --output HDMI1 --left-of eDP1")
 awful.spawn.once("compton")
-awful.spawn.once("nm-applet")
+awful.spawn.once("cmst")
 awful.spawn.once("ibus-daemon -rdx")
 
 
