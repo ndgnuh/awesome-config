@@ -102,6 +102,11 @@ I haven't done much yet
 | guns girl | a setup based on a mobile game by [Mihoyo](https://www.mihoyo.com/) |
 
 The 3 first setup is really default, and the latter two use `gtk` theme that came with `awesome`, so i'm only posting previews of other setup(s).
+
+### Fancy
+Basically me playing with cairo.
+![preview](https://raw.githubusercontent.com/ndgnuh/awesome-config/gh-resources/fancy.png)
+
 ### Guns girl - Schooldayz
 Based on a [mobile game](https://www.youtube.com/watch?v=Rk1cIG1iC8o) by Mihoyo. 
 Change the `ign`, `iglevel` in the `ggz/init.lua` to whatever username and level you want. 
