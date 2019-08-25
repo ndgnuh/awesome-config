@@ -3,7 +3,7 @@ local gears = require("gears")
 
 -- {{ commands
 local AUDIO_VOL_TOGGLE = "amixer sset Master toggle"
-local AUDIO_VOL_GET    = "amixer sget Master | grep %"
+local AUDIO_VOL_GET    = "amixer sget Master | tail -n 1 | grep %"
 local AUDIO_VOL_UP     = "amixer sset Master 10%+ unmute"
 local AUDIO_VOL_DOWN   = "amixer sset Master 10%- unmute"
 local AUDIO_VOL_SET    = "amixer sset Master "
@@ -28,10 +28,10 @@ local audio = {
 	},
 	widget = {},
 	status = {
-		vol_level = 0, 
-		vol_muted = false, 
-		mic_muted = false,
+		vol_level = 0,
 		mic_level = 0,
+		vol_muted = false,
+		mic_muted = false,
 	},
 	key = {},
 }
@@ -47,7 +47,7 @@ function audio.update_mic()
 	awful.spawn.easy_async_with_shell(AUDIO_MIC_GET, function(stdout)
 		-- Sample output
 		-- Mono: Playback 63 [50%] [-32.00dB] [on]
-		lv, stat = string.match(stdout, ".*%[(%d%d?%d?)%%%].*%[(%a*)].*")
+		local lv, stat = string.match(stdout, ".*%[(%d%d?%d?)%%%].*%[(%a*)].*")
 		local muted = nil
 		if stat == 'on' then muted = false else muted = true end
 		audio.status.mic_level = lv
@@ -62,8 +62,7 @@ function audio.update_vol()
 	awful.spawn.easy_async_with_shell(AUDIO_VOL_GET, function(stdout)
 		-- Sample output
 		-- Mono: Playback 63 [50%] [-32.00dB] [on]
-		lv, stat = string.match(stdout, ".*%[(%d%d?%d?)%%%].*%[(%a*)].*")
-		local muted = nil
+		local lv, stat = string.match(stdout, ".*%[(%d%d?%d?)%%%].*%[(%a*)].*")
 		if stat == 'on' then muted = false else muted = true end
 		audio.status.vol_level = lv
 		audio.status.vol_muted = muted
@@ -82,9 +81,10 @@ function audio.mic_increase() awful.spawn.easy_async(AUDIO_MIC_UP,         audio
 function audio.mic_decrease() awful.spawn.easy_async(AUDIO_MIC_DOWN,       audio.update_mic) end
 function audio.mic_set(level) awful.spawn.easy_async(AUDIO_MIC_SET..level, audio.update_vol) end
 
-function audio.attach(widget)
+function audio.attach(widget, callback)
 	audio.widget[#audio.widget + 1] = widget
 	audio.update_vol()
+	if type(callback) == "function" then callback() end
 end
 
 audio.key = gears.table.join(audio.key,

@@ -41,10 +41,6 @@ local key_root = gears.table.join(
       description = 'Next layout',
       group = 'Awesome'
    }),
-   awful.key({mod, 'Shift'}, 'space', function() awful.layout.inc(-1) end, {
-      description = 'Previous layout',
-      group = 'Awesome'
-   }),
    awful.key({mod, 'Shift'}, 'r', awesome.restart, {
       description = 'Restart awesome',
       group = 'Awesome',
@@ -179,6 +175,10 @@ local key_client = gears.table.join(
    end, {
       description = "swap with previous client by index",
       group = "Client"
+   }),
+   awful.key({mod, 'Shift'}, 'space', function(c) c.floating = not c.floating end, {
+      description = 'Toggle client float',
+      group = 'Awesome'
    })
 ) --key_client
 

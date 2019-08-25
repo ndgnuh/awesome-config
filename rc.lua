@@ -22,6 +22,8 @@ end
 configsets = {
 	{ "Basic", function () change_config_set("basic") end },
 	{ "Guns girl", function () change_config_set("ggz") end },
+	{ "Legion (WIP)", function () change_config_set("legion") end },
+	{ "Fancy (WIP)", function () change_config_set("fancy") end },
 	{ "Friendly", function () change_config_set("friendly") end },
 	{ "Default", function () change_config_set("default") end }
 } -- config set
@@ -84,7 +86,7 @@ function colorinvert(c)
 	})
 end -- find invert color
 
-require("draft")
+-- require("draft")
 require("configset")
 
 -------------------------------------

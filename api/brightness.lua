@@ -37,9 +37,10 @@ function brightness.increase()
 	awful.spawn.easy_async(BRIGHTNESS_UP, brightness.update)
 end
 
-function brightness.attach(widget)
+function brightness.attach(widget, callback)
 	table.insert(brightness.widget, widget)
 	brightness.update()
+	if type(callback) == "function" then callback() end
 end
 
 brightness.key = gears.table.join(

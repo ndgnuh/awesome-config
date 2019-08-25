@@ -27,6 +27,13 @@ battery_bar:connect_signal(api.battery.signal.update, function(_, device)
    battery_bar.value = device.percentage
    local status_text = math.floor(device.percentage + 0.5) .. "/100 ".. api.battery.status[device.state]
    battery_text.markup = beautiful.whitetext(status_text)
+   if device.percentage < 50 then
+      naughty.notification {
+         preset  = naughty.config.presets.critical,
+         message = "Low battery, percentage left: " .. tostring(device.percentage) .. "%",
+         title   = "Warning"
+      }
+   end
 end)
 
 api.battery.attach(battery_bar)

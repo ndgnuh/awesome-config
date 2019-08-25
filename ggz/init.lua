@@ -39,13 +39,14 @@ require("ggz.widgets.promptbox")
 require("ggz.widgets.info")
 local Testprompt = require("awesome-prompt")
 local prompt = Testprompt({
-   forced_width = awful.screen.focused().geometry.width,
-   forced_height = awful.screen.focused().geometry.height,
+   placement = 'top',
+   forced_width = awful.screen.focused().geometry.width / 3,
+   -- forced_height = awful.screen.focused().geometry.height,
    style = {
-      prompt_item_bg = {"#232323", "#f2f3f4"},
-      prompt_item_fg = {"#f2f3f4", "#232323"},
-      prompt_item_bg_selected = "#23B398",
-      prompt_item_fg_selected = "#f2f2f3",
+      prompt_item_bg = {beautiful.shade},
+      prompt_item_fg = {"#f2f3f4"},
+      prompt_item_bg_selected = beautiful.blue,
+      prompt_item_fg_selected = beautiful.shade,
    }
 })
 local powermenu = Testprompt({})
