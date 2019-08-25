@@ -2,12 +2,39 @@
 Config set(s) for awesomewm
 
 Table of contents:
+- [Preview](#some-setups)
+    - [Guns girl - Schooldayz](#guns-girl-schooldayz)
+    - [Fancy](#fancy)
 - [Usage](#usage)
     - [Directory structure](#the-directory-structure)
     - [The "api" module](#volume-battery-and-brightness-widget-with-api-module)
     - [Fast switching between setups](#quick-switching-between-setups)
-- [Some setups](#some-setups)
-    - [Guns girl - Schooldayz](#guns-girl-schooldayz)
+
+
+## Preview
+I haven't done much yet
+
+| setup name | description |
+| ----------| ---------|
+| default | the default of awesomewm |
+| basic | nearly default, but some configs are changed |
+| friendly | mouse orientated, just in case some borrow my laptop? |
+| guns girl | a setup based on a mobile game by [Mihoyo](https://www.mihoyo.com/) |
+| fancy | me playing with cairo |
+
+The 3 first setup is really default, and the latter two use `gtk` theme that came with `awesome`, so i'm only posting previews of other setup(s).
+
+### Fancy
+Basically me playing with cairo.
+![preview](https://raw.githubusercontent.com/ndgnuh/awesome-config/gh-resources/fancy.png)
+
+### Guns girl - Schooldayz
+Based on a [mobile game](https://www.youtube.com/watch?v=Rk1cIG1iC8o) by Mihoyo. 
+Change the `ign`, `iglevel` in the `ggz/init.lua` to whatever username and level you want. 
+Replace `ggz/icons/avatar.png` and `ggz/icons/wallpaper.png` for the user image and the background (too lazy so i those in the `icons` folder :P should have changed the name to `resources`)
+![preview](https://raw.githubusercontent.com/ndgnuh/awesome-config/gh-resources/awesome-ggz.png)
+
+
 ## Usage
 ### The directory tree:
 ```sh
@@ -90,25 +117,3 @@ If you want to migrate your setup to this kind of structure: backup your setup, 
 
 ### Other files
 If i don't mention them, they are either one of the setups, trash files or wip.
-
-## Some setups
-I haven't done much yet
-
-| setup name | description |
-| ----------| ---------|
-| default | the default of awesomewm |
-| basic | nearly default, but some configs are changed |
-| friendly | mouse orientated, just in case some borrow my laptop? |
-| guns girl | a setup based on a mobile game by [Mihoyo](https://www.mihoyo.com/) |
-
-The 3 first setup is really default, and the latter two use `gtk` theme that came with `awesome`, so i'm only posting previews of other setup(s).
-
-### Fancy
-Basically me playing with cairo.
-![preview](https://raw.githubusercontent.com/ndgnuh/awesome-config/gh-resources/fancy.png)
-
-### Guns girl - Schooldayz
-Based on a [mobile game](https://www.youtube.com/watch?v=Rk1cIG1iC8o) by Mihoyo. 
-Change the `ign`, `iglevel` in the `ggz/init.lua` to whatever username and level you want. 
-Replace `ggz/icons/avatar.png` and `ggz/icons/wallpaper.png` for the user image and the background (too lazy so i those in the `icons` folder :P should have changed the name to `resources`)
-![preview](https://raw.githubusercontent.com/ndgnuh/awesome-config/gh-resources/awesome-ggz.png)
