@@ -480,6 +480,7 @@ awful.rules.rules = {
         },
         class = {
           "Arandr",
+			 "Picture In Picture",
           "Blueman-manager",
           "Gpick",
           "Kruler",
