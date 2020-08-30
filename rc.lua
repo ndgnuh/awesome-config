@@ -241,7 +241,11 @@ root.buttons(gears.table.join(
 -- {{{ Key bindings
 root.keys({})
 
+local TaskSwitcher = require("TaskSwitcher")
+local ts = TaskSwitcher()
+
 globalkeys = gears.table.join(
+	awful.key({modkey}, "i", function() ts:trigger() end),
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
               {description="show help", group="awesome"}),
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev,
@@ -595,4 +599,3 @@ awful.add_key_binding(
 	end)
 	)
 
-require("TaskSwitcher")
