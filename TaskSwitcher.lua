@@ -6,7 +6,6 @@ local TaskSwitcher = {}
 
 local awful = require("awful")
 local wibox = require("wibox")
-local gtimer = require("gears.timer")
 local gtable = require("gears.table")
 local client = client
 local max = math.max
@@ -48,49 +47,61 @@ local new = function(args)
 		placement = awful.placement.centered,
 		widget = {
 			widget = wibox.layout.fixed.vertical,
-			wibox.widget.textbox("hello"),
-			-- forced_height = 400
 		}
 	}
 
-	box.focus_idx = 1
-
-	-- timer for the wibox to go invisible
-	box.timer = gtimer{
-		timeout = timeout,
-		callback = function() box.visible = false end
+	-- grabber
+	box.keygrabber = awful.keygrabber{
+		keybindings = {
+			{{modkey}, "j", function() box:emit_signal("forward") end},
+			{{modkey}, "k", function() box:emit_signal("backward") end}
+		},
+		stop_key = modkey,
+		stop_event = 'release',
+		stop_callback = function()
+			box.visible = false
+			client.focus = box.client[box.focus_idx]
+			if client.focus then
+				client.focus:raise()
+			end
+		end,
+		export_keybinding = true
 	}
+	box.keygrabber.started = false
+
+	-- focus index of the task list
+	box.focus_idx = 1
 
 	-- when triggered, by button press or key binding
 	box:connect_signal("triggered", function(self)
-		-- get all clients
-		allClients = client.get()
-		-- rerender the widget
-		if self.visible then
-			self.focus_idx = (self.focus_idx % #allClients) + 1
-		else
-			self.focus_idx = 1
-		end
-		renderTaskSwitcher(self, allClients, self.focus_idx, not self.visible)
+		-- set widget visible
 		self.visible = true
-		-- reset the timer
-		self.timer:again()
-		-- @deprecated {{{
-		-- if self.visible then
-		-- 	self.focus_idx = self.focus_idx + 1
-		-- else
-		-- 	self.visible = true
-		-- 	-- find the focused client
-		-- 	-- replace the box focus idx
-		-- 	for i, c in ipairs(allClients) do
-		-- 		if client.focus == c then
-		-- 			self.focus_idx = i
-		-- 			break
-		-- 		end
-		-- 	end
-		-- end
-		-- @deprecated }}}
+		-- get all clients
+		self.client = client.get()
+		-- start key grabber
+		self.keygrabber:start()
+		-- rerender the widget
+		for i, c in ipairs(self.client) do
+			if client.focus == c then
+				self.focus_idx = i
+				break
+			end
+		end
+		renderTaskSwitcher(self, self.client, self.focus_idx, not self.visible)
 	end)
+
+	box:connect_signal("forward", function(self)
+		self.focus_idx = (self.focus_idx % #self.client) + 1
+		renderTaskSwitcher(self, self.client, self.focus_idx, not self.visible)
+	end)
+	box:connect_signal("backward", function(self)
+		self.focus_idx = self.focus_idx - 1
+		if self.focus_idx == 0 then
+			self.focus_idx = #self.client
+		end
+		renderTaskSwitcher(self, self.client, self.focus_idx, not self.visible)
+	end)
+
 
 	-- dismiss on click
 	box:buttons(awful.button({}, 3, function(self)
