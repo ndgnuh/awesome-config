@@ -594,3 +594,5 @@ awful.add_key_binding(
 		}
 	end)
 	)
+
+require("TaskSwitcher")
