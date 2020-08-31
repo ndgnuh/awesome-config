@@ -6,6 +6,7 @@ local TaskSwitcher = {}
 
 local awful = require("awful")
 local common = require("awful.widget.common")
+local beautiful = require("beautiful")
 local wibox = require("wibox")
 local gtable = require("gears.table")
 local client = client
@@ -13,39 +14,80 @@ local max = math.max
 local min = math.min
 local mod = math.mod
 
--- @TODO: use awful.widget.clienticon
-local defaultTemplate = {
-	{
-		layout = wibox.layout.fixed.horizontal,
+-- @function renderTask(box, client index)
+-- render the task item in tasklist
+local renderTask = function(box, idx, args)
+	local c = box.client[idx]
+	local isFocus = idx == box.focus_idx
+
+	local selectedBackground = args.selectedBackground
+		or beautiful.taskSwitcherSelectedBackground
+		or beautiful.taskSwitcherBackground
+		or beautiful.bg_focus
+	local normalBackground = args.normalBackground
+		or beautiful.taskSwitcherNormalBackground
+		or beautiful.taskSwitcherBackground
+		or beautiful.bg_normal
+	local normalForeground = args.normalForeground
+		or beautiful.taskSwitcherNormalBackground
+		or beautiful.taskSwitcherForeground
+		or beautiful.fg_normal
+	local selectedForeground = args.selectedForeground
+		or beautiful.taskSwitcherSelectedBackground
+		or beautiful.taskSwitcherForeground
+		or beautiful.fg_focus
+	local normalFont = args.normalFont
+		or beautiful.taskSwitcherNormalFont
+		or beautiful.taskSwitcherFont
+		or beautiful.font
+	local selectedFont = args.selectedFont
+		or beautiful.taskSwitcherSelectedFont
+		or beautiful.taskSwitcherFont
+		or beautiful.font
+
+	return wibox.widget{
+		widget = wibox.container.background,
+		bg = isFocus and selectedBackground or normalBackground,
+		forced_height = 48,
+		forced_width = 1024,
 		{
-			widget = wibox.widget.textbox,
-			id = 'text_role',
+			layout = wibox.layout.fixed.horizontal,
+			{
+				widget = wibox.widget.textbox,
+				markup = (isFocus and " > " or ""),
+				align = 'center',
+				forced_width = 30,
+			},
+			{
+				widget = awful.widget.clienticon,
+				client = c,
+			},
+			{
+				widget = wibox.widget.textbox,
+				markup = c.name,
+			},
 		},
-		{
-			widget = wibox.widget.imagebox,
-			id = 'icon_role',
-		},
-	},
-	id = 'background_role',
-	widget = wibox.container.background,
-}
+	}
+end
 
 --- Rerender the task switcher
 -- @TODO:
--- [ ] nice render instead of textbox
--- [ ] cycle render
--- [ ] awful.widget.common and widget template
-local renderTaskSwitcher = function(box, allClients, focus_idx, isFromStart)
+-- [x] nice render instead of textbox
+-- [x] cycle render
+local renderTaskSwitcher = function(box, allClients, focus_idx, isFromStart, args)
 	box.widget:reset()
 	-- render from start to number of clients
 	for i = 1,#allClients do
-		local text = allClients[i].name
-		if i == focus_idx then
-			text = "<i>" .. text .. "</i>"
-		end
-		box.widget:add(wibox.widget.textbox(text))
+		box.widget:add(renderTask(box, i, args))
 	end
 	-- dump(focus_idx)
+end
+
+-- use widget.common
+local renderTaskSwitcher2 = function(box, widget_template)
+	common.list_update(box.widget, _, _, _, box.client, {
+			widget_template = widget_template
+		})
 end
 
 --- Create the TaskSwitcher box
@@ -58,8 +100,10 @@ end
 -- [x] reset timeout per keypress
 -- [ ] theme-able via beautiful
 -- [ ] modularize the code
+local defaultArgs = {}
 local new = function(args)
-	timeout = args and args.timeout or 5
+	args = args or defaultArgs
+	timeout = args.timeout or 5
 
 	local box = awful.popup{
 		visible = false, ontop = true,
@@ -106,19 +150,19 @@ local new = function(args)
 				break
 			end
 		end
-		renderTaskSwitcher(self, self.client, self.focus_idx, not self.visible)
+		renderTaskSwitcher(self, self.client, self.focus_idx, not self.visible, args)
 	end)
 
 	-- focus_idx forward
 	box:connect_signal("forward", function(self)
 		self.focus_idx = (self.focus_idx % #self.client) + 1
-		renderTaskSwitcher(self, self.client, self.focus_idx, not self.visible)
+		renderTaskSwitcher(self, self.client, self.focus_idx, not self.visible, args)
 	end)
 
 	-- focus_idx backward
 	box:connect_signal("backward", function(self)
 		self.focus_idx = (self.focus_idx - 2) % #self.client + 1
-		renderTaskSwitcher(self, self.client, self.focus_idx, not self.visible)
+		renderTaskSwitcher(self, self.client, self.focus_idx, not self.visible, args)
 	end)
 
 

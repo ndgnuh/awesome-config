@@ -222,7 +222,11 @@ awful.screen.connect_for_each_screen(function(s)
 			{ -- Right widgets
 				layout = wibox.layout.fixed.vertical,
 				s.mytasklist,
-				wibox.widget.systray(),
+				{
+					widget = wibox.container.rotate,
+					wibox.widget.systray(),
+					direction = "west",
+				},
 				mytextclock,
 				s.mylayoutbox,
 			},
@@ -245,8 +249,8 @@ local TaskSwitcher = require("TaskSwitcher")
 local ts = TaskSwitcher()
 
 globalkeys = gears.table.join(
-	awful.key({modkey}, "j", function() ts:trigger() end),
-	awful.key({modkey}, "k", function() ts:trigger() end),
+	awful.key({modkey}, "j", function() ts:trigger() ts:emit_signal("forward") end),
+	awful.key({modkey}, "k", function() ts:trigger() ts:emit_signal("backward") end),
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
               {description="show help", group="awesome"}),
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev,
@@ -309,8 +313,8 @@ globalkeys = gears.table.join(
               {description = "increase the number of columns", group = "layout"}),
     awful.key({ modkey, "Control" }, "l",     function () awful.tag.incncol(-1, nil, true)    end,
               {description = "decrease the number of columns", group = "layout"}),
-    awful.key({ modkey,           }, "space", function () awful.layout.inc( 1)                end,
-              {description = "select next", group = "layout"}),
+--    awful.key({ modkey,           }, "space", function () awful.layout.inc( 1)                end,
+--              {description = "select next", group = "layout"}),
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(-1)                end,
               {description = "select previous", group = "layout"}),
 
@@ -589,14 +593,11 @@ end)
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
---
+
+local sh = require("sh")
 
 awful.add_key_binding(
-	awful.key({modkey}, "v", function()
-		naughty.notify{
-			title = "Test",
-			text = "test notification"
-		}
+	awful.key({modkey}, "space", function()
+		sh"ibus-cycle.sh"
 	end)
 	)
-

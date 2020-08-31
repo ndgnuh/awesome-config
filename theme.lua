@@ -365,6 +365,9 @@ theme.notification_shape = function(cr, w, h)
 end
 theme.notification_border_color = theme.link
 
+theme.taskSwitcherNormalBackground = theme.bg_normal
+theme.taskSwitcherSelectedBackground = "#434484"
+
 return theme
 
 -- vim: filetype=lua:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:textwidth=80:foldmethod=marker
