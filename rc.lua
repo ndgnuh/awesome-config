@@ -492,7 +492,6 @@ awful.rules.rules = {
         },
         class = {
           "Arandr",
-			 "Picture In Picture",
           "Blueman-manager",
           "Gpick",
           "Kruler",
@@ -507,6 +506,7 @@ awful.rules.rules = {
         -- and the name shown there might not match defined rules here.
         name = {
           "Event Tester",  -- xev.
+			 "Picture-in-Picture", -- firefox picture in picture
         },
         role = {
           "AlarmWindow",  -- Thunderbird's calendar.
