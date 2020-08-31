@@ -5,6 +5,7 @@
 local TaskSwitcher = {}
 
 local awful = require("awful")
+local common = require("awful.widget.common")
 local wibox = require("wibox")
 local gtable = require("gears.table")
 local client = client
@@ -12,10 +13,28 @@ local max = math.max
 local min = math.min
 local mod = math.mod
 
+-- @TODO: use awful.widget.clienticon
+local defaultTemplate = {
+	{
+		layout = wibox.layout.fixed.horizontal,
+		{
+			widget = wibox.widget.textbox,
+			id = 'text_role',
+		},
+		{
+			widget = wibox.widget.imagebox,
+			id = 'icon_role',
+		},
+	},
+	id = 'background_role',
+	widget = wibox.container.background,
+}
+
 --- Rerender the task switcher
 -- @TODO:
 -- [ ] nice render instead of textbox
 -- [ ] cycle render
+-- [ ] awful.widget.common and widget template
 local renderTaskSwitcher = function(box, allClients, focus_idx, isFromStart)
 	box.widget:reset()
 	-- render from start to number of clients
