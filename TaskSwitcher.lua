@@ -90,15 +90,15 @@ local new = function(args)
 		renderTaskSwitcher(self, self.client, self.focus_idx, not self.visible)
 	end)
 
+	-- focus_idx forward
 	box:connect_signal("forward", function(self)
 		self.focus_idx = (self.focus_idx % #self.client) + 1
 		renderTaskSwitcher(self, self.client, self.focus_idx, not self.visible)
 	end)
+
+	-- focus_idx backward
 	box:connect_signal("backward", function(self)
-		self.focus_idx = self.focus_idx - 1
-		if self.focus_idx == 0 then
-			self.focus_idx = #self.client
-		end
+		self.focus_idx = (self.focus_idx - 2) % #self.client + 1
 		renderTaskSwitcher(self, self.client, self.focus_idx, not self.visible)
 	end)
 
@@ -108,6 +108,7 @@ local new = function(args)
 		self.visible = false
 	end))
 
+	-- trigger function, call with box:trigger()
 	box.trigger = function(self) self:emit_signal("triggered") end
 
 	-- return the wibox
