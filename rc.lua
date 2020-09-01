@@ -574,5 +574,5 @@ local ic = require("icon")
 awful.add_key_binding(
 	awful.key({modkey}, "space", function()
 		sh"ibus-cycle.sh"
-	end),
+	end)
 	)
