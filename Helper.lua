@@ -2,6 +2,8 @@ local unpack = unpack or table.unpack
 local fine1, gears = pcall(require, "gears")
 local fine2, naughty = pcall(require, "naughty")
 
+dpi = require("beautiful.xresources").apply_dpi
+
 partial = function(f, x)
 	return function(...)
 		return f(x, ...)

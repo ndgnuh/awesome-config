@@ -129,11 +129,11 @@ theme.fg_minimize   = mix(theme.wibar_fg, theme.wibar_bg, 0.9)
 
 theme.bg_systray    = theme.wibar_bg
 
-theme.border_normal = theme.bg_normal
-theme.border_focus  = "#7BAAF7"
-theme.border_marked = "#E67C73"
+theme.border_normal = "#1d1f21"
+theme.border_focus  = "#1d1f21"
+theme.border_marked = "#1d1f21"
 
-theme.border_width  = dpi(2)
+theme.border_width  = dpi(1)
 theme.border_radius = theme.gtk.button_border_radius
 
 theme.useless_gap   = dpi(0)
@@ -157,7 +157,7 @@ theme.tasklist_icon_margin = dpi(0)
 theme.tasklist_fg_normal = theme.wibar_fg
 theme.tasklist_bg_normal = theme.wibar_bg
 theme.tasklist_fg_focus = theme.tasklist_fg_normal
-theme.tasklist_bg_focus = "#6843B9"
+theme.tasklist_bg_focus = "#63C5EA"
 
 theme.tasklist_font_focus = theme.gtk.bold_font
 
@@ -254,8 +254,8 @@ theme.taglist_fg_empty = mix(
 )
 
 theme.titlebar_font_normal = theme.gtk.bold_font
-theme.titlebar_bg_normal = theme.bg_normal
-theme.titlebar_fg_normal = theme.fg_normal
+theme.titlebar_bg_normal = "#3B4252"
+theme.titlebar_fg_normal = "#EDFEFE"
 --theme.titlebar_fg_normal = choose_contrast_color(
     --theme.titlebar_bg_normal,
     --theme.gtk.menubar_fg_color,
@@ -263,8 +263,8 @@ theme.titlebar_fg_normal = theme.fg_normal
 --)
 
 theme.titlebar_font_focus = theme.gtk.bold_font
-theme.titlebar_bg_focus = "#7bAAF7"
-theme.titlebar_fg_focus = theme.bg_focus
+theme.titlebar_bg_focus = "#3B4252"
+theme.titlebar_fg_focus = "#EDFEFE"
 --theme.titlebar_fg_focus = choose_contrast_color(
     --theme.titlebar_bg_focus,
     --theme.gtk.menubar_fg_color,

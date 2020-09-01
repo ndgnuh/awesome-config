@@ -33,7 +33,7 @@ local template = {
 	{
 		wibox.widget.base.make_widget(),
 		widget = wibox.container.background,
-		forced_width = beautiful.border_width,
+		forced_width = dpi(2),
 		id = 'background_role',
 	},
 	{
