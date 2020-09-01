@@ -54,7 +54,7 @@ local renderTask = function(box, idx, args)
 			layout = wibox.layout.fixed.horizontal,
 			{
 				widget = wibox.widget.textbox,
-				markup = (isFocus and " > " or ""),
+				markup = (isFocus and " ▸ " or ""),
 				align = 'center',
 				forced_width = 30,
 			},
