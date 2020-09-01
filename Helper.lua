@@ -34,3 +34,5 @@ else
 end
 
 pass = function() end
+
+re = require

@@ -115,6 +115,8 @@ theme.fg_normal     = "#ffffff"
 
 theme.wibar_bg      = theme.bg_normal
 theme.wibar_fg      = "#57BB8A"
+theme.wibar_height = dpi(32)
+theme.wibar_width = dpi(32)
 
 theme.bg_focus      = theme.bg_normal
 theme.fg_focus      = "#7BAAF7"
@@ -151,10 +153,11 @@ end
 -- tooltip_[font|opacity|fg_color|bg_color|border_width|border_color]
 -- mouse_finder_[color|timeout|animate_timeout|radius|factor]
 
+theme.tasklist_icon_margin = dpi(0)
 theme.tasklist_fg_normal = theme.wibar_fg
 theme.tasklist_bg_normal = theme.wibar_bg
 theme.tasklist_fg_focus = theme.tasklist_fg_normal
-theme.tasklist_bg_focus = theme.tasklist_bg_normal
+theme.tasklist_bg_focus = "#6843B9"
 
 theme.tasklist_font_focus = theme.gtk.bold_font
 
