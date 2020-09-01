@@ -3,6 +3,7 @@
 --   by Yauhen Kirylau                      --
 ----------------------------------------------
 
+local ic = re"icon"
 local theme_assets = require("beautiful.theme_assets")
 local dpi = require("beautiful.xresources").apply_dpi
 local gfs = require("gears.filesystem")
@@ -370,6 +371,16 @@ theme.notification_border_color = theme.link
 
 theme.taskSwitcherNormalBackground = theme.bg_normal
 theme.taskSwitcherSelectedBackground = "#434484"
+
+
+-- @titlebar_button
+theme.titlebar_close_button_normal = ic"gtk-close.svg"
+theme.titlebar_close_button_normal_hover = ic"gtk-close.svg"
+theme.titlebar_close_button_normal_press = ic"gtk-close.svg"
+-- theme.titlebar_close_button_normal_press
+theme.titlebar_close_button_focus = ic"gtk-close.svg"
+theme.titlebar_close_button_focus_hover = ic"gtk-close.svg"
+theme.titlebar_close_button_focus_press = ic"gtk-close.svg"
 
 return theme
 
