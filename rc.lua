@@ -569,9 +569,10 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 -- }}}
 
 local sh = require("sh")
+local ic = require("icon")
 
 awful.add_key_binding(
 	awful.key({modkey}, "space", function()
 		sh"ibus-cycle.sh"
-	end)
+	end),
 	)
