@@ -1,9 +1,13 @@
-assert(awesomedir, "awesomedir is not defined")
+-- assert(awesomedir, "awesomedir is not defined")
 
 local awful = re"awful"
 local gfs = re"gears.filesystem"
 
-local shdir = awesomedir .. "/sh"
+-- local shdir = awesomedir .. "/sh"
+-- dump(debug.getinfo(1).source:sub(2):match("(.*/)"))
+
+local shdir = debug.getinfo(1).source:sub(2):match("(.*/)")
+
 local defaul_callback = function(o, e)
 	if e and e ~= "" then dump(e) end
 end

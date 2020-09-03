@@ -1,6 +1,12 @@
 local unpack = unpack or table.unpack
 local fine1, gears = pcall(require, "gears")
 local fine2, naughty = pcall(require, "naughty")
+local ch = require("c_helper")
+
+for v, func in pairs(require("c_helper")) do
+	_G[v] = func
+end
+
 
 dpi = require("beautiful.xresources").apply_dpi
 
@@ -8,18 +14,6 @@ partial = function(f, x)
 	return function(...)
 		return f(x, ...)
 	end
-end
-
-map = function(f, tbl)
-	t = {}
-	for k,v in pairs(tbl) do
-		t[k] = f(v)
-	end
-	return t
-end
-
-bmap = function(f, ...)
-	return unpack(map(f, {...}))
 end
 
 if fine1 and fine2 then
@@ -37,4 +31,11 @@ end
 
 pass = function() end
 
+-- doesn't work, this debug line must be placed where the file is
+-- __dir__ = function()
+-- 	return debug.getinfo(1).source:sub(2):match("(.*/)")
+-- end
+
 re = require
+
+
