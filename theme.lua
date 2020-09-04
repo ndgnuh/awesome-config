@@ -159,18 +159,19 @@ theme.tasklist_fg_normal = theme.wibar_fg
 theme.tasklist_bg_normal = theme.wibar_bg
 theme.tasklist_fg_focus = theme.tasklist_fg_normal
 theme.tasklist_bg_focus = "#63C5EA"
+theme.tasklist_bg_minimized = grayscale(theme.tasklist_fg_normal)
 
 theme.tasklist_font_focus = theme.gtk.bold_font
 
-theme.tasklist_shape_minimized = rounded_rect_shape
-theme.tasklist_shape_border_color_minimized = mix(
-    theme.bg_minimize,
-    theme.fg_minimize,
-    0.85
-)
-theme.tasklist_shape_border_width_minimized = theme.gtk.button_border_width
-
-theme.tasklist_spacing = theme.gtk.button_border_width
+-- theme.tasklist_shape_minimized = rounded_rect_shape
+-- theme.tasklist_shape_border_color_minimized = mix(
+--     theme.bg_minimize,
+--     theme.fg_minimize,
+--     0.85
+-- )
+-- theme.tasklist_shape_border_width_minimized = theme.gtk.button_border_width
+-- 
+-- theme.tasklist_spacing = theme.gtk.button_border_width
 
 --[[ Advanced taglist and tasklist styling: {{{
 

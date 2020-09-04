@@ -1,9 +1,59 @@
 -- @TODO:
--- hover on button show thumbnail, with delay of 500ms
+-- [done] hover on button show thumbnail, ~~with delay of 500ms~~
+-- resize the thumbnail to the client size
 local awful = re"awful"
 local wibox = re"wibox"
 local gears = re"gears"
+local shape = re"gears.shape"
 local beautiful = re"beautiful"
+local ClientThumbnail = re"ClientThumbnail"
+
+local arrowSize = 8
+local infobubble = function(cr, w, h)
+	local hh = h / 2
+	cr:move_to(0, hh)
+	cr:line_to(arrowSize, hh + arrowSize)
+	cr:line_to(arrowSize, h)
+	cr:line_to(w, h)
+	cr:line_to(w, 0)
+	cr:line_to(arrowSize, 0)
+	cr:line_to(arrowSize, hh - arrowSize)
+	cr:line_to(0, hh)
+	cr:close_path()
+end
+local thumbnail = awful.popup{
+	widget = wibox.widget{
+		widget = wibox.container.background,
+		bg = beautiful.bg_normal,
+		{
+			widget = wibox.container.place,
+			id = 'thumb_container',
+			forced_width = 192 * 2,
+			{
+				widget = ClientThumbnail,
+				id = 'thumb'
+			}
+		},
+	}
+}
+
+local thumb = thumbnail.widget:get_children_by_id('thumb')[1]
+local thumbContainer = thumbnail.widget:get_children_by_id('thumb_container')[1]
+local showThumbnail = function(widget, c)
+	local geo = c:geometry()
+	local scale = geo.width / geo.height
+	thumbContainer.forced_height = thumbContainer.forced_width / scale
+
+	thumb:set_client(c)
+	thumbnail.ontop = true
+	thumbnail.visible = true
+	thumbnail:move_next_to(mouse.current_widget_geometry)
+	thumbnail.x = thumbnail.x + arrowSize
+end
+local hideThumbnail = function(widget, c)
+	thumbnail.ontop = false
+	thumbnail.visible = false
+end
 
 local tasklist_buttons = gears.table.join(
 	awful.button({ }, 1, function (c)
@@ -47,6 +97,16 @@ local template = {
 	nil,
 	create_callback = function(self, c, index, objects) --luacheck: no unused args
 		self:get_children_by_id('clienticon')[1].client = c
+
+		-- activate timer on enter
+		self:connect_signal("mouse::enter", function()
+			showThumbnail(self, c)
+		end)
+
+		-- hide thumbnail
+		self:connect_signal("mouse::leave", function()
+			hideThumbnail(self)
+		end)
 	end,
 }
 
