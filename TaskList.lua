@@ -23,6 +23,7 @@ local infobubble = function(cr, w, h)
 	cr:close_path()
 end
 local thumbnail = awful.popup{
+	visible = false,
 	shape = infobubble,
 	widget = wibox.widget{
 		widget = wibox.container.background,

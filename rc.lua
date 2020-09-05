@@ -192,11 +192,13 @@ awful.screen.connect_for_each_screen(function(s)
 		local middle_layout = nil
 		local right_layout = wibox.layout.fixed.vertical()
 		right_layout:add(s.mytasklist)
-		right_layout:add(s == screen.primary and wibox.widget{
+		if s == screen.primary then
+			right_layout:add(wibox.widget{
 				widget = wibox.container.rotate,
 				wibox.widget.systray(),
 				direction = "west",
 			})
+		end
 		right_layout:add(mytextclock)
 		right_layout:add(s.mylayoutbox)
 
