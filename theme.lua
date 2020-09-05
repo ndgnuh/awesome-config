@@ -114,7 +114,7 @@ theme.font          = theme.gtk.font_family .. ' 14'
 theme.bg_normal     = "#323232"
 theme.fg_normal     = "#ffffff"
 
-theme.wibar_bg      = theme.bg_normal
+theme.wibar_bg      = "#3B4252"
 theme.wibar_fg      = "#57BB8A"
 theme.wibar_height = dpi(32)
 theme.wibar_width = dpi(32)

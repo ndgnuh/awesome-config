@@ -185,26 +185,27 @@ awful.screen.connect_for_each_screen(function(s)
 		s.mywibox = awful.wibar({ position = "left", screen = s })
 
 		-- Add widgets to the wibox
-		s.mywibox:setup {
-			layout = wibox.layout.align.vertical,
-			{ -- Left widgets
-				layout = wibox.layout.fixed.vertical,
-				mylauncher,
-				s.mypromptbox,
-			},
-			nil,
-			{ -- Right widgets
-				layout = wibox.layout.fixed.vertical,
-				s.mytasklist,
-				{
-					widget = wibox.container.rotate,
-					wibox.widget.systray(),
-					direction = "west",
-				},
-				mytextclock,
-				s.mylayoutbox,
-			},
-		}
+		local left_layout = wibox.layout.fixed.vertical()
+		left_layout:add(mylauncher)
+		left_layout:add(s.mypromptbox)
+
+		local middle_layout = nil
+		local right_layout = wibox.layout.fixed.vertical()
+		right_layout:add(s.mytasklist)
+		right_layout:add(s == screen.primary and wibox.widget{
+				widget = wibox.container.rotate,
+				wibox.widget.systray(),
+				direction = "west",
+			})
+		right_layout:add(mytextclock)
+		right_layout:add(s.mylayoutbox)
+
+		local bar_layout = wibox.layout.align.vertical()
+		bar_layout:set_first(left_layout)
+		bar_layout:set_second(middle_layout)
+		bar_layout:set_third(right_layout)
+
+		s.mywibox:set_widget(bar_layout)
 	end)
 	-- }}}
 
