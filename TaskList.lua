@@ -1,6 +1,6 @@
 -- @TODO:
 -- [done] hover on button show thumbnail, ~~with delay of 500ms~~
--- resize the thumbnail to the client size
+-- [done] resize the thumbnail to the client size
 local awful = re"awful"
 local wibox = re"wibox"
 local gears = re"gears"
@@ -8,7 +8,8 @@ local shape = re"gears.shape"
 local beautiful = re"beautiful"
 local ClientThumbnail = re"ClientThumbnail"
 
-local arrowSize = 8
+local thumbHeight = 248
+local arrowSize = 12
 local infobubble = function(cr, w, h)
 	local hh = h / 2
 	cr:move_to(0, hh)
@@ -22,14 +23,19 @@ local infobubble = function(cr, w, h)
 	cr:close_path()
 end
 local thumbnail = awful.popup{
+	shape = infobubble,
 	widget = wibox.widget{
 		widget = wibox.container.background,
-		bg = beautiful.bg_normal,
+		bg = "#ff0000",
 		{
-			widget = wibox.container.place,
-			id = 'thumb_container',
-			forced_width = 192 * 2,
+			widget = wibox.container.margin,
+			left = arrowSize + 4,
+			right = 4,
+			bottom = 4,
+			top = 4,
 			{
+				forced_height = thumbHeight,
+				forced_width = thumbHeight,
 				widget = ClientThumbnail,
 				id = 'thumb'
 			}
@@ -40,15 +46,16 @@ local thumbnail = awful.popup{
 local thumb = thumbnail.widget:get_children_by_id('thumb')[1]
 local thumbContainer = thumbnail.widget:get_children_by_id('thumb_container')[1]
 local showThumbnail = function(widget, c)
-	local geo = c:geometry()
-	local scale = geo.width / geo.height
-	thumbContainer.forced_height = thumbContainer.forced_width / scale
-
 	thumb:set_client(c)
+	local geo = c:geometry()
+	local scale = thumb.forced_height / geo.height
+	thumb.forced_width = geo.width * scale
+
 	thumbnail.ontop = true
 	thumbnail.visible = true
 	thumbnail:move_next_to(mouse.current_widget_geometry)
 	thumbnail.x = thumbnail.x + arrowSize
+	thumbnail.y = thumbnail.y + (thumbHeight - beautiful.wibar_width / 2) * 0.5 
 end
 local hideThumbnail = function(widget, c)
 	thumbnail.ontop = false

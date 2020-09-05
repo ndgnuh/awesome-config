@@ -3,6 +3,11 @@ local shape = re"gears.shape"
 local surface = re"gears.surface"
 
 local module = {}
+local cachedSurface = {}
+
+client.connect_signal("property::minimized", function(c)
+	cachedSurface[c] = surface(c.content)
+end)
 
 local fit = function(self, ctx, w, h)
 	local s = math.min(w, h)
@@ -17,15 +22,18 @@ end
 local draw = function(self, content, cr, width, height)
     local c = self._private.client[1]
     local s, geo = surface(c.content), c:geometry()
+    -- local scale = math.max(width/geo.width, height/geo.height)
     local scalex, scaley = width/geo.width, height/geo.height
+	 local scale = math.max(scalex, scaley)
     local w, h = geo.width*scalex, geo.height*scaley
     local dx, dy = (width-w)/2, (height-h)/2
-    cr:translate(dx, dy)
-    shape.rounded_rect(cr, w, h)
-    cr:clip()
-    cr:scale(scalex, scaley)
+	 cr:translate(dx, dy)
+	 shape.rounded_rect(cr, w, h)
+	 cr:clip()
+	 local sw, sh = surface.get_size(s)
+	 cr:scale(width / sw, height / sh)
     cr:set_source_surface(s)
-    cr:paint()
+	 cr:paint()
 end
 
 local geo = function(self)
