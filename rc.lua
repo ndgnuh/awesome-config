@@ -263,14 +263,14 @@ globalkeys = gears.table.join(
               {description = "focus the previous screen", group = "screen"}),
     awful.key({ modkey,           }, "u", awful.client.urgent.jumpto,
               {description = "jump to urgent client", group = "client"}),
-    awful.key({ modkey,           }, "Tab",
-        function ()
-            awful.client.focus.history.previous()
-            if client.focus then
-                client.focus:raise()
-            end
-        end,
-        {description = "go back", group = "client"}),
+--    awful.key({ modkey,           }, "Tab",
+--        function ()
+--            awful.client.focus.history.previous()
+--            if client.focus then
+--                client.focus:raise()
+--            end
+--        end,
+--        {description = "go back", group = "client"}),
 
     -- Standard program
     awful.key({ modkey, "Control" }, "r", awesome.restart,
@@ -521,8 +521,11 @@ local sh = require("sh")
 local ic = require("icon")
 re"brightness"
 
+
 awful.add_key_binding(
 	awful.key({modkey}, "space", function()
 		sh"ibus-cycle.sh"
-	end)
-	)
+	end),
+	awful.key({modkey}, "Tab", re"focusPrevious", {description = "go back", group = "client"}),
+		{})
+
