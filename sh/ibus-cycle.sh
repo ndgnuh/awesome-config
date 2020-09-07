@@ -11,7 +11,7 @@ engine="something"
 while [ "$engine" != "" ]; do
 	index=$((index + 1))
 	eval engine="\$engine$index"
-	if [ $current_engine = $engine ]; then
+	if [ "$current_engine" = "$engine" ]; then
 		engine=""
 	fi
 done
@@ -23,3 +23,5 @@ if [ "$engine" = "" ]; then
 	engine="$engine0"
 fi
 ibus engine "$engine"
+
+echo -n "$(ibus engine | sed 's/\n$//g')" 

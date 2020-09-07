@@ -50,6 +50,14 @@ end
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(awesomedir .. "/theme.lua")
 
+-- {{{ @libs
+-- custom library and module goes here
+local sh = require("sh")
+local ic = require("icon")
+local IBus = re"IBus"
+re"brightness"
+-- }}}
+
 -- This is used later as the default terminal and editor to run.
 editor = os.getenv("EDITOR") or "nano"
 editor_cmd = terminal .. " -e " .. editor
@@ -188,10 +196,15 @@ awful.screen.connect_for_each_screen(function(s)
 		local left_layout = wibox.layout.fixed.vertical()
 		left_layout:add(mylauncher)
 		left_layout:add(s.mypromptbox)
+		left_layout:add(wibox.widget{
+				widget = wibox.widget.imagebox,
+				image = ic"start-here.svg"
+			})
 
 		local middle_layout = nil
 		local right_layout = wibox.layout.fixed.vertical()
 		right_layout:add(s.mytasklist)
+		right_layout:add(IBus.widget)
 		if s == screen.primary then
 			right_layout:add(wibox.widget{
 				widget = wibox.container.rotate,
@@ -208,7 +221,10 @@ awful.screen.connect_for_each_screen(function(s)
 		bar_layout:set_third(right_layout)
 
 		s.mywibox:set_widget(bar_layout)
+
+		dump({s.mywibox:get_children_by_id('ibus-engine')})--:get_children_by_id('ibus-engine'))
 	end)
+	-- @end_each_screen_callback
 	-- }}}
 
 -- {{{ Mouse bindings
@@ -499,9 +515,10 @@ client.connect_signal("request::titlebars", function(c)
             layout  = wibox.layout.flex.horizontal
         },
         { -- Right
-            awful.titlebar.widget.floatingbutton (c),
+            awful.titlebar.widget.floatingbutton(c),
+            awful.titlebar.widget.minimizebutton(c),
             awful.titlebar.widget.maximizedbutton(c),
-            awful.titlebar.widget.closebutton    (c),
+            awful.titlebar.widget.closebutton(c),
             layout = wibox.layout.fixed.horizontal()
         },
         layout = wibox.layout.align.horizontal
@@ -516,11 +533,6 @@ end)
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
-
-local sh = require("sh")
-local ic = require("icon")
-re"brightness"
-
 
 awful.add_key_binding(
 	awful.key({modkey}, "space", function()

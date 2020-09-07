@@ -3,6 +3,7 @@ if [ -z $cmd ]; then
 	cmd="xbacklight"
 fi
 
+thearg=""
 case $cmd in
 	xbacklight)
 		argget="-get"
@@ -26,5 +27,5 @@ esac
 
 eval thearg="\$arg$1"
 theval=$2
-$cmd $thearg $theval 1> /dev/null
-printf $($cmd $argget)
+"$cmd" "$thearg" "$theval" 1> /dev/null
+printf "%s" "$("$cmd" "$argget")"

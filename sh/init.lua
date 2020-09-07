@@ -1,21 +1,22 @@
 -- assert(awesomedir, "awesomedir is not defined")
 
-local awful = re"awful"
-local gfs = re"gears.filesystem"
+local spawn = (re"awful.spawn").easy_async_with_shell
+local gobj = re"gears.object"
+
+local sh = gobj()
 
 -- local shdir = awesomedir .. "/sh"
 -- dump(debug.getinfo(1).source:sub(2):match("(.*/)"))
-
 local shdir = debug.getinfo(1).source:sub(2):match("(.*/)")
 
-local defaul_callback = function(o, e)
-	if e and e ~= "" then dump(e) end
+sh.dir = shdir
+sh.mt = {}
+sh.mt.__call = function(self, name)
+	local file = string.format("%s/%s", self.dir, name)
+
+	spawn(file, function(stdout, stderr)
+		self:emit_signal(name, stdout, stderr)
+	end)
 end
 
-return function(name, callback)
-	local file = string.format("%s/%s", shdir, name)
-
-	awful.spawn.easy_async_with_shell(
-		shdir .. "/" .. name,
-		callback or defaul_callback)
-end
+return setmetatable(sh, sh.mt)
