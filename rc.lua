@@ -48,7 +48,7 @@ end
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
-beautiful.init(awesomedir .. "/theme.lua")
+beautiful.init(awesomedir .. "/fleon-gtk.theme.lua")
 
 -- {{{ @libs
 -- custom library and module goes here

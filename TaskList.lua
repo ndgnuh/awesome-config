@@ -96,7 +96,7 @@ local template = {
 	},
 	{
 		widget = wibox.container.margin,
-		margins = beautiful.tasklist_icon_margin,
+		margins = beautiful.wibar_width / 8,
 		{
 			widget = awful.widget.clienticon,
 			id = 'clienticon',
