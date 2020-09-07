@@ -374,14 +374,54 @@ theme.taskSwitcherNormalBackground = theme.bg_normal
 theme.taskSwitcherSelectedBackground = "#434484"
 
 
--- @titlebar_button
-theme.titlebar_close_button_normal = ic"gtk-close.svg"
-theme.titlebar_close_button_normal_hover = ic"gtk-close.svg"
-theme.titlebar_close_button_normal_press = ic"gtk-close.svg"
--- theme.titlebar_close_button_normal_press
-theme.titlebar_close_button_focus = ic"gtk-close.svg"
-theme.titlebar_close_button_focus_hover = ic"gtk-close.svg"
-theme.titlebar_close_button_focus_press = ic"gtk-close.svg"
+-- @titlebar_buttons {{{
+theme.titlebar_close_button_normal = ic"close.svg"
+theme.titlebar_close_button_normal_hover = ic"close-hover.svg"
+theme.titlebar_close_button_normal_press = ic"close-press.svg"
+theme.titlebar_close_button_focus = ic"close.svg"
+theme.titlebar_close_button_focus_hover = ic"close-hover.svg"
+theme.titlebar_close_button_focus_press = ic"close-press.svg"
+
+theme.titlebar_minimize_button_normal = ic"minimize.svg"
+theme.titlebar_minimize_button_normal_hover = ic"minimize-hover.svg"
+theme.titlebar_minimize_button_normal_press = ic"minimize-press.svg"
+theme.titlebar_minimize_button_focus = ic"minimize.svg"
+theme.titlebar_minimize_button_focus_hover = ic"minimize-hover.svg"
+theme.titlebar_minimize_button_focus_press = ic"minimize-press.svg"
+
+theme.titlebar_maximized_button_normal_inactive = ic"maximized-inactive.svg"
+theme.titlebar_maximized_button_normal_inactive_hover = ic"maximized-inactive-hover.svg"
+theme.titlebar_maximized_button_normal_inactive_press = ic"maximized-inactive-press.svg"
+theme.titlebar_maximized_button_focus_inactive = ic"maximized-inactive.svg"
+theme.titlebar_maximized_button_focus_inactive_hover = ic"maximized-inactive-hover.svg"
+theme.titlebar_maximized_button_focus_inactive_press = ic"maximized-inactive-press.svg"
+
+theme.titlebar_maximized_button_normal_active = ic"maximized-active.svg"
+theme.titlebar_maximized_button_normal_active_hover = ic"maximized-active-hover.svg"
+theme.titlebar_maximized_button_normal_active_press = ic"maximized-active-press.svg"
+theme.titlebar_maximized_button_focus_active = ic"maximized-active.svg"
+theme.titlebar_maximized_button_focus_active_hover = ic"maximized-active-hover.svg"
+theme.titlebar_maximized_button_focus_active_press = ic"maximized-active-press.svg"
+
+theme.titlebar_floating_button_normal_inactive = ic"floating-inactive.svg"
+theme.titlebar_floating_button_normal_inactive_hover = ic"floating-inactive-hover.svg"
+theme.titlebar_floating_button_normal_inactive_press = ic"floating-inactive-press.svg"
+theme.titlebar_floating_button_focus_inactive = ic"floating-inactive.svg"
+theme.titlebar_floating_button_focus_inactive_hover = ic"floating-inactive-hover.svg"
+theme.titlebar_floating_button_focus_inactive_press = ic"floating-inactive-press.svg"
+theme.titlebar_floating_button_normal_active = ic"floating-active.svg"
+theme.titlebar_floating_button_normal_active_hover = ic"floating-active-hover.svg"
+theme.titlebar_floating_button_normal_active_press = ic"floating-active-press.svg"
+theme.titlebar_floating_button_focus_active = ic"floating-active.svg"
+theme.titlebar_floating_button_focus_active_hover = ic"floating-active-hover.svg"
+theme.titlebar_floating_button_focus_active_press = ic"floating-active-press.svg"
+-- @end_titlebar_icons }}}
+
+-- @layout_icons {{{
+theme.layout_tile = ic"floating-inactive.svg"
+theme.layout_floating = ic"floating-active.svg"
+theme.layout_max = ic"maximized-active.svg"
+-- @end_layout_icons }}}
 
 return theme
 
