@@ -56,7 +56,7 @@ int l_map (lua_State *L) {
 	return 1;  /* return new table */
 }
 
-int l_valmap(lua_State *L) {
+int l_vmap(lua_State *L) {
 	int i;
 	int n = lua_gettop(L); /* number of args */
 
@@ -203,9 +203,9 @@ int l_range(lua_State *L){
 	return 1;
 }
 
-static const struct luaL_Reg helperlib[] = {
+static const struct luaL_Reg utillib[] = {
 	{"map", l_map},
-	{"valmap", l_valmap},
+	{"vmap", l_vmap},
 	{"mapinplace", l_mapinplace},
 	{"cycle", l_cycle},
 	{"foldl", l_foldl},
@@ -213,7 +213,7 @@ static const struct luaL_Reg helperlib[] = {
 	{NULL, NULL}
 };
 
-int luaopen_c_helper(lua_State *L) {
-	luaL_newlib(L, helperlib);
+int luaopen_c_utils(lua_State *L) {
+	luaL_newlib(L, utillib);
 	return 1;
 }

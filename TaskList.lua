@@ -27,7 +27,7 @@ local thumbnail = awful.popup{
 	shape = infobubble,
 	widget = wibox.widget{
 		widget = wibox.container.background,
-		bg = "#ff0000",
+		bg = beautiful.color11,
 		{
 			widget = wibox.container.margin,
 			left = arrowSize + 4,
@@ -95,16 +95,35 @@ local template = {
 		id = 'background_role',
 	},
 	{
-		widget = wibox.container.margin,
-		margins = beautiful.wibar_width / 8,
+		widget = wibox.container.background,
+		id = 'background_role_2',
 		{
-			widget = awful.widget.clienticon,
-			id = 'clienticon',
-		},
+			widget = wibox.container.margin,
+			margins = beautiful.wibar_width / 8,
+			{
+				widget = awful.widget.clienticon,
+				id = 'clienticon',
+			},
+		}
 	},
 	nil,
+	update_callback = function(self, c, index, objects) --luacheck: no unused args
+		-- set second brightbackground
+		local bg2 = gears.color.transparent
+		if c == client.focus then
+			bg2 = beautiful.color8
+		end
+		self:get_children_by_id('background_role_2')[1].bg = bg2
+	end,
 	create_callback = function(self, c, index, objects) --luacheck: no unused args
 		self:get_children_by_id('clienticon')[1].client = c
+
+		-- set second brightbackground
+		local bg2 = gears.color.transparent
+		if c == client.focus then
+			bg2 = beautiful.color8
+		end
+		self:get_children_by_id('background_role_2')[1].bg = bg2
 
 		-- activate timer on enter
 		self:connect_signal("mouse::enter", function()

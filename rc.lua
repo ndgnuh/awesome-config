@@ -18,7 +18,15 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
-require("Helper")
+
+do -- @use_all_the_functions_from_c_utils
+	local c_utils = require("c_utils")
+	for k, f in pairs(c_utils) do
+		_G[k] = f
+	end
+end
+
+require("util")
 require("Extend")
 
 -- {{{ Error handling
@@ -48,7 +56,7 @@ end
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
-beautiful.init(awesomedir .. "/fleon-gtk.theme.lua")
+beautiful.init(awesomedir .. "/fleon-gtk.theme")
 
 -- {{{ @libs
 -- custom library and module goes here

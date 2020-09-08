@@ -4,8 +4,8 @@ LIBOPTS="-shared"
 FLAGS="-fpic"
 CXX="gcc"
 
-c_helper.so: lua-helper.c
+c_utils.so: c_utils.c
 	$(CXX)  $^ $(INCLUDE) $(FLAGS) $(LIBOPTS) -o $@
 
 clean:
-	rm c_helper.so
+	rm c_utils.so

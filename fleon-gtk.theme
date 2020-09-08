@@ -8,21 +8,24 @@ local theme_assets = require("beautiful.theme_assets")
 local dpi = require("beautiful.xresources").apply_dpi
 local gfs = require("gears.filesystem")
 local themes_path = gfs.get_themes_dir()
+local gears = re"gears"
 local gears_shape = require("gears.shape")
 local wibox = require("wibox")
 local awful_widget_clienticon = require("awful.widget.clienticon")
 local gtk = require("beautiful.gtk")
 
--- Helper functions for modifying hex colors:
+-- @not_my_code {{{ Helper functions for modifying hex colors:
 --
 local hex_color_match = "[a-fA-F0-9][a-fA-F0-9]"
-local function darker(color_value, darker_n)
+
+local function darker(color_value, n)
+    n = n or 0.5
     local result = "#"
     local channel_counter = 1
     for s in color_value:gmatch(hex_color_match) do
         local bg_numeric_value = tonumber("0x"..s)
         if channel_counter <= 3 then
-            bg_numeric_value = bg_numeric_value - darker_n
+            bg_numeric_value = bg_numeric_value - n
         end
         if bg_numeric_value < 0 then bg_numeric_value = 0 end
         if bg_numeric_value > 255 then bg_numeric_value = 255 end
@@ -31,6 +34,7 @@ local function darker(color_value, darker_n)
     end
     return result
 end
+
 local function is_dark(color_value)
     local bg_numeric_value = 0;
     local channel_counter = 1
@@ -44,22 +48,23 @@ local function is_dark(color_value)
     local is_dark_bg = (bg_numeric_value < 383)
     return is_dark_bg
 end
-local function mix(color1, color2, ratio)
-    ratio = ratio or 0.5
-    local result = "#"
-    local channels1 = color1:gmatch(hex_color_match)
-    local channels2 = color2:gmatch(hex_color_match)
-    for _ = 1,3 do
-        local bg_numeric_value = math.ceil(
-          tonumber("0x"..channels1())*ratio +
-          tonumber("0x"..channels2())*(1-ratio)
-        )
-        if bg_numeric_value < 0 then bg_numeric_value = 0 end
-        if bg_numeric_value > 255 then bg_numeric_value = 255 end
-        result = result .. string.format("%02x", bg_numeric_value)
-    end
-    return result
-end
+
+--local function mix(color1, color2, ratio)
+--    ratio = ratio or 0.5
+--    local result = "#"
+--    local channels1 = color1:gmatch(hex_color_match)
+--    local channels2 = color2:gmatch(hex_color_match)
+--    for _ = 1,3 do
+--        local bg_numeric_value = math.ceil(
+--          tonumber("0x"..channels1())*ratio +
+--          tonumber("0x"..channels2())*(1-ratio)
+--        )
+--        if bg_numeric_value < 0 then bg_numeric_value = 0 end
+--        if bg_numeric_value > 255 then bg_numeric_value = 255 end
+--        result = result .. string.format("%02x", bg_numeric_value)
+--    end
+--    return result
+--end
 
 local function reduce_contrast(color, ratio)
     ratio = ratio or 50
@@ -81,7 +86,7 @@ local function choose_contrast_color(reference, candidate1, candidate2)  -- luac
         end
     end
 end
-
+-- @e_not_my_code }}}
 
 -- inherit xresources theme:
 local theme = dofile(themes_path.."xresources/theme.lua")
@@ -99,7 +104,8 @@ theme.gtk.menubar_border_color = mix(
     theme.gtk.menubar_bg_color,
     theme.gtk.menubar_fg_color,
     0.7
-)
+    )
+
 
 -- @colors {{{
 theme.primary = "#FFFFFF"
@@ -121,27 +127,23 @@ theme.warning = "#F7CB4D"
 -- 4: blue
 -- 5: magenta
 -- 6: cyan
-theme.color0 = '#373ED4'
+theme.color0 = '#373E4D'
 theme.color1 = '#FA74B2'
 theme.color2 = '#2BE491'
 theme.color3 = '#FA946E'
-theme.color4 = '#63C5EA'
+theme.color4 = '#7ACBEA'
 theme.color5 = '#CF8EF4'
-theme.color6 = '#D8A6F4'
+theme.color6 = '#A1D5F7'
 theme.color7 = '#FFFFFF'
 -- bright colors
 theme.color8 = '#3B4252'
 theme.color9 = '#FA74B2'
-theme.color10 = '#FFFFFF'
+theme.color10 = '#44EB9F'
 theme.color11 = '#FAA687'
-theme.color12 = '#7ACBEA'
+theme.color12 = '#63C5EA'
 theme.color13 = '#D8A6F4'
 theme.color14 = '#A1D5F7'
 theme.color15 = '#F9F9F9'
-
-
-
-
 -- }}}
 
 
@@ -150,8 +152,8 @@ theme.font          = theme.gtk.font_family .. ' 14'
 theme.bg_normal     = "#323232"
 theme.fg_normal     = "#ffffff"
 
-theme.wibar_bg      = "#3B4252"
-theme.wibar_fg      = "#57BB8A"
+theme.wibar_bg      = theme.color0
+theme.wibar_fg      = theme.color3
 theme.wibar_height = dpi(32)
 theme.wibar_width = dpi(32)
 
@@ -194,8 +196,9 @@ theme.tasklist_icon_margin = dpi(0)
 theme.tasklist_fg_normal = theme.wibar_fg
 theme.tasklist_bg_normal = theme.wibar_bg
 theme.tasklist_fg_focus = theme.tasklist_fg_normal
-theme.tasklist_bg_focus = "#63C5EA"
-theme.tasklist_bg_minimized = grayscale(theme.tasklist_fg_normal)
+theme.tasklist_bg_focus = theme.color10
+theme.tasklist_bg_minimize = theme.color11
+theme.tasklist_bg_urgent = theme.color9
 
 theme.tasklist_font_focus = theme.gtk.bold_font
 

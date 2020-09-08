@@ -2,13 +2,7 @@ re = require
 local pow = math.pow or function(x, y) return x^y end
 local unpack = unpack or table.unpack
 local naughty = re"naughty"
-local ch = re"c_helper"
 local gears = re"gears"
-
-for v, func in pairs(require("c_helper")) do
-	_G[v] = func
-end
-
 
 dpi = require("beautiful.xresources").apply_dpi
 
@@ -28,9 +22,20 @@ end
 pass = function() end
 
 grayscale = function(color)
-	local c = gears.color(color)
-	local err, r, g, b, a = c:get_rgba()
-	assert(err, "Get rgba from " .. color .. " failed")
-	local gray = pow(pow(r, 2.2) + pow(g, 2.2) + pow(b, 2.2), 1/2.2)
-	return gears.color(gray, gray, gray, a)
+	local err, r, g, b, a
+	if type(color) == "string" then
+		r, g, b, a = gears.color.parse_color(color)
+		dump{r,g,b,a}
+	else
+		err, r, g, b, a = c:get_rgba()
+		assert(err, "Get rgba from " .. color .. " failed")
+	end
+	local clinear = 0.3*r + 0.59*g + 0.11*b
+	local gray
+	if clinear > 0.0031308 then
+		gray = 1.055 * pow(clinear, 2.4) - 0.055
+	else
+		gray = 12.92 * clinear
+	end
+	return gears.color(gray, gray, gray)
 end
