@@ -208,10 +208,6 @@ awful.screen.connect_for_each_screen(function(s)
 		local left_layout = wibox.layout.fixed.vertical()
 		left_layout:add(mylauncher)
 		left_layout:add(s.mypromptbox)
-		left_layout:add(wibox.widget{
-				widget = wibox.widget.imagebox,
-				image = ic"start-here.svg"
-			})
 
 		local middle_layout = nil
 		local right_layout = wibox.layout.fixed.vertical()
