@@ -109,10 +109,12 @@ myawesomemenu = {
    { "quit", function() awesome.quit() end },
 }
 
-mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
-                                    { "open terminal", terminal }
-                                  }
-                        })
+mymainmenu = awful.menu{
+	items = {
+		{ "awesome", myawesomemenu },
+		{ "open terminal", terminal }
+	}
+}
 
 mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
                                      menu = mymainmenu })
@@ -549,3 +551,12 @@ awful.add_key_binding(
 	awful.key({modkey}, "Tab", re"focusPrevious", {description = "go back", group = "client"}),
 		{})
 
+
+-- @autostart {{{
+-- vmap(awful.spawn.single_instance,
+-- 	"ibus-daemon -rdx -s",
+-- 	"picom",
+-- 	"xfce4-power-manager",
+-- 	"nm-applet"
+-- 	)
+-- }}}

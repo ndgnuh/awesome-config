@@ -7,6 +7,7 @@ local gears = re"gears"
 local shape = re"gears.shape"
 local beautiful = re"beautiful"
 local ClientThumbnail = re"ClientThumbnail"
+local icon = re"icon"
 
 local thumbHeight = 248
 local arrowSize = 12
@@ -63,6 +64,50 @@ local hideThumbnail = function(widget, c)
 	thumbnail.visible = false
 end
 
+-- create client menu
+-- with actions like kill and toggles
+local clientmenu = function(c)
+	awful.menu{
+		items = {
+			{
+				"Close",
+				function() c:kill() end,
+				icon"close.svg",
+			},
+			{
+				c.minimized and "Un-minimized" or "Minimize",
+				function()
+					c.minimized = not c.minimized
+					if not c.minimized then
+						c:raise()
+					end
+				end,
+				icon"minimize.svg",
+			},
+			{
+				c.maximized and "Un-maximize" or "Maximize",
+				function() c.maximized = not c.maximized end,
+				c.maximized and icon"maximized-inactive.svg" or icon"maximized-active.svg",
+			},
+			{
+				c.floating and "Floating" or "Follow layout",
+				function() c.floating = not c.floating end,
+				c.floating and icon"floating-active.svg" or icon"floating-inactive.svg",
+			},
+			{
+				"Fullscreen",
+				function() c.fullscreen = not c.fullscreen end,
+				icon"maximized-active.svg",
+			},
+			{
+				"To next screen",
+				function() c:move_to_screen() end
+			},
+			{ "Cancel", "" }
+		}
+	}:show()
+end
+
 local tasklist_buttons = gears.table.join(
 	awful.button({ }, 1, function (c)
 		if c == client.focus then
@@ -71,9 +116,7 @@ local tasklist_buttons = gears.table.join(
 			c:emit_signal("request::activate", "tasklist", {raise = true})
 		end
 	end),
-	awful.button({ }, 3, function()
-		awful.menu.client_list({ theme = { width = 250 } })
-	end),
+	awful.button({ }, 3, clientmenu),
 	awful.button({ }, 4, function ()
 		awful.client.focus.byidx(1)
 	end),
@@ -117,7 +160,6 @@ local template = {
 	end,
 	create_callback = function(self, c, index, objects) --luacheck: no unused args
 		self:get_children_by_id('clienticon')[1].client = c
-
 		-- set second brightbackground
 		local bg2 = gears.color.transparent
 		if c == client.focus then

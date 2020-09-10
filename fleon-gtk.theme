@@ -313,15 +313,10 @@ theme.taglist_squares_unsel = nil
 theme.wallpaper = "~/Pictures/wallpaper/index"
 
 -- naughty
-theme.notification_border_width = dpi(2)
-theme.notification_width = dpi(512)
-theme.notification_max_height = dpi(256)
+theme.notification_border_width = dpi(4)
+theme.notification_border_color = theme.color3
 theme.notification_icon_size = dpi(64)
 -- theme.notification_margin = doesn't work
-theme.notification_shape = function(cr, w, h)
-    return gears_shape.partially_rounded_rect(
-        cr, w, h, false, false, false, true)
-end
 -- theme.notification_border_color = theme.link
 
 theme.taskSwitcherNormalBackground = theme.bg_normal
