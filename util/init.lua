@@ -11,6 +11,5 @@ else
 end
 
 require("util.Helper")
-require("util.color")
 
 return true

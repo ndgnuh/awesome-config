@@ -1,9 +1,4 @@
-----------------------------------------------
--- Awesome theme which follows GTK+ 3 theme --
---   by Yauhen Kirylau                      --
-----------------------------------------------
-
-local ic = re"icon"
+local icon = re"icon"
 local theme_assets = require("beautiful.theme_assets")
 local dpi = require("beautiful.xresources").apply_dpi
 local gfs = require("gears.filesystem")
@@ -13,80 +8,6 @@ local gears_shape = require("gears.shape")
 local wibox = require("wibox")
 local awful_widget_clienticon = require("awful.widget.clienticon")
 local gtk = require("beautiful.gtk")
-
--- @not_my_code {{{ Helper functions for modifying hex colors:
---
-local hex_color_match = "[a-fA-F0-9][a-fA-F0-9]"
-
-local function darker(color_value, n)
-    n = n or 0.5
-    local result = "#"
-    local channel_counter = 1
-    for s in color_value:gmatch(hex_color_match) do
-        local bg_numeric_value = tonumber("0x"..s)
-        if channel_counter <= 3 then
-            bg_numeric_value = bg_numeric_value - n
-        end
-        if bg_numeric_value < 0 then bg_numeric_value = 0 end
-        if bg_numeric_value > 255 then bg_numeric_value = 255 end
-        result = result .. string.format("%02x", bg_numeric_value)
-        channel_counter = channel_counter + 1
-    end
-    return result
-end
-
-local function is_dark(color_value)
-    local bg_numeric_value = 0;
-    local channel_counter = 1
-    for s in color_value:gmatch(hex_color_match) do
-        bg_numeric_value = bg_numeric_value + tonumber("0x"..s);
-        if channel_counter == 3 then
-            break
-        end
-        channel_counter = channel_counter + 1
-    end
-    local is_dark_bg = (bg_numeric_value < 383)
-    return is_dark_bg
-end
-
---local function mix(color1, color2, ratio)
---    ratio = ratio or 0.5
---    local result = "#"
---    local channels1 = color1:gmatch(hex_color_match)
---    local channels2 = color2:gmatch(hex_color_match)
---    for _ = 1,3 do
---        local bg_numeric_value = math.ceil(
---          tonumber("0x"..channels1())*ratio +
---          tonumber("0x"..channels2())*(1-ratio)
---        )
---        if bg_numeric_value < 0 then bg_numeric_value = 0 end
---        if bg_numeric_value > 255 then bg_numeric_value = 255 end
---        result = result .. string.format("%02x", bg_numeric_value)
---    end
---    return result
---end
-
-local function reduce_contrast(color, ratio)
-    ratio = ratio or 50
-    return darker(color, is_dark(color) and -ratio or ratio)
-end
-
-local function choose_contrast_color(reference, candidate1, candidate2)  -- luacheck: no unused
-    if is_dark(reference) then
-        if not is_dark(candidate1) then
-            return candidate1
-        else
-            return candidate2
-        end
-    else
-        if is_dark(candidate1) then
-            return candidate1
-        else
-            return candidate2
-        end
-    end
-end
--- @e_not_my_code }}}
 
 -- inherit xresources theme:
 local theme = dofile(themes_path.."xresources/theme.lua")
@@ -100,22 +21,12 @@ end
 theme.gtk.button_border_radius = dpi(theme.gtk.button_border_radius or 0)
 theme.gtk.button_border_width = dpi(theme.gtk.button_border_width or 1)
 theme.gtk.bold_font = theme.gtk.font_family .. ' Bold ' .. theme.gtk.font_size
-theme.gtk.menubar_border_color = mix(
+theme.gtk.menubar_border_color = color_mix(
     theme.gtk.menubar_bg_color,
     theme.gtk.menubar_fg_color,
     0.7
     )
 
-
--- @colors {{{
-theme.primary = "#FFFFFF"
-theme.link = "#7BAAF7"
-theme.positive = "#67BB8A"
-theme.negative = "#E67C73"
-theme.warning = "#F7CB4D"
--- those color use webstuff, not really using it anyone
--- @TODO: get rid of these
--- }}}
 
 -- @newcolors {{{
 -- tput colors
@@ -146,31 +57,30 @@ theme.color14 = '#A1D5F7'
 theme.color15 = '#F9F9F9'
 -- }}}
 
+theme.font = theme.gtk.font_family .. ' 14'
 
-theme.font          = theme.gtk.font_family .. ' 14'
+theme.bg_normal = theme.color0
+theme.fg_normal = theme.color7
 
-theme.bg_normal     = "#323232"
-theme.fg_normal     = "#ffffff"
-
-theme.wibar_bg      = theme.color0
-theme.wibar_fg      = theme.color3
+theme.wibar_bg = theme.color0
+theme.wibar_fg = theme.color6
 theme.wibar_height = dpi(32)
 theme.wibar_width = dpi(32)
 
-theme.bg_focus      = theme.bg_normal
-theme.fg_focus      = "#7BAAF7"
+theme.bg_focus = theme.bg_normal
+theme.fg_focus = "#7BAAF7"
 
-theme.bg_urgent     = theme.gtk.error_bg_color
-theme.fg_urgent     = theme.gtk.error_fg_color
+theme.bg_urgent = theme.gtk.error_bg_color
+theme.fg_urgent = theme.gtk.error_fg_color
 
-theme.bg_minimize   = mix(theme.wibar_fg, theme.wibar_bg, 0.3)
-theme.fg_minimize   = mix(theme.wibar_fg, theme.wibar_bg, 0.9)
+theme.bg_minimize = color_mix(theme.wibar_fg, theme.wibar_bg, 0.3)
+theme.fg_minimize = color_mix(theme.wibar_fg, theme.wibar_bg, 0.9)
 
-theme.bg_systray    = theme.wibar_bg
+theme.bg_systray = theme.wibar_bg
 
-theme.border_normal = "#1d1f21"
-theme.border_focus  = "#1d1f21"
-theme.border_marked = "#1d1f21"
+theme.border_normal = theme.color0
+theme.border_focus = theme.color8
+theme.border_marked = theme.color2
 
 theme.border_width  = dpi(1)
 theme.border_radius = theme.gtk.button_border_radius
@@ -178,10 +88,12 @@ theme.border_radius = theme.gtk.button_border_radius
 theme.useless_gap   = dpi(0)
 
 local rounded_rect_shape = function(cr,w,h)
-    gears_shape.rounded_rect(
-        cr, w, h, theme.border_radius
-    )
+    gears_shape.rounded_rect(cr, w, h, theme.border_radius)
 end
+
+client.connect_signal("manage", function(c)
+    c.shape = rounded_rect_shape
+end)
 
 -- There are other variable sets
 -- overriding the default one when
@@ -196,21 +108,21 @@ theme.tasklist_icon_margin = dpi(0)
 theme.tasklist_fg_normal = theme.wibar_fg
 theme.tasklist_bg_normal = theme.wibar_bg
 theme.tasklist_fg_focus = theme.tasklist_fg_normal
-theme.tasklist_bg_focus = theme.color10
-theme.tasklist_bg_minimize = theme.color11
+theme.tasklist_bg_focus = "#63c5ea" -- theme.color10
+theme.tasklist_bg_minimize = color_mix(theme.color11, theme.bg_normal, 0.5)
 theme.tasklist_bg_urgent = theme.color9
 
 theme.tasklist_font_focus = theme.gtk.bold_font
 
--- theme.tasklist_shape_minimized = rounded_rect_shape
--- theme.tasklist_shape_border_color_minimized = mix(
---     theme.bg_minimize,
---     theme.fg_minimize,
---     0.85
--- )
--- theme.tasklist_shape_border_width_minimized = theme.gtk.button_border_width
--- 
--- theme.tasklist_spacing = theme.gtk.button_border_width
+theme.tasklist_shape_minimized = rounded_rect_shape
+theme.tasklist_shape_border_color_minimized = color_mix(
+    theme.bg_minimize,
+    theme.fg_minimize,
+    0.85
+)
+theme.tasklist_shape_border_width_minimized = theme.gtk.button_border_width
+
+theme.tasklist_spacing = theme.gtk.button_border_width
 
 --[[ Advanced taglist and tasklist styling: {{{
 
@@ -284,15 +196,15 @@ theme.taglist_shape_border_color_container = theme.gtk.header_button_border_colo
 theme.taglist_bg_occupied = theme.gtk.header_button_bg_color
 theme.taglist_fg_occupied = theme.gtk.header_button_fg_color
 
-theme.taglist_bg_empty = mix(
-    theme.gtk.menubar_bg_color,
-    theme.gtk.header_button_bg_color,
-    0.3
-)
-theme.taglist_fg_empty = mix(
-    theme.gtk.menubar_bg_color,
-    theme.gtk.header_button_fg_color
-)
+-- theme.taglist_bg_empty = color_mix(
+--     theme.gtk.menubar_bg_color,
+--     theme.gtk.header_button_bg_color,
+--     0.3
+-- )
+-- theme.taglist_fg_empty = color_mix(
+--     theme.gtk.menubar_bg_color,
+--     theme.gtk.header_button_fg_color
+-- )
 
 theme.titlebar_font_normal = theme.gtk.bold_font
 theme.titlebar_bg_normal = "#3B4252"
@@ -319,16 +231,18 @@ theme.tooltip_bg = theme.gtk.tooltip_bg_color
 -- menu_[bg|fg]_[normal|focus]
 -- menu_[border_color|border_width]
 
-theme.menu_border_width = theme.gtk.button_border_width
-theme.menu_border_color = theme.gtk.menubar_border_color
-theme.menu_bg_normal = theme.gtk.menubar_bg_color
-theme.menu_fg_normal = theme.gtk.menubar_fg_color
+-- theme.menu_border_width = theme.gtk.button_border_width
+-- theme.menu_border_color = theme.gtk.menubar_border_color
+-- theme.menu_bg_normal = theme.gtk.menubar_bg_color
+-- theme.menu_fg_normal = theme.gtk.menubar_fg_color
 
 -- @TODO: get from gtk menu height
 theme.menu_height = dpi(32)
 theme.menu_width  = dpi(240)
 theme.menu_submenu_icon = nil
-theme.menu_submenu = "▸ "
+theme.menu_submenu = "≻ "
+theme.menu_bg_normal = theme.color0
+theme.menu_bg_focus = theme.color8
 
 -- You can add as many variables as
 -- you wish and access them by using
@@ -337,37 +251,38 @@ theme.menu_submenu = "▸ "
 
 
 -- Recolor Layout icons:
-theme = theme_assets.recolor_layout(theme, theme.wibar_fg)
+-- theme = theme_assets.recolor_layout(theme, theme.wibar_fg)
 
 -- Recolor titlebar icons:
 --
-theme = theme_assets.recolor_titlebar(
-    theme, theme.titlebar_fg_normal, "normal"
-)
-theme = theme_assets.recolor_titlebar(
-    theme, reduce_contrast(theme.titlebar_fg_normal, 50), "normal", "hover"
-)
-theme = theme_assets.recolor_titlebar(
-    theme, theme.gtk.error_bg_color, "normal", "press"
-)
-theme = theme_assets.recolor_titlebar(
-    theme, theme.titlebar_fg_focus, "focus"
-)
-theme = theme_assets.recolor_titlebar(
-    theme, reduce_contrast(theme.titlebar_fg_focus, 50), "focus", "hover"
-)
-theme = theme_assets.recolor_titlebar(
-    theme, theme.gtk.error_bg_color, "focus", "press"
-)
+--theme = theme_assets.recolor_titlebar(
+--    theme, theme.titlebar_fg_normal, "normal"
+--)
+--theme = theme_assets.recolor_titlebar(
+--    theme, reduce_contrast(theme.titlebar_fg_normal, 50), "normal", "hover"
+--)
+--theme = theme_assets.recolor_titlebar(
+--    theme, theme.gtk.error_bg_color, "normal", "press"
+--)
+--theme = theme_assets.recolor_titlebar(
+--    theme, theme.titlebar_fg_focus, "focus"
+--)
+--theme = theme_assets.recolor_titlebar(
+--    theme, reduce_contrast(theme.titlebar_fg_focus, 50), "focus", "hover"
+--)
+--theme = theme_assets.recolor_titlebar(
+--    theme, theme.gtk.error_bg_color, "focus", "press"
+--)
 
 -- Define the icon theme for application icons. If not set then the icons
 -- from /usr/share/icons and /usr/share/icons/hicolor will be used.
 theme.icon_theme = nil
 
 -- Generate Awesome icon:
-theme.awesome_icon = theme_assets.awesome_icon(
-    theme.menu_height, mix(theme.bg_focus, theme.fg_normal), theme.wibar_bg
-)
+-- theme.awesome_icon = theme_assets.awesome_icon(
+--     theme.menu_height, color_mix(theme.bg_focus, theme.fg_normal), theme.wibar_bg
+-- )
+theme.awesome_icon = gears.color.recolor_image(icon'start-here.svg', theme.color6)
 
 -- Generate taglist squares:
 --local taglist_square_size = dpi(4)
@@ -382,19 +297,19 @@ theme.taglist_squares_sel = nil
 theme.taglist_squares_unsel = nil
 
 -- Generate wallpaper:
-local wallpaper_bg = theme.gtk.base_color
-local wallpaper_fg = theme.gtk.bg_color
-local wallpaper_alt_fg = theme.gtk.selected_bg_color
-if not is_dark(theme.bg_normal) then
-    wallpaper_bg, wallpaper_fg = wallpaper_fg, wallpaper_bg
-end
-wallpaper_bg = reduce_contrast(wallpaper_bg, 50)
-wallpaper_fg = reduce_contrast(wallpaper_fg, 30)
-wallpaper_fg = mix(wallpaper_fg, wallpaper_bg, 0.4)
-wallpaper_alt_fg = mix(wallpaper_alt_fg, wallpaper_fg, 0.4)
-theme.wallpaper = function(s)
-    return theme_assets.wallpaper(wallpaper_bg, wallpaper_fg, wallpaper_alt_fg, s)
-end
+--local wallpaper_bg = theme.gtk.base_color
+--local wallpaper_fg = theme.gtk.bg_color
+--local wallpaper_alt_fg = theme.gtk.selected_bg_color
+--if not isdark(theme.bg_normal) then
+--    wallpaper_bg, wallpaper_fg = wallpaper_fg, wallpaper_bg
+--end
+--wallpaper_bg = reduce_contrast(wallpaper_bg, 50)
+--wallpaper_fg = reduce_contrast(wallpaper_fg, 30)
+--wallpaper_fg = color_mix(wallpaper_fg, wallpaper_bg, 0.4)
+--wallpaper_alt_fg = color_mix(wallpaper_alt_fg, wallpaper_fg, 0.4)
+--theme.wallpaper = function(s)
+--    return theme_assets.wallpaper(wallpaper_bg, wallpaper_fg, wallpaper_alt_fg, s)
+--end
 theme.wallpaper = "~/Pictures/wallpaper/index"
 
 -- naughty
@@ -407,59 +322,59 @@ theme.notification_shape = function(cr, w, h)
     return gears_shape.partially_rounded_rect(
         cr, w, h, false, false, false, true)
 end
-theme.notification_border_color = theme.link
+-- theme.notification_border_color = theme.link
 
 theme.taskSwitcherNormalBackground = theme.bg_normal
 theme.taskSwitcherSelectedBackground = "#434484"
 
 
 -- @titlebar_buttons {{{
-theme.titlebar_close_button_normal = ic"close.svg"
-theme.titlebar_close_button_normal_hover = ic"close-hover.svg"
-theme.titlebar_close_button_normal_press = ic"close-press.svg"
-theme.titlebar_close_button_focus = ic"close.svg"
-theme.titlebar_close_button_focus_hover = ic"close-hover.svg"
-theme.titlebar_close_button_focus_press = ic"close-press.svg"
+theme.titlebar_close_button_normal = icon"close.svg"
+theme.titlebar_close_button_normal_hover = icon"close-hover.svg"
+theme.titlebar_close_button_normal_press = icon"close-press.svg"
+theme.titlebar_close_button_focus = icon"close.svg"
+theme.titlebar_close_button_focus_hover = icon"close-hover.svg"
+theme.titlebar_close_button_focus_press = icon"close-press.svg"
 
-theme.titlebar_minimize_button_normal = ic"minimize.svg"
-theme.titlebar_minimize_button_normal_hover = ic"minimize-hover.svg"
-theme.titlebar_minimize_button_normal_press = ic"minimize-press.svg"
-theme.titlebar_minimize_button_focus = ic"minimize.svg"
-theme.titlebar_minimize_button_focus_hover = ic"minimize-hover.svg"
-theme.titlebar_minimize_button_focus_press = ic"minimize-press.svg"
+theme.titlebar_minimize_button_normal = icon"minimize.svg"
+theme.titlebar_minimize_button_normal_hover = icon"minimize-hover.svg"
+theme.titlebar_minimize_button_normal_press = icon"minimize-press.svg"
+theme.titlebar_minimize_button_focus = icon"minimize.svg"
+theme.titlebar_minimize_button_focus_hover = icon"minimize-hover.svg"
+theme.titlebar_minimize_button_focus_press = icon"minimize-press.svg"
 
-theme.titlebar_maximized_button_normal_inactive = ic"maximized-inactive.svg"
-theme.titlebar_maximized_button_normal_inactive_hover = ic"maximized-inactive-hover.svg"
-theme.titlebar_maximized_button_normal_inactive_press = ic"maximized-inactive-press.svg"
-theme.titlebar_maximized_button_focus_inactive = ic"maximized-inactive.svg"
-theme.titlebar_maximized_button_focus_inactive_hover = ic"maximized-inactive-hover.svg"
-theme.titlebar_maximized_button_focus_inactive_press = ic"maximized-inactive-press.svg"
+theme.titlebar_maximized_button_normal_inactive = icon"maximized-inactive.svg"
+theme.titlebar_maximized_button_normal_inactive_hover = icon"maximized-inactive-hover.svg"
+theme.titlebar_maximized_button_normal_inactive_press = icon"maximized-inactive-press.svg"
+theme.titlebar_maximized_button_focus_inactive = icon"maximized-inactive.svg"
+theme.titlebar_maximized_button_focus_inactive_hover = icon"maximized-inactive-hover.svg"
+theme.titlebar_maximized_button_focus_inactive_press = icon"maximized-inactive-press.svg"
 
-theme.titlebar_maximized_button_normal_active = ic"maximized-active.svg"
-theme.titlebar_maximized_button_normal_active_hover = ic"maximized-active-hover.svg"
-theme.titlebar_maximized_button_normal_active_press = ic"maximized-active-press.svg"
-theme.titlebar_maximized_button_focus_active = ic"maximized-active.svg"
-theme.titlebar_maximized_button_focus_active_hover = ic"maximized-active-hover.svg"
-theme.titlebar_maximized_button_focus_active_press = ic"maximized-active-press.svg"
+theme.titlebar_maximized_button_normal_active = icon"maximized-active.svg"
+theme.titlebar_maximized_button_normal_active_hover = icon"maximized-active-hover.svg"
+theme.titlebar_maximized_button_normal_active_press = icon"maximized-active-press.svg"
+theme.titlebar_maximized_button_focus_active = icon"maximized-active.svg"
+theme.titlebar_maximized_button_focus_active_hover = icon"maximized-active-hover.svg"
+theme.titlebar_maximized_button_focus_active_press = icon"maximized-active-press.svg"
 
-theme.titlebar_floating_button_normal_inactive = ic"floating-inactive.svg"
-theme.titlebar_floating_button_normal_inactive_hover = ic"floating-inactive-hover.svg"
-theme.titlebar_floating_button_normal_inactive_press = ic"floating-inactive-press.svg"
-theme.titlebar_floating_button_focus_inactive = ic"floating-inactive.svg"
-theme.titlebar_floating_button_focus_inactive_hover = ic"floating-inactive-hover.svg"
-theme.titlebar_floating_button_focus_inactive_press = ic"floating-inactive-press.svg"
-theme.titlebar_floating_button_normal_active = ic"floating-active.svg"
-theme.titlebar_floating_button_normal_active_hover = ic"floating-active-hover.svg"
-theme.titlebar_floating_button_normal_active_press = ic"floating-active-press.svg"
-theme.titlebar_floating_button_focus_active = ic"floating-active.svg"
-theme.titlebar_floating_button_focus_active_hover = ic"floating-active-hover.svg"
-theme.titlebar_floating_button_focus_active_press = ic"floating-active-press.svg"
+theme.titlebar_floating_button_normal_inactive = icon"floating-inactive.svg"
+theme.titlebar_floating_button_normal_inactive_hover = icon"floating-inactive-hover.svg"
+theme.titlebar_floating_button_normal_inactive_press = icon"floating-inactive-press.svg"
+theme.titlebar_floating_button_focus_inactive = icon"floating-inactive.svg"
+theme.titlebar_floating_button_focus_inactive_hover = icon"floating-inactive-hover.svg"
+theme.titlebar_floating_button_focus_inactive_press = icon"floating-inactive-press.svg"
+theme.titlebar_floating_button_normal_active = icon"floating-active.svg"
+theme.titlebar_floating_button_normal_active_hover = icon"floating-active-hover.svg"
+theme.titlebar_floating_button_normal_active_press = icon"floating-active-press.svg"
+theme.titlebar_floating_button_focus_active = icon"floating-active.svg"
+theme.titlebar_floating_button_focus_active_hover = icon"floating-active-hover.svg"
+theme.titlebar_floating_button_focus_active_press = icon"floating-active-press.svg"
 -- @end_titlebar_icons }}}
 
 -- @layout_icons {{{
-theme.layout_tile = ic"floating-inactive.svg"
-theme.layout_floating = ic"floating-active.svg"
-theme.layout_max = ic"maximized-active.svg"
+theme.layout_tile = icon"floating-inactive.svg"
+theme.layout_floating = icon"floating-active.svg"
+theme.layout_max = icon"maximized-active.svg"
 -- @end_layout_icons }}}
 
 return theme

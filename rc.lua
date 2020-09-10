@@ -27,6 +27,8 @@ do -- @use_all_the_functions_from_c_utils
 end
 
 require("util")
+require("util.math")
+require("util.color")
 require("Extend")
 
 -- {{{ Error handling
@@ -128,10 +130,12 @@ mytextclock = wibox.widget{
 	widget = wibox.container.place,
 	{
 		widget = wibox.widget.textclock,
-		format = "%H\n%M",
-		halign = "center",
-		font = "monospace",
-	}
+		format = "<b>%I\n%M</b>\n<u><i>%p</i></u>",
+		forced_width = beautiful.wibar_width,
+		align = 'center',
+		valign = 'center',
+		font = 'monospace',
+	},
 }
 
 -- Create a wibox for each screen and add it

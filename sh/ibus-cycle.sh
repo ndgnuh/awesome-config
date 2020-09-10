@@ -5,6 +5,12 @@ engine1="xkb:us::eng"
 
 index=-1
 current_engine=$(ibus engine)
+
+if [ -z $current_engine ]; then
+	ibus-daemon -rdxs
+	ibus engine 'xkb:us::eng'
+fi
+
 engine="something"
 
 # search in the list of engines
