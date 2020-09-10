@@ -28,7 +28,7 @@ local thumbnail = awful.popup{
 	shape = infobubble,
 	widget = wibox.widget{
 		widget = wibox.container.background,
-		bg = beautiful.color11,
+		bg = beautiful.color3,
 		{
 			widget = wibox.container.margin,
 			left = arrowSize + 4,
@@ -98,6 +98,10 @@ local clientmenu = function(c)
 				"Fullscreen",
 				function() c.fullscreen = not c.fullscreen end,
 				icon"maximized-active.svg",
+			},
+			{
+				"Shade",
+				function() c.shade = not c.shade end
 			},
 			{
 				"To next screen",

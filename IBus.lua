@@ -3,6 +3,7 @@ local ic = re"icon"
 local awful = re"awful"
 local widget = re"wibox.widget"
 local gobject = re"gears.object"
+local gtable = re"gears.table"
 
 local script = "ibus-cycle.sh"
 
@@ -19,7 +20,9 @@ module.iconmap = {
 module.widget = widget {
 	widget = widget.imagebox,
 	image = ic(module.iconmap['default']),
+	buttons = awful.button({}, 1, partial(sh, script))
 }
+
 
 -- @cycle
 -- cycle between ibus engine

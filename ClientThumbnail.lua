@@ -1,9 +1,11 @@
 local wibox = re"wibox"
 local shape = re"gears.shape"
 local surface = re"gears.surface"
+local beautiful = re"beautiful"
 
 local module = {}
 local cachedSurface = {}
+local radius = beautiful.border_radius or 10
 
 local fit = function(self, ctx, w, h)
 	local s = math.min(w, h)
@@ -29,7 +31,7 @@ local draw = function(self, content, cr, width, height)
 	local w, h = geo.width*scalex, geo.height*scaley
 	local dx, dy = (width-w)/2, (height-h)/2
 	cr:translate(dx, dy)
-	shape.rounded_rect(cr, w, h)
+	shape.rounded_rect(cr, w, h, radius)
 	cr:clip()
 	local sw, sh = surface.get_size(s)
 	cr:scale(width / sw, height / sh)

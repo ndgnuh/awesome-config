@@ -243,6 +243,7 @@ theme.menu_submenu_icon = nil
 theme.menu_submenu = "≻ "
 theme.menu_bg_normal = theme.color0
 theme.menu_bg_focus = theme.color8
+theme.menu_fg_focus = theme.color11
 
 -- You can add as many variables as
 -- you wish and access them by using
