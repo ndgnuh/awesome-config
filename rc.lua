@@ -233,6 +233,10 @@ awful.screen.connect_for_each_screen(function(s)
 		s.mywibox:set_widget(bar_layout)
 
 		dump({s.mywibox:get_children_by_id('ibus-engine')})--:get_children_by_id('ibus-engine'))
+		
+		-- setup bounding corners
+		-- must run after setting up wibar
+		re"rounded_corner_padding"(s)
 	end)
 	-- @end_each_screen_callback
 	-- }}}
@@ -550,6 +554,7 @@ awful.add_key_binding(
 	end),
 	awful.key({modkey}, "Tab", re"focusPrevious", {description = "go back", group = "client"}),
 		{})
+
 
 
 -- @autostart {{{
