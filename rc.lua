@@ -116,8 +116,18 @@ mymainmenu = awful.menu{
 	}
 }
 
-mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
-                                     menu = mymainmenu })
+mylauncher = awful.widget.launcher{
+	image = beautiful.awesome_icon,
+	menu = mymainmenu
+}
+mylauncher:buttons(gears.table.join(
+		awful.button({}, 1, function()
+			mymainmenu:show()
+		end),
+		awful.button({}, 3, function()
+			awful.spawn.easy_async_with_shell("$HOME/.config/rofi/scripts/appsmenu.sh", pass)
+		end)
+	))
 
 -- Menubar configuration
 menubar.utils.terminal = terminal -- Set the terminal for applications that require it
@@ -232,7 +242,7 @@ awful.screen.connect_for_each_screen(function(s)
 
 		s.mywibox:set_widget(bar_layout)
 
-		dump({s.mywibox:get_children_by_id('ibus-engine')})--:get_children_by_id('ibus-engine'))
+		-- dump({s.mywibox:get_children_by_id('ibus-engine')})--:get_children_by_id('ibus-engine'))
 		
 		-- setup bounding corners
 		-- must run after setting up wibar
@@ -340,7 +350,7 @@ globalkeys = gears.table.join(
     -- Prompt
     awful.key({ modkey }, "r", function()
 		 -- awful.screen.focused().mypromptbox:run() end,
-		 awful.spawn.easy_async_with_shell("$HOME/.config/rofi/scripts/appsmenu.sh", pass)
+		 awful.spawn(string.format('rofi -show run -theme %s/.config/rofi/themes/appsmenu', os.getenv("HOME")))
 	 end,
 	 {description = "run prompt", group = "launcher"}),
 
