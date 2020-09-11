@@ -9,76 +9,76 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   id="SVGRoot"
-   version="1.1"
-   viewBox="0 0 64.0 64.0"
-   height="64.0px"
-   width="64.0px"
+   sodipodi:docname="minimize-press.svg"
    inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
-   sodipodi:docname="minimize-press.svg">
+   width="64.0px"
+   height="64.0px"
+   viewBox="0 0 64.0 64.0"
+   version="1.1"
+   id="SVGRoot">
   <defs
      id="defs2434">
     <linearGradient
-       id="linearGradient3958"
-       inkscape:collect="always">
+       inkscape:collect="always"
+       id="linearGradient3958">
       <stop
-         id="stop3954"
+         style="stop-color:#a1d5f7;stop-opacity:1;"
          offset="0"
-         style="stop-color:#a1d5f7;stop-opacity:1;" />
+         id="stop3954" />
       <stop
-         id="stop3956"
+         style="stop-color:#a1d5f7;stop-opacity:0;"
          offset="1"
-         style="stop-color:#a1d5f7;stop-opacity:0;" />
+         id="stop3956" />
     </linearGradient>
     <linearGradient
-       osb:paint="solid"
-       id="linearGradient3804">
+       id="linearGradient3804"
+       osb:paint="solid">
       <stop
-         id="stop3802"
+         style="stop-color:#a1d5f7;stop-opacity:1;"
          offset="0"
-         style="stop-color:#a1d5f7;stop-opacity:1;" />
+         id="stop3802" />
     </linearGradient>
     <inkscape:perspective
-       sodipodi:type="inkscape:persp3d"
-       inkscape:vp_x="12.062115 : 31.476505 : 1"
-       inkscape:vp_y="734.37715 : 770.18055 : 0"
-       inkscape:vp_z="81.069213 : 16.699254 : 1"
+       id="perspective2579"
        inkscape:persp3d-origin="38.732307 : 15.87262 : 1"
-       id="perspective2579" />
+       inkscape:vp_z="81.069213 : 16.699254 : 1"
+       inkscape:vp_y="734.37715 : 770.18055 : 0"
+       inkscape:vp_x="12.062115 : 31.476505 : 1"
+       sodipodi:type="inkscape:persp3d" />
     <radialGradient
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1,0,0,0.86602543,0,4.2871863)"
-       r="27.453543"
-       fy="32"
-       fx="32"
-       cy="32"
-       cx="32"
-       id="radialGradient3960"
+       inkscape:collect="always"
        xlink:href="#linearGradient3958"
-       inkscape:collect="always" />
+       id="radialGradient3960"
+       cx="32"
+       cy="32"
+       fx="32"
+       fy="32"
+       r="27.453543"
+       gradientTransform="matrix(1,0,0,0.86602543,2,6.2871863)"
+       gradientUnits="userSpaceOnUse" />
   </defs>
   <sodipodi:namedview
-     id="base"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="10.077477"
-     inkscape:cx="-7.4069357"
-     inkscape:cy="28.876341"
-     inkscape:document-units="px"
-     inkscape:current-layer="layer1"
-     inkscape:document-rotation="0"
-     showgrid="true"
-     inkscape:window-width="1782"
-     inkscape:window-height="981"
-     inkscape:window-x="40"
+     inkscape:window-maximized="1"
      inkscape:window-y="0"
-     inkscape:window-maximized="1">
+     inkscape:window-x="40"
+     inkscape:window-height="981"
+     inkscape:window-width="1782"
+     showgrid="true"
+     inkscape:document-rotation="0"
+     inkscape:current-layer="layer1"
+     inkscape:document-units="px"
+     inkscape:cy="51.30272"
+     inkscape:cx="-10.665784"
+     inkscape:zoom="5.5473939"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base">
     <inkscape:grid
-       id="grid2443"
-       type="xygrid" />
+       type="xygrid"
+       id="grid2443" />
   </sodipodi:namedview>
   <metadata
      id="metadata2437">
@@ -88,40 +88,40 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
-     inkscape:label="Layer 1"
+     id="layer1"
      inkscape:groupmode="layer"
-     id="layer1">
+     inkscape:label="Layer 1">
     <path
-       d="m 45.72677,55.775466 -27.453543,-1e-6 L 4.5464573,31.999999 18.27323,8.2245339 l 27.453543,1.4e-6 13.72677,23.7754657 z"
-       inkscape:randomized="0"
-       inkscape:rounded="0"
-       inkscape:flatsided="true"
-       sodipodi:arg2="1.5707963"
-       sodipodi:arg1="1.0471976"
-       sodipodi:r2="23.775467"
-       sodipodi:r1="27.453543"
-       sodipodi:cy="32"
-       sodipodi:cx="32"
-       sodipodi:sides="6"
+       sodipodi:type="star"
+       style="font-variation-settings:'wght' 700;opacity:0.7;mix-blend-mode:multiply;fill:url(#radialGradient3960);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.449067;stroke-opacity:1"
        id="path1680"
-       style="font-variation-settings:'wght' 700;mix-blend-mode:multiply;fill:url(#radialGradient3960);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.449067;stroke-opacity:1;opacity:0.7"
-       sodipodi:type="star" />
+       sodipodi:sides="6"
+       sodipodi:cx="34"
+       sodipodi:cy="34"
+       sodipodi:r1="27.453543"
+       sodipodi:r2="23.775467"
+       sodipodi:arg1="1.0471976"
+       sodipodi:arg2="1.5707963"
+       inkscape:flatsided="true"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 47.72677,57.775466 -27.453543,-1e-6 L 6.5464573,33.999999 20.27323,10.224534 l 27.453543,10e-7 13.72677,23.775466 z" />
     <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:73.4406px;line-height:1.25;font-family:sans-serif;fill:#a1d5f7;fill-opacity:1;stroke:none;stroke-width:1.83602;stroke-opacity:1;"
-       x="-53.261051"
-       y="54.362663"
+       transform="rotate(-90)"
        id="text2657"
-       transform="rotate(-90)"><tspan
-         style="stroke-width:1.83602;fill:#a1d5f7;fill-opacity:1;"
-         sodipodi:role="line"
+       y="56.362663"
+       x="-55.261051"
+       style="font-style:normal;font-weight:normal;font-size:73.4406px;line-height:1.25;font-family:sans-serif;fill:#a1d5f7;fill-opacity:1;stroke:none;stroke-width:1.83602;stroke-opacity:1"
+       xml:space="preserve"><tspan
+         y="56.362663"
+         x="-55.261051"
          id="tspan2655"
-         x="-53.261051"
-         y="54.362663">↫</tspan></text>
+         sodipodi:role="line"
+         style="fill:#a1d5f7;fill-opacity:1;stroke-width:1.83602">↫</tspan></text>
   </g>
 </svg>

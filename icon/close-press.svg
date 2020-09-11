@@ -8,60 +8,60 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   id="SVGRoot"
-   version="1.1"
-   viewBox="0 0 64.0 64.0"
-   height="64.0px"
-   width="64.0px"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
    sodipodi:docname="close-press.svg"
-   inkscape:version="1.0 (4035a4fb49, 2020-05-01)">
+   width="64.0px"
+   height="64.0px"
+   viewBox="0 0 64.0 64.0"
+   version="1.1"
+   id="SVGRoot">
   <defs
      id="defs1632">
     <linearGradient
-       id="linearGradient1507"
-       inkscape:collect="always">
+       inkscape:collect="always"
+       id="linearGradient1507">
       <stop
-         id="stop1503"
+         style="stop-color:#fa74b2;stop-opacity:1;"
          offset="0"
-         style="stop-color:#fa74b2;stop-opacity:1;" />
+         id="stop1503" />
       <stop
-         id="stop1505"
+         style="stop-color:#fa74b2;stop-opacity:0;"
          offset="1"
-         style="stop-color:#fa74b2;stop-opacity:0;" />
+         id="stop1505" />
     </linearGradient>
     <radialGradient
-       gradientUnits="userSpaceOnUse"
-       r="24"
-       fy="32"
-       fx="32"
-       cy="32"
-       cx="32"
-       id="radialGradient1509"
+       inkscape:collect="always"
        xlink:href="#linearGradient1507"
-       inkscape:collect="always" />
+       id="radialGradient1509"
+       cx="32"
+       cy="32"
+       fx="32"
+       fy="32"
+       r="24"
+       gradientUnits="userSpaceOnUse" />
   </defs>
   <sodipodi:namedview
-     id="base"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="7.4875826"
-     inkscape:cx="22.231877"
-     inkscape:cy="33.359451"
-     inkscape:document-units="px"
-     inkscape:current-layer="layer1"
-     inkscape:document-rotation="0"
-     showgrid="true"
-     inkscape:window-width="1782"
-     inkscape:window-height="981"
-     inkscape:window-x="40"
+     inkscape:window-maximized="1"
      inkscape:window-y="0"
-     inkscape:window-maximized="1">
+     inkscape:window-x="40"
+     inkscape:window-height="981"
+     inkscape:window-width="1782"
+     showgrid="true"
+     inkscape:document-rotation="0"
+     inkscape:current-layer="layer1"
+     inkscape:document-units="px"
+     inkscape:cy="33.359451"
+     inkscape:cx="22.231877"
+     inkscape:zoom="7.1024557"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base">
     <inkscape:grid
-       id="grid1641"
-       type="xygrid" />
+       type="xygrid"
+       id="grid1641" />
   </sodipodi:namedview>
   <metadata
      id="metadata1635">
@@ -75,25 +75,25 @@
     </rdf:RDF>
   </metadata>
   <g
-     inkscape:label="Layer 1"
+     id="layer1"
      inkscape:groupmode="layer"
-     id="layer1">
+     inkscape:label="Layer 1">
     <text
-       xml:space="preserve"
+       id="text1650"
+       y="65.788849"
+       x="12.365288"
        style="font-style:normal;font-weight:normal;font-size:57.1741px;line-height:1.25;font-family:sans-serif;opacity:0.999;fill:#fa74b2;fill-opacity:1;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       x="10.365288"
-       y="63.788849"
-       id="text1650"><tspan
-         sodipodi:role="line"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:91.4787px;font-family:Comfortaa;-inkscape-font-specification:'Comfortaa, @wght=700';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 700;fill:#fa74b2;fill-opacity:1;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         y="65.788849"
+         x="12.365288"
          id="tspan1648"
-         x="10.365288"
-         y="63.788849"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:91.4787px;font-family:Comfortaa;-inkscape-font-specification:'Comfortaa, @wght=700';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 700;fill:#fa74b2;fill-opacity:1;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">×</tspan></text>
+         sodipodi:role="line">×</tspan></text>
     <circle
-       r="24"
-       cy="32"
-       cx="32"
+       style="font-variation-settings:'wght' 700;opacity:0.35;fill:url(#radialGradient1509);stroke-width:0.755065;fill-opacity:1"
        id="path1501"
-       style="font-variation-settings:'wght' 700;opacity:0.35;fill:url(#radialGradient1509);stroke-width:0.755065;fill-opacity:1" />
+       cx="32"
+       cy="32"
+       r="24" />
   </g>
 </svg>
