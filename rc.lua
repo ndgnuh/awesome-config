@@ -186,6 +186,7 @@ screen.connect_signal("property::geometry", set_wallpaper)
 
 local tasklist = re"TaskList"
 
+local w_battery = re"battery"
 awful.screen.connect_for_each_screen(function(s)
 	-- Wallpaper
 	set_wallpaper(s)
@@ -225,6 +226,7 @@ awful.screen.connect_for_each_screen(function(s)
 		local right_layout = wibox.layout.fixed.vertical()
 		right_layout:add(s.mytasklist)
 		right_layout:add(IBus.widget)
+		right_layout:add(w_battery)
 		if s == screen.primary then
 			right_layout:add(wibox.widget{
 				widget = wibox.container.rotate,
