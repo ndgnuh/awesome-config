@@ -560,11 +560,24 @@ client.connect_signal("focus", function(c) c.border_color = beautiful.border_foc
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
 
+local Mod = {modkey}
+local onlytag
 awful.add_key_binding(
-	awful.key({modkey}, "space", function()
+	awful.key(Mod, "space", function()
 		sh"ibus-cycle.sh"
 	end),
-	awful.key({modkey}, "Tab", re"focusPrevious", {description = "go back", group = "client"}),
+	awful.key(Mod, "Tab", re"focusPrevious", {description = "go back", group = "client"}),
+	awful.key(Mod, "b", function()
+		awful.spawn.easy_async_with_shell("xdotool key ctrl+b ; xdotool key semicolon", pass)
+	end),
+	awful.key(Mod, "0", function()
+		if awful.tag.selected() then
+			onlytag = awful.tag.selected()
+			awful.tag.viewnone()
+		else
+			onlytag:view_only()
+		end
+	end),
 		{})
 
 
