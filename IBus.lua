@@ -4,15 +4,20 @@ local awful = re"awful"
 local widget = re"wibox.widget"
 local gobject = re"gears.object"
 local gtable = re"gears.table"
+local lgi = re"lgi"
+
+local IBus = lgi.IBus
 
 local script = "ibus-cycle.sh"
 
-local module = {}
+local module = {
+	bus = IBus.Bus()
+}
 
 -- @iconmap
 -- engine name = icon file
 module.iconmap = {
-	["Bamboo"] = "ibus-vietnamese.svg",
+	["Bamboo"] = "mdi-ibus-vietnamese.svg",
 	["xkb:us::eng"] = "ibus-english.svg",
 	["default"] = "ibus-english.svg"
 }

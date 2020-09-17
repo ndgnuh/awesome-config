@@ -10,14 +10,12 @@ case $cmd in
 		argset="-set"
 		arginc="-inc"
 		argdec="-dec"
-		argext=""
 		;;
 	light)
 		argget="-G"
 		argset="-S"
 		arginc="-A"
 		argdec="-U"
-		argext="-v 3"
 		;;
 	*)
 		printf "unknown brightness command" 1>&2

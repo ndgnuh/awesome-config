@@ -56,15 +56,17 @@ local callback = function(stdout, stderr)
 	deltaResetTimer:again()
 end
 
+sh:connect_signal("brightness.sh", callback)
+
 --[[ @brightness_key_binding
 Add key binding to the global key
 --]]
 awful.add_key_binding(
 	awful.key({}, "XF86MonBrightnessUp", function()
-		sh("brightness.sh inc " .. delta, callback)
+		sh("brightness.sh inc " .. delta)
 	end),
 	awful.key({}, "XF86MonBrightnessDown", function()
-		sh("brightness.sh dec " .. delta, callback)
+		sh("brightness.sh dec " .. delta)
 	end),
 	--[[ add key binding --]]{})
 

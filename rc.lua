@@ -65,7 +65,6 @@ beautiful.init(awesomedir .. "/fleon-gtk.theme")
 local sh = require("sh")
 local ic = require("icon")
 local IBus = re"IBus"
-re"brightness"
 -- }}}
 
 -- This is used later as the default terminal and editor to run.
@@ -80,6 +79,7 @@ editor_cmd = terminal .. " -e " .. editor
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
+	awful.layout.suit.max,
 	awful.layout.suit.floating,
 	awful.layout.suit.tile,
 	-- awful.layout.suit.tile.left,
@@ -89,7 +89,6 @@ awful.layout.layouts = {
 	-- awful.layout.suit.fair.horizontal,
 	-- awful.layout.suit.spiral,
 	-- awful.layout.suit.spiral.dwindle,
-	awful.layout.suit.max,
 	-- awful.layout.suit.max.fullscreen,
 	-- awful.layout.suit.magnifier,
 	-- awful.layout.suit.corner.nw,
@@ -225,7 +224,7 @@ awful.screen.connect_for_each_screen(function(s)
 		local middle_layout = nil
 		local right_layout = wibox.layout.fixed.vertical()
 		right_layout:add(s.mytasklist)
-		right_layout:add(IBus.widget)
+		-- right_layout:add(IBus.widget)
 		right_layout:add(w_battery)
 		if s == screen.primary then
 			right_layout:add(wibox.widget{
@@ -580,6 +579,7 @@ awful.add_key_binding(
 	end),
 		{})
 
+re"brightness"
 
 
 -- @autostart {{{

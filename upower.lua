@@ -57,7 +57,6 @@ module.watch = function(callback)
 		module.battery.state_string = dev.state_to_string(dev.state)
 		module.battery.state = dev.state
 		module.battery.percentage = dev.percentage
-		dump(3)
 		if module.battery.state_string == "Charging" then
 			module.battery.time = device.time_to_full
 		elseif module.battery.state_string == "Discharging" then
@@ -65,7 +64,6 @@ module.watch = function(callback)
 		else
 			module.battery.time = 0
 		end
-		dump(module.battery)
 		callback(module.battery, dev, gstat)
 	end
 end
