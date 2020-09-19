@@ -64,8 +64,8 @@ theme.fg_normal = theme.color7
 
 theme.wibar_bg = theme.color0
 theme.wibar_fg = theme.color6
-theme.wibar_height = dpi(32)
-theme.wibar_width = dpi(32)
+theme.wibar_height = dp(42)
+theme.wibar_width = dpi(42)
 
 theme.bg_focus = theme.bg_normal
 theme.fg_focus = "#7BAAF7"
