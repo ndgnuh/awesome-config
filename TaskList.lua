@@ -9,6 +9,7 @@ local beautiful = re"beautiful"
 local ClientThumbnail = re"ClientThumbnail"
 local icon = re"icon"
 
+-- thumbnail{{{
 local thumbHeight = 248
 local arrowSize = 12
 local infobubble = function(cr, w, h)
@@ -57,7 +58,6 @@ local showThumbnail = function(widget, c)
 	local geo = c:geometry()
 	local scale = thumb.forced_height / geo.height
 	thumb.forced_width = geo.width * scale
-
 	thumbnail.ontop = true
 	thumbnail.visible = true
 	thumbnail:move_next_to(mouse.current_widget_geometry)
@@ -68,8 +68,9 @@ local hideThumbnail = function(widget, c)
 	thumbnail.ontop = false
 	thumbnail.visible = false
 end
+--}}}
 
--- create client menu
+-- create client menu{{{
 -- with actions like kill and toggles
 local clientmenu = function(c)
 	awful.menu{
@@ -77,7 +78,7 @@ local clientmenu = function(c)
 			{
 				"Close",
 				function() c:kill() end,
-				icon"close.svg",
+				beautiful.titlebar_close_button_focus,
 			},
 			{
 				c.minimized and "Un-minimized" or "Minimize",
@@ -87,22 +88,24 @@ local clientmenu = function(c)
 						c:raise()
 					end
 				end,
-				icon"minimize.svg",
+				beautiful.titlebar_minimize_button_focus,
 			},
 			{
 				c.maximized and "Un-maximize" or "Maximize",
 				function() c.maximized = not c.maximized end,
-				c.maximized and icon"maximized-inactive.svg" or icon"maximized-active.svg",
+				(c.maximized and beautiful.titlebar_maximized_button_focus_inactive)
+          or beautiful.titlebar_maximized_button_focus_active,
 			},
 			{
 				c.floating and "Floating" or "Follow layout",
 				function() c.floating = not c.floating end,
-				c.floating and icon"floating-active.svg" or icon"floating-inactive.svg",
+				(c.floating and beautiful.titlebar_floating_button_focus_inactive)
+          or beautiful.titlebar_floating_button_focus_active,
 			},
 			{
 				"Fullscreen",
 				function() c.fullscreen = not c.fullscreen end,
-				icon"maximized-active.svg",
+				beautiful.layout_fullscreen,
 			},
 			{
 				"Shade",
@@ -115,8 +118,9 @@ local clientmenu = function(c)
 			{ "Cancel", "" }
 		}
 	}:show()
-end
+end--}}}
 
+-- tasklist buttons{{{
 local tasklist_buttons = gears.table.join(
 	awful.button({ }, 1, function (c)
 		if c == client.focus then
@@ -131,13 +135,16 @@ local tasklist_buttons = gears.table.join(
 	end),
 	awful.button({ }, 5, function ()
 		awful.client.focus.byidx(-1)
-	end))
+	end))--}}}
 
+-- tasklist layout{{{
 local layout = {
 	layout = wibox.layout.fixed.vertical,
 	spacing = beautiful.border_width,
 }
+--}}}
 
+-- tasklist template{{{
 local template = {
 	widget = wibox.layout.align.horizontal,
 	{
@@ -189,6 +196,7 @@ local template = {
 		end)
 	end,
 }
+--}}}
 
 local tasklist = function(s)
 	return awful.widget.tasklist{

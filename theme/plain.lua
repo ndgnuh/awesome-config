@@ -50,17 +50,17 @@ string.format(
   os.getenv("HOME"))
 --}}}
 
--- @wibar{{{
+-- wibar{{{
 theme.wibar_width = 42
 theme.wibar_height = theme.wibar_width
 --}}}
 
--- @assets{{{
+-- assets{{{
 theme.awesome_icon =
   recolor(icon"mdi/chevron-right.svg", theme.color7)
 --}}}
 
--- @titlebar {{{
+-- titlebar {{{
 theme.titlebar_bg_focus = theme.color0
 
 theme.titlebar_close_button_normal =
@@ -115,18 +115,30 @@ theme.titlebar_maximized_button_focus_active_hover =
 theme.titlebar_maximized_button_focus_active_press =
   recolor(icon"mdi/window-maximize.svg", theme.fg_focus)
 
-theme.titlebar_floating_button_normal_inactive = icon"floating-inactive.svg"
-theme.titlebar_floating_button_normal_inactive_hover = icon"floating-inactive-hover.svg"
-theme.titlebar_floating_button_normal_inactive_press = icon"floating-inactive-press.svg"
-theme.titlebar_floating_button_focus_inactive = icon"floating-inactive.svg"
-theme.titlebar_floating_button_focus_inactive_hover = icon"floating-inactive-hover.svg"
-theme.titlebar_floating_button_focus_inactive_press = icon"floating-inactive-press.svg"
-theme.titlebar_floating_button_normal_active = icon"floating-active.svg"
-theme.titlebar_floating_button_normal_active_hover = icon"floating-active-hover.svg"
-theme.titlebar_floating_button_normal_active_press = icon"floating-active-press.svg"
-theme.titlebar_floating_button_focus_active = icon"floating-active.svg"
-theme.titlebar_floating_button_focus_active_hover = icon"floating-active-hover.svg"
-theme.titlebar_floating_button_focus_active_press = icon"floating-active-press.svg"
+theme.titlebar_floating_button_normal_inactive =
+  recolor(icon"mdi/view-quilt.svg", theme.fg_focus)
+theme.titlebar_floating_button_normal_inactive_hover =
+  recolor(icon"mdi/view-quilt.svg", theme.fg_focus)
+theme.titlebar_floating_button_normal_inactive_press =
+  recolor(icon"mdi/view-quilt.svg", theme.fg_focus)
+theme.titlebar_floating_button_focus_inactive =
+  recolor(icon"mdi/view-quilt.svg", theme.fg_focus)
+theme.titlebar_floating_button_focus_inactive_hover =
+  recolor(icon"mdi/view-quilt.svg", theme.fg_focus)
+theme.titlebar_floating_button_focus_inactive_press =
+  recolor(icon"mdi/view-quilt.svg", theme.fg_focus)
+theme.titlebar_floating_button_normal_active =
+  recolor(icon"mdi/view-quilt-outline.svg", theme.fg_focus)
+theme.titlebar_floating_button_normal_active_hover =
+  recolor(icon"mdi/view-quilt-outline.svg", theme.fg_focus)
+theme.titlebar_floating_button_normal_active_press =
+  recolor(icon"mdi/view-quilt-outline.svg", theme.fg_focus)
+theme.titlebar_floating_button_focus_active =
+  recolor(icon"mdi/view-quilt-outline.svg", theme.fg_focus)
+theme.titlebar_floating_button_focus_active_hover =
+  recolor(icon"mdi/view-quilt-outline.svg", theme.fg_focus)
+theme.titlebar_floating_button_focus_active_press =
+  recolor(icon"mdi/view-quilt-outline.svg", theme.fg_focus)
 --}}}
 
 -- layout icons{{{
@@ -136,6 +148,8 @@ theme.layout_floating =
   recolor(icon"mdi/window-restore.svg", theme.fg_focus)
 theme.layout_tile =
   recolor(icon"mdi/view-quilt.svg", theme.fg_focus)
+theme.layout_fullscreen =
+  recolor(icon"mdi/fullscreen.svg", theme.fg_focus)
 --
 --}}}
 
