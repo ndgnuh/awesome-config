@@ -6,11 +6,21 @@ local gears = re"gears"
 
 dpi = require("beautiful.xresources").apply_dpi
 
-partial = function(f, x)
-	return function(...)
-		return f(x, ...)
-	end
-end
+partial =
+  function(f, x)
+    return
+      function(...)
+        return f(x, ...)
+    end
+  end
+
+partial2 =
+  function(f, x, y)
+    return
+      function(...)
+        return f(x, y, ...)
+    end
+  end
 
 dump = function(x, tite)
 	naughty.notify{
@@ -20,7 +30,16 @@ dump = function(x, tite)
 	}
 end
 
-pass = function() end
+pass = function()end
+
+dp =
+  function(x, s) -- x, screen
+    local density =
+      s and s.dpi or
+      124
+    return
+      x * 160 / density
+  end
 
 grayscale = function(color)
 	local err, r, g, b, a

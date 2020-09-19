@@ -4,26 +4,33 @@ pcall(require, "luarocks.loader")
 
 require("configuration")
 -- Standard awesome library
-local gears = require("gears")
-local awful = require("awful")
+local gears =
+  require("gears")
+local awful =
+  require("awful")
 require("awful.autofocus")
 -- Widget and layout library
-local wibox = require("wibox")
+local wibox =
+  require("wibox")
 -- Theme handling library
-local beautiful = require("beautiful")
+local beautiful =
+  require("beautiful")
 -- Notification library
-local naughty = require("naughty")
-local menubar = require("menubar")
-local hotkeys_popup = require("awful.hotkeys_popup")
+local naughty =
+  require("naughty")
+local menubar =
+  require("menubar")
+local hotkeys_popup =
+  require("awful.hotkeys_popup")
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
 
 do -- @use_all_the_functions_from_c_utils
-	local c_utils = require("c_utils")
-	for k, f in pairs(c_utils) do
-		_G[k] = f
-	end
+  local c_utils = require("c_utils")
+  for k, f in pairs(c_utils) do
+    _G[k] = f
+  end
 end
 
 require("util")
@@ -35,22 +42,30 @@ require("Extend")
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
 if awesome.startup_errors then
-    naughty.notify({ preset = naughty.config.presets.critical,
-                     title = "Oops, there were errors during startup!",
-                     text = awesome.startup_errors })
+    naughty.notify
+      {
+        preset = naughty.config.presets.critical,
+        title = "Oops, there were errors during startup!",
+        text = awesome.startup_errors
+      }
 end
 
 -- Handle runtime errors after startup
 do
     local in_error = false
-    awesome.connect_signal("debug::error", function (err)
+    awesome.connect_signal (
+      "debug::error",
+      function (err)
         -- Make sure we don't go into an endless error loop
         if in_error then return end
         in_error = true
 
-        naughty.notify({ preset = naughty.config.presets.critical,
-                         title = "Oops, an error happened!",
-                         text = tostring(err) })
+        naughty.notify
+          {
+            preset = naughty.config.presets.critical,
+            title = "Oops, an error happened!",
+            text = tostring(err)
+          }
         in_error = false
     end)
 end
@@ -58,13 +73,16 @@ end
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
-beautiful.init(awesomedir .. "/fleon-gtk.theme")
+do
+  local themefile = "/theme/plain.lua"
+  local themefile = "/fleon-gtk.theme"
+  beautiful.init(awesomedir .. themefile)
+end
 
 -- {{{ @libs
 -- custom library and module goes here
 local sh = require("sh")
 local ic = require("icon")
-local IBus = re"IBus"
 -- }}}
 
 -- This is used later as the default terminal and editor to run.
@@ -79,22 +97,22 @@ editor_cmd = terminal .. " -e " .. editor
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
-	awful.layout.suit.max,
-	awful.layout.suit.floating,
-	awful.layout.suit.tile,
-	-- awful.layout.suit.tile.left,
-	-- awful.layout.suit.tile.bottom,
-	-- awful.layout.suit.tile.top,
-	-- awful.layout.suit.fair,
-	-- awful.layout.suit.fair.horizontal,
-	-- awful.layout.suit.spiral,
-	-- awful.layout.suit.spiral.dwindle,
-	-- awful.layout.suit.max.fullscreen,
-	-- awful.layout.suit.magnifier,
-	-- awful.layout.suit.corner.nw,
-	-- awful.layout.suit.corner.ne,
-	-- awful.layout.suit.corner.sw,
-	-- awful.layout.suit.corner.se,
+  awful.layout.suit.max,
+  awful.layout.suit.floating,
+  awful.layout.suit.tile,
+  -- awful.layout.suit.tile.left,
+  -- awful.layout.suit.tile.bottom,
+  -- awful.layout.suit.tile.top,
+  -- awful.layout.suit.fair,
+  -- awful.layout.suit.fair.horizontal,
+  -- awful.layout.suit.spiral,
+  -- awful.layout.suit.spiral.dwindle,
+  -- awful.layout.suit.max.fullscreen,
+  -- awful.layout.suit.magnifier,
+  -- awful.layout.suit.corner.nw,
+  -- awful.layout.suit.corner.ne,
+  -- awful.layout.suit.corner.sw,
+  -- awful.layout.suit.corner.se,
 }
 -- }}}
 
@@ -109,24 +127,24 @@ myawesomemenu = {
 }
 
 mymainmenu = awful.menu{
-	items = {
-		{ "awesome", myawesomemenu },
-		{ "open terminal", terminal }
-	}
+  items = {
+    { "awesome", myawesomemenu },
+    { "open terminal", terminal }
+  }
 }
 
 mylauncher = awful.widget.launcher{
-	image = beautiful.awesome_icon,
-	menu = mymainmenu
+  image = beautiful.awesome_icon,
+  menu = mymainmenu
 }
 mylauncher:buttons(gears.table.join(
-		awful.button({}, 1, function()
-			mymainmenu:show()
-		end),
-		awful.button({}, 3, function()
-			awful.spawn.easy_async_with_shell("$HOME/.config/rofi/scripts/appsmenu.sh", pass)
-		end)
-	))
+    awful.button({}, 1, function()
+      mymainmenu:show()
+    end),
+    awful.button({}, 3, function()
+      awful.spawn.easy_async_with_shell("$HOME/.config/rofi/scripts/appsmenu.sh", pass)
+    end)
+  ))
 
 -- Menubar configuration
 menubar.utils.terminal = terminal -- Set the terminal for applications that require it
@@ -138,34 +156,34 @@ mykeyboardlayout = awful.widget.keyboardlayout()
 -- {{{ Wibar
 -- Create a textclock widget
 mytextclock = wibox.widget{
-	widget = wibox.container.place,
-	{
-		widget = wibox.widget.textclock,
-		format = "<b>%I\n%M</b>\n<u><i>%p</i></u>",
-		forced_width = beautiful.wibar_width,
-		align = 'center',
-		valign = 'center',
-		font = 'monospace',
-	},
+  widget = wibox.container.place,
+  {
+    widget = wibox.widget.textclock,
+    format = "<b>%I\n%M</b>\n<u><i>%p</i></u>",
+    forced_width = beautiful.wibar_width,
+    align = 'center',
+    valign = 'center',
+    font = 'monospace',
+  },
 }
 
 -- Create a wibox for each screen and add it
 local taglist_buttons = gears.table.join(
-	awful.button({ }, 1, function(t) t:view_only() end),
-	awful.button({ modkey }, 1, function(t)
-		if client.focus then
-			client.focus:move_to_tag(t)
-		end
-	end),
-	awful.button({ }, 3, awful.tag.viewtoggle),
-	awful.button({ modkey }, 3, function(t)
-		if client.focus then
-			client.focus:toggle_tag(t)
-		end
-	end),
-	awful.button({ }, 4, function(t) awful.tag.viewnext(t.screen) end),
-	awful.button({ }, 5, function(t) awful.tag.viewprev(t.screen) end)
-	)
+  awful.button({ }, 1, function(t) t:view_only() end),
+  awful.button({ modkey }, 1, function(t)
+    if client.focus then
+      client.focus:move_to_tag(t)
+    end
+  end),
+  awful.button({ }, 3, awful.tag.viewtoggle),
+  awful.button({ modkey }, 3, function(t)
+    if client.focus then
+      client.focus:toggle_tag(t)
+    end
+  end),
+  awful.button({ }, 4, function(t) awful.tag.viewnext(t.screen) end),
+  awful.button({ }, 5, function(t) awful.tag.viewprev(t.screen) end)
+  )
 
 
 local function set_wallpaper(s)
@@ -187,70 +205,77 @@ local tasklist = re"TaskList"
 
 local w_battery = re"battery"
 awful.screen.connect_for_each_screen(function(s)
-	-- Wallpaper
-	set_wallpaper(s)
+  -- Wallpaper
+  set_wallpaper(s)
 
-	-- Each screen has its own tag table.
-	awful.tag({1}, s, awful.layout.layouts[1])
+  -- Each screen has its own tag table.
+  awful.tag({1}, s, awful.layout.layouts[1])
 
-	-- Create a promptbox for each screen
-	s.mypromptbox = awful.widget.prompt()
-	-- Create an imagebox widget which will contain an icon indicating which layout we're using.
-	-- We need one layoutbox per screen.
-	s.mylayoutbox = awful.widget.layoutbox(s)
-	s.mylayoutbox:buttons(gears.table.join(
-			awful.button({ }, 1, function () awful.layout.inc( 1) end),
-			awful.button({ }, 3, function () awful.layout.inc(-1) end),
-			awful.button({ }, 4, function () awful.layout.inc( 1) end),
-		awful.button({ }, 5, function () awful.layout.inc(-1) end)))
-		-- Create a taglist widget
-		s.mytaglist = awful.widget.taglist {
-			screen  = s,
-			filter  = function() return false end, --awful.widget.taglist.filter.all,
-			buttons = taglist_buttons
-		}
+  -- Create a promptbox for each screen
+  s.mypromptbox = awful.widget.prompt()
+  -- Create an imagebox widget which will contain an icon indicating which layout we're using.
+  -- We need one layoutbox per screen.
+  s.mylayoutbox = awful.widget.layoutbox(s)
+  s.mylayoutbox:buttons(gears.table.join(
+      awful.button({ }, 1, function () awful.layout.inc( 1) end),
+      awful.button({ }, 3, function () awful.layout.inc(-1) end),
+      awful.button({ }, 4, function () awful.layout.inc( 1) end),
+    awful.button({ }, 5, function () awful.layout.inc(-1) end)))
+    -- Create a taglist widget
+    s.mytaglist = awful.widget.taglist {
+      screen  = s,
+      filter  = function() return false end, --awful.widget.taglist.filter.all,
+      buttons = taglist_buttons
+    }
 
-		-- Create a tasklist widget
-		s.mytasklist = tasklist(s)
+    -- Create a tasklist widget
+    s.mytasklist = tasklist(s)
 
-		-- Create the wibox
-		s.mywibox = awful.wibar({ position = "left", screen = s })
+    -- Create the wibox
+    s.mywibox =
+      awful.wibar{
+        position = "left",
+        screen   = s
+      }
 
-		-- Add widgets to the wibox
-		local left_layout = wibox.layout.fixed.vertical()
-		left_layout:add(mylauncher)
-		left_layout:add(s.mypromptbox)
+    -- Add widgets to the wibox
+    local left_layout =
+      wibox.layout.fixed.vertical()
+    left_layout
+      :add(mylauncher)
+    left_layout
+      :add(s.mypromptbox)
 
-		local middle_layout = nil
-		local right_layout = wibox.layout.fixed.vertical()
-		right_layout:add(s.mytasklist)
-		-- right_layout:add(IBus.widget)
-		right_layout:add(w_battery)
-		if s == screen.primary then
-			right_layout:add(wibox.widget{
-				widget = wibox.container.rotate,
-				wibox.widget.systray(),
-				direction = "west",
-			})
-		end
-		right_layout:add(mytextclock)
-		right_layout:add(s.mylayoutbox)
+    local right_layout =
+      wibox.layout.fixed.vertical()
+    right_layout:add(s.mytasklist)
+    -- right_layout:add(IBus.widget)
+    right_layout:add(w_battery)
+    if s == screen.primary then
+      right_layout:add(wibox.widget{
+        widget = wibox.container.rotate,
+        wibox.widget.systray(),
+        direction = "west",
+      })
+    end
+    right_layout:add(mytextclock)
+    right_layout:add(s.mylayoutbox)
 
-		local bar_layout = wibox.layout.align.vertical()
-		bar_layout:set_first(left_layout)
-		bar_layout:set_second(middle_layout)
-		bar_layout:set_third(right_layout)
+    local bar_layout = wibox.layout.align.vertical()
+    bar_layout:set_first(left_layout)
+    bar_layout:set_second(middle_layout)
+    bar_layout:set_third(right_layout)
 
-		s.mywibox:set_widget(bar_layout)
+    s.mywibox:set_widget(bar_layout)
 
-		-- dump({s.mywibox:get_children_by_id('ibus-engine')})--:get_children_by_id('ibus-engine'))
-		
-		-- setup bounding corners
-		-- must run after setting up wibar
-		re"rounded_corner_padding"(s)
-	end)
-	-- @end_each_screen_callback
-	-- }}}
+    -- dump({s.mywibox:get_children_by_id('ibus-engine')})--:get_children_by_id('ibus-engine'))
+    
+    -- setup bounding corners
+    -- must run after setting up wibar
+    re"rounded_corner_padding"(s)
+  end)
+  -- @end_each_screen_callback
+  -- }}}
 
 -- {{{ Mouse bindings
 root.buttons(gears.table.join(
@@ -267,8 +292,8 @@ local TaskSwitcher = require("TaskSwitcher")
 local ts = TaskSwitcher()
 
 globalkeys = gears.table.join(
-	awful.key({modkey}, "j", function() ts:trigger() ts:emit_signal("forward") end),
-	awful.key({modkey}, "k", function() ts:trigger() ts:emit_signal("backward") end),
+  awful.key({modkey}, "j", function() ts:trigger() ts:emit_signal("forward") end),
+  awful.key({modkey}, "k", function() ts:trigger() ts:emit_signal("backward") end),
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
               {description="show help", group="awesome"}),
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev,
@@ -350,10 +375,10 @@ globalkeys = gears.table.join(
 
     -- Prompt
     awful.key({ modkey }, "r", function()
-		 -- awful.screen.focused().mypromptbox:run() end,
-		 awful.spawn(string.format('rofi -show run -theme %s/.config/rofi/themes/appsmenu', os.getenv("HOME")))
-	 end,
-	 {description = "run prompt", group = "launcher"}),
+     -- awful.screen.focused().mypromptbox:run() end,
+     awful.spawn(string.format('rofi -show run -theme %s/.config/rofi/themes/appsmenu', os.getenv("HOME")))
+   end,
+   {description = "run prompt", group = "launcher"}),
 
     awful.key({ modkey }, "x",
               function ()
@@ -430,10 +455,10 @@ clientbuttons = gears.table.join(
 -- Set keys
 root.keys(globalkeys)
 awful.add_key_binding(
-	awful.key({"Mod4", "Shift"}, "r", awesome.restart),
-	awful.key({modkey}, "Return", partial(awful.spawn, terminal)),
-	awful.key({}, "Print", partial(awful.spawn.raise_or_spawn, "gscreenshot"))
-	)
+  awful.key({"Mod4", "Shift"}, "r", awesome.restart),
+  awful.key({modkey}, "Return", partial(awful.spawn, terminal)),
+  awful.key({}, "Print", partial(awful.spawn.raise_or_spawn, "gscreenshot"))
+  )
 
 -- }}}
 
@@ -476,7 +501,7 @@ awful.rules.rules = {
         -- and the name shown there might not match defined rules here.
         name = {
           "Event Tester",  -- xev.
-			 "Picture-in-Picture", -- firefox picture in picture
+       "Picture-in-Picture", -- firefox picture in picture
         },
         role = {
           "AlarmWindow",  -- Thunderbird's calendar.
@@ -525,7 +550,7 @@ client.connect_signal("request::titlebars", function(c)
         end)
     )
 
-    awful.titlebar(c) : setup {
+    awful.titlebar(c, {size = dpi(42)}) : setup {
         { -- Left
             awful.titlebar.widget.iconwidget(c),
             buttons = buttons,
@@ -561,32 +586,23 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 
 local Mod = {modkey}
 local onlytag
+
+local IBus = re"IBus"
+
 awful.add_key_binding(
-	awful.key(Mod, "space", function()
-		sh"ibus-cycle.sh"
-	end),
-	awful.key(Mod, "Tab", re"focusPrevious", {description = "go back", group = "client"}),
-	awful.key(Mod, "b", function()
-		awful.spawn.easy_async_with_shell("xdotool key ctrl+b ; xdotool key semicolon", pass)
-	end),
-	awful.key(Mod, "0", function()
-		if awful.tag.selected() then
-			onlytag = awful.tag.selected()
-			awful.tag.viewnone()
-		else
-			onlytag:view_only()
-		end
-	end),
-		{})
+  IBus.key(Mod, "space", { "xkb:us::eng", "Bamboo" }),
+  awful.key(Mod, "Tab", re"focusPrevious", {description = "go back", group = "client"}),
+  awful.key(Mod, "0", function()
+    if awful.tag.selected() then
+      onlytag =
+        awful.tag.selected()
+      awful.tag.viewnone()
+    else
+      onlytag:view_only()
+    end
+  end),
+    {})
 
-re"brightness"
+require"pulse-shortcut"
 
-
--- @autostart {{{
--- vmap(awful.spawn.single_instance,
--- 	"ibus-daemon -rdx -s",
--- 	"picom",
--- 	"xfce4-power-manager",
--- 	"nm-applet"
--- 	)
--- }}}
+dump(dp(24 * 3), mouse.screen)
