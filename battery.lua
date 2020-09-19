@@ -9,43 +9,69 @@ local beautiful = require"beautiful"--}}}
 local floor = math.floor
 local ceil = math.ceil--}}}
 
+-- default color {{{
+local default = {
+  color_full = "#00ff00",
+  color_normal = "#ffff00",
+  color_low = "#ff0000",
+  color_charging_full = "#00ff00",
+  color_charging_normal = "#ffff00",
+  color_charging_low = "#ff0000",
+}
+---}}}
+
 local batteryicons = {--{{{
-  icon"mdi/battery-10.svg",
-  icon"mdi/battery-20.svg",
-  icon"mdi/battery-30.svg",
-  icon"mdi/battery-40.svg",
-  icon"mdi/battery-50.svg",
-  icon"mdi/battery-60.svg",
-  icon"mdi/battery-70.svg",
-  icon"mdi/battery-80.svg",
-  icon"mdi/battery-90.svg",
-  icon"mdi/battery.svg",
-  icon"mdi/battery-charging-10.svg",
-  icon"mdi/battery-charging-20.svg",
-  icon"mdi/battery-charging-30.svg",
-  icon"mdi/battery-charging-40.svg",
-  icon"mdi/battery-charging-50.svg",
-  icon"mdi/battery-charging-60.svg",
-  icon"mdi/battery-charging-70.svg",
-  icon"mdi/battery-charging-80.svg",
-  icon"mdi/battery-charging-90.svg",
-  icon"mdi/battery-charging-100.svg",
+  beautiful.battery_10_icon or icon"mdi/battery-10.svg",
+  beautiful.battery_20_icon or icon"mdi/battery-20.svg",
+  beautiful.battery_30_icon or icon"mdi/battery-30.svg",
+  beautiful.battery_40_icon or icon"mdi/battery-40.svg",
+  beautiful.battery_50_icon or icon"mdi/battery-50.svg",
+  beautiful.battery_60_icon or icon"mdi/battery-60.svg",
+  beautiful.battery_70_icon or icon"mdi/battery-70.svg",
+  beautiful.battery_80_icon or icon"mdi/battery-80.svg",
+  beautiful.battery_90_icon or icon"mdi/battery-90.svg",
+  beautiful.battery_100_icon or icon"mdi/battery.svg",
+  beautiful.battery_charging_10_icon or icon"mdi/battery-charging-10.svg",
+  beautiful.battery_charging_20_icon or icon"mdi/battery-charging-20.svg",
+  beautiful.battery_charging_30_icon or icon"mdi/battery-charging-30.svg",
+  beautiful.battery_charging_40_icon or icon"mdi/battery-charging-40.svg",
+  beautiful.battery_charging_50_icon or icon"mdi/battery-charging-50.svg",
+  beautiful.battery_charging_60_icon or icon"mdi/battery-charging-60.svg",
+  beautiful.battery_charging_70_icon or icon"mdi/battery-charging-70.svg",
+  beautiful.battery_charging_80_icon or icon"mdi/battery-charging-80.svg",
+  beautiful.battery_charging_90_icon or icon"mdi/battery-charging-90.svg",
+  beautiful.battery_charging_100_icon or icon"mdi/battery-charging-100.svg",
 }--}}}
 
-local seticon = function(w, percent, ischarging)--{{{
-  local iconidx =--{{{
+-- set icon for widget {{{
+local seticon = function(w, percent, ischarging)
+  local iconidx =
     (percent == 0 and 1) or
     (ceil(percent / 10))
-  iconidx =
-    (ischarging and iconidx + 10) or
-    (iconidx)--}}}
+  if ischarging then
+    iconidx = iconidx + 10
+  end
   local icon = batteryicons[iconidx]
-  local iconcolor =--{{{
-    (percent > 70 and beautiful.color2) or
-    (percent > 40 and beautiful.color3) or
-    (percent > 20 and beautiful.color1) or
-    (beautiful.color1) or
-    ("#ffffff")--}}}
+  local iconcolor =
+    ischarging and
+      (percent > 70 and
+         beautiful.battery_color_charging_full or
+         beautiful.battery_color_full or
+         default.color_full) or
+      (percent > 40 and
+        beautiful.battery_color_charging_normal or
+        beautiful.battery_color_normal or
+        default.color_nomal) or
+      (percent > 20 and
+        beautiful.battery_color_charging_low or
+        beautiful.battery_color_low or
+        default.color_low) or
+      ("#ffffff")
+    or
+      (percent > 70 and beautiful.battery_color_full or default.color_full) or
+      (percent > 40 and beautiful.battery_color_normal or default.color_nomal) or
+      (percent > 20 and beautiful.battery_color_low or default.color_low) or
+      ("#ffffff")
   coloredicon =
     gears.color.recolor_image(icon, iconcolor)
   w.image = coloredicon

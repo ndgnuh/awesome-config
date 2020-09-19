@@ -1,5 +1,7 @@
+-- requirements {{{
 local icon = require"icon"
 local gears = require"gears"
+-- }}}
 
 -- shorts {{{
 local dpi = require("beautiful.xresources").apply_dpi
@@ -150,7 +152,6 @@ theme.layout_tile =
   recolor(icon"mdi/view-quilt.svg", theme.fg_focus)
 theme.layout_fullscreen =
   recolor(icon"mdi/fullscreen.svg", theme.fg_focus)
---
 --}}}
 
 -- menubar{{{
@@ -173,8 +174,8 @@ end)
 --}}}
 
 -- tasklist{{{
-theme.tasklist_bg_focus = theme.color10
-theme.tasklist_bg_focus2 = theme.color0
+theme.tasklist_bg_focus = theme.color15
+theme.tasklist_bg_focus2 = theme.color8
 theme.tasklist_thumbnail_outline = theme.color15
 theme.tasklist_thumbnail_shape = rounded_rect_shape
 --}}}
