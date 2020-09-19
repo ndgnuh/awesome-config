@@ -139,6 +139,8 @@ local new = function(args)
 	box:connect_signal("triggered", function(self)
 		-- set widget visible
 		self.visible = true
+		-- currently focused screen
+		self.screen = mouse.screen
 		-- get all clients
 		self.client = client.get()
 		-- start key grabber
