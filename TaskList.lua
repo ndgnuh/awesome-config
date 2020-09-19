@@ -25,13 +25,18 @@ local infobubble = function(cr, w, h)
 end
 local thumbnail = awful.popup{
 	visible = false,
-	shape = infobubble,
+	shape = beautiful.tasklist_thumbnail_shape or infobubble,
 	widget = wibox.widget{
 		widget = wibox.container.background,
-		bg = beautiful.color3,
+		bg =
+      beautiful.tasklist_thumbnail_outline or
+      beautiful.color3 or
+      "#ffffff",
 		{
 			widget = wibox.container.margin,
-			left = arrowSize + 4,
+			left =
+        (beautiful.tasklist_thumbnail_shape and 4) or
+        (4 + arrowSize),
 			right = 4,
 			bottom = 4,
 			top = 4,
@@ -158,7 +163,9 @@ local template = {
 		-- set second brightbackground
 		local bg2 = gears.color.transparent
 		if c == client.focus then
-			bg2 = beautiful.color8
+			bg2 =
+        beautiful.tasklist_bg_focus2 or
+        darker_color(beautiful.bg_focus, 1.5)
 		end
 		self:get_children_by_id('background_role_2')[1].bg = bg2
 	end,
