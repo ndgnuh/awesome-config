@@ -74,8 +74,9 @@ end
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
 do
-  local themefile = "/theme/plain.lua"
-  local themefile = "/fleon-gtk.theme"
+  -- local themefile = "/theme/plain.lua"
+  local themefile = "/theme/tempus-night.lua"
+  -- local themefile = "/fleon-gtk.theme"
   beautiful.init(awesomedir .. themefile)
 end
 
@@ -155,6 +156,8 @@ mykeyboardlayout = awful.widget.keyboardlayout()
 
 -- {{{ Wibar
 -- Create a textclock widget
+local ibus_widget = require"ibus-widget"
+
 mytextclock = wibox.widget{
   widget = wibox.container.place,
   {
@@ -241,15 +244,12 @@ awful.screen.connect_for_each_screen(function(s)
     -- Add widgets to the wibox
     local left_layout =
       wibox.layout.fixed.vertical()
-    left_layout
-      :add(mylauncher)
-    left_layout
-      :add(s.mypromptbox)
+    left_layout:add(mylauncher)
+    left_layout:add(s.mypromptbox)
 
-    local right_layout =
-      wibox.layout.fixed.vertical()
+    local right_layout = wibox.layout.fixed.vertical()
     right_layout:add(s.mytasklist)
-    -- right_layout:add(IBus.widget)
+    right_layout:add(ibus_widget)
     right_layout:add(w_battery)
     if s == screen.primary then
       right_layout:add(wibox.widget{
@@ -550,7 +550,7 @@ client.connect_signal("request::titlebars", function(c)
         end)
     )
 
-    awful.titlebar(c, {size = dpi(42)}) : setup {
+    awful.titlebar(c, {size = beautiful.wibar_width}) : setup {
         { -- Left
             awful.titlebar.widget.iconwidget(c),
             buttons = buttons,
@@ -604,5 +604,3 @@ awful.add_key_binding(
     {})
 
 require"pulse-shortcut"
-
-dump(dp(24 * 3), mouse.screen)
