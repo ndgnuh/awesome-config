@@ -64,7 +64,7 @@ theme.cursorColor2 = "#1a1a1a"
 -- }}}
 
 -- wibar{{{
-theme.wibar_width = dpi(42)
+theme.wibar_width = dpi(36)
 theme.wibar_height = theme.wibar_width
 --}}}
 
