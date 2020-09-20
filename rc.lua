@@ -376,7 +376,7 @@ globalkeys = gears.table.join(
     -- Prompt
     awful.key({ modkey }, "r", function()
      -- awful.screen.focused().mypromptbox:run() end,
-     awful.spawn(string.format('rofi -show run -theme %s/.config/rofi/themes/appsmenu', os.getenv("HOME")))
+     awful.spawn(string.format('rofi -show run', os.getenv("HOME")))
    end,
    {description = "run prompt", group = "launcher"}),
 
@@ -604,3 +604,10 @@ awful.add_key_binding(
     {})
 
 require"pulse-shortcut"
+
+client.connect_signal("manage", function(c)
+	local icon = require"icon"
+	if not c.icon then
+		c.icon = gears.color.recolor_image(icon"mdi/application.svg", "#FFFFFF")._native
+	end
+end)

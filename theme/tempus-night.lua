@@ -70,7 +70,7 @@ theme.wibar_height = theme.wibar_width
 
 -- assets{{{
 theme.awesome_icon =
-  recolor(icon"mdi/chevron-right.svg", theme.color2)
+  recolor(icon"mdi/chevron-right.svg", theme.color4)
 --}}}
 
 -- titlebar {{{
