@@ -1,6 +1,7 @@
 local awful = require"awful"
 local naughty = require"naughty"
 local gears = require"gears"
+local SingleNotification = require"SingleNotification"
 
 -- shortcut
 local spnw = awful.spawn.easy_async_with_shell
@@ -84,38 +85,28 @@ local matcher = {
   left  = "front%-left: *%d+ */ *(%d+)%%[^\n]*"  ,
 }
 
-local noti
-local stdHandler =
-  function(stdout, stderr)
-    if stderr and stderr ~= "" then
-      naughty.notification {
-        preset = naughty.preset.error ,
-        title = "Pulse error"         ,
-        message = tostring(stderr)    ,
-      }
-    else
-      local mute = stdout:match(matcher.mute) == "yes"
-      local right = stdout:match(matcher.right)
-      local left = stdout:match(matcher.left)
-      if noti then
-        noti.message =
-          string.format (
-            "Left: %s%%, Right: %s%%, Muted: %s" ,
-            left                                 ,
-            right                                ,
-            mute                                 )
-      else
-        noti = naughty.notification {
-          title = "Pulse Audio",
-          message = string.format (
-            "Left: %s%%, Right: %s%%, Muted: %s" ,
-            left                                 ,
-            right                                ,
-            mute                                 )
-        }
-      end
-    end
+local notification = SingleNotification()
+local stdHandler = function(stdout, stderr)
+  if stderr and stderr ~= "" then
+    naughty.notify {
+      preset = naughty.preset.error ,
+      title = "Pulse error"         ,
+      text = tostring(stderr)    ,
+    }
+  else
+    local mute = stdout:match(matcher.mute) == "yes"
+    local right = stdout:match(matcher.right)
+    local left = stdout:match(matcher.left)
+    notification {
+      title = "Pulse Audio",
+      text = string.format (
+        "Left: %s%%, Right: %s%%, Muted: %s" ,
+        left                                 ,
+        right                                ,
+        mute                                 )
+    }
   end
+end
 
 local dispatch =
   function(cmd)
