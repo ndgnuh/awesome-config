@@ -1,1 +1,1 @@
-require("fancy")
+require("ggz")

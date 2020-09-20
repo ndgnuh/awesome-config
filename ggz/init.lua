@@ -25,7 +25,7 @@ iglevel = 374 -- this will be displayed on the info panel
 ------------------------------------------------------------------------
 -- beautiful.init(gears.filesystem.get_themes_dir() .. "gtk/theme.lua")
 require("ggz.theme")
-beautiful.wallpaper = "/home/hung/Pictures/wallpaper"
+beautiful.wallpaper = "/home/hung/Pictures/wallpaper/index"
 -- beautiful.wallpaper = beautiful.icon_dir .. "wallpaper.png"
 
 ------------------------------------------------------------------------
@@ -144,7 +144,7 @@ end
 ------------------------------------------------------------------------
 --                 some global variables and configs                  --
 ------------------------------------------------------------------------
-terminal = 'terminal'
+terminal = 'x-terminal-emulator'
 editor = os.getenv("EDITOR") or "nvim"
 editor_cmd = terminal .. " -e " .. editor
 mod = "Mod1"
@@ -423,7 +423,7 @@ screen.connect_signal("request::wallpaper", function(s)
 end)
 
 
-screen.connect_signal("request::desktop_decoration", function(s)
+awful.screen.connect_for_each_screen(function(s)
    -- Each screen has its own tag table.
    for _,tag in pairs(beautiful.tags) do
       awful.tag.add(tag, {
