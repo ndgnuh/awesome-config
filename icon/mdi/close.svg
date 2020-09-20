@@ -1,1 +1,55 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="mdi-close" width="24" height="24" viewBox="0 0 24 24"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" /></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:version="1.0 (unknown)"
+   sodipodi:docname="close.svg"
+   viewBox="0 0 64 64"
+   height="64"
+   width="64"
+   id="mdi-close"
+   version="1.1">
+  <metadata
+     id="metadata157">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs155" />
+  <sodipodi:namedview
+     inkscape:current-layer="mdi-close"
+     inkscape:window-maximized="0"
+     inkscape:window-y="0"
+     inkscape:window-x="1327"
+     inkscape:cy="22.174825"
+     inkscape:cx="-26.980664"
+     inkscape:zoom="8.6875"
+     showgrid="false"
+     id="namedview153"
+     inkscape:window-height="1033"
+     inkscape:window-width="1873"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0"
+     guidetolerance="10"
+     gridtolerance="10"
+     objecttolerance="10"
+     borderopacity="1"
+     bordercolor="#666666"
+     pagecolor="#ffffff" />
+  <path
+     style="stroke-width:2"
+     id="path150"
+     d="M 46,20.82 43.18,18 32,29.18 20.82,18 18,20.82 29.18,32 18,43.18 20.82,46 32,34.82 43.18,46 46,43.18 34.82,32 Z" />
+</svg>
