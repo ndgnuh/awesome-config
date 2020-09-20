@@ -10,7 +10,12 @@ local ok, UPower = pcall(lgi.require, "UPowerGlib")
 
 if not ok then
   dump("Please install upower")
-  return {}
+  return {
+	  percentage = function() return 0 end,
+	  ischarging = function() return false end,
+	  isfull = function() return false end,
+	  watch = function() end
+  }
 end
 
 local upower_client = UPower.Client()

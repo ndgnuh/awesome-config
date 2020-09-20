@@ -109,7 +109,7 @@ callback()--}}}
 
 upower.watch(callback)
 
-return wibox.widget{--{{{
+local battery = wibox.widget{--{{{
   widget = wibox.container.margin,
   margins = beautiful.wibar_width / 8,
   {
@@ -118,3 +118,5 @@ return wibox.widget{--{{{
     bicon,
   }
 }--}}}
+
+return require"hoverbox"(battery)
