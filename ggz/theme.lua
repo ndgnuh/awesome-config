@@ -1,6 +1,7 @@
 local beautiful = require("beautiful")
 local gears = require("gears")
 local transparent = "#FFFFFF00"
+local dpi = require"beautiful.xresources".apply_dpi
 
 beautiful.font = 'Segoe UI 11'
 beautiful.boldfont = 'Segoe UI Bold 11'

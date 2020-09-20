@@ -14,6 +14,11 @@ require("awful.hotkeys_popup.keys")
 local api = require("api")
 api.audio.set_step(5)
 
+-- @TODO:
+-- remove this, this is global dpi function to keep
+-- compability with the old code
+dpi = beautiful.xresources.apply_dpi
+
 -------------------
 --  some config  --
 -------------------
