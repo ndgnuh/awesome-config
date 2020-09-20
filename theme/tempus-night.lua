@@ -194,9 +194,9 @@ theme.tasklist_thumbnail_shape = rounded_rect_shape
 --}}}
 
 -- battery widget color{{{
-theme.battery_color_full = theme.color2
-theme.battery_color_normal = theme.color4
-theme.battery_color_low = theme.color1
+theme.battery_color_full = theme.color10
+theme.battery_color_normal = theme.color12
+theme.battery_color_low = theme.color9
 --}}}
 
 return theme
