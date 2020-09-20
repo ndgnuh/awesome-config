@@ -90,6 +90,7 @@ module.cycle = function (self, engines)
   local idx = 1
   local current_engine = self.bus:get_global_engine()
   if not current_engine then
+    self.bus:set_global_engine(engines[1])
     return
   end
   local current_name = current_engine.name
