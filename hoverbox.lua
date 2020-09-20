@@ -12,12 +12,16 @@ local color_hover =
   beautiful.hoverbox_focus or
   beautiful.bg_focus or
   gears.color.transparent
+local shape = beautiful.hoverbox_shape
 --}}}
 
-local hoverbox = function(...)
-  local wrapper = wibox.container.background(...)
+local hoverbox = function(w, shape, callback)
+  local wrapper = wibox.container.background(w, _, shape)
   wrapper:connect_signal("mouse::enter", function(self)
     self.bg = color_hover
+    if callback and type(callback) == "function" then
+      callback(self)
+    end
   end)
   wrapper:connect_signal("mouse::leave", function(self)
     self.bg = color_normal

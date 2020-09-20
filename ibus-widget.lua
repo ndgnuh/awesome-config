@@ -8,6 +8,7 @@ local hoverbox = require"hoverbox"
 -- ibus menu{{{
 local menu = awful.menu {
   items = {
+    {"Start", "ibus-daemon -rdxs"},
     {"Restart", "ibus restart"},
     {"Preference", "ibus-setup"},
     {"Quit", "ibus exit"},

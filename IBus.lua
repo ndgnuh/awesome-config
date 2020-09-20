@@ -1,17 +1,19 @@
---[[ module doc{{{
-this module should provide these functionality:
-- cycle e1, e2, ...
-- get
-- watch callback
-- key mod key
-- button mod button
-]]
+-- module doc{{{
+-- @TODO: watch on connect, on disconnect
+-- this module should provide these functionality:
+-- * cycle e1, e2, ...
+-- * get
+-- * watch callback
+-- * key mod key
+-- * button mod button
+--
 local sh = require"sh"
 local ic = require"icon"
 local awful = require"awful"
 local gobject = require"gears.object"
 local lgi = require"lgi"
-local IBus = lgi.IBus--}}}
+local IBus = lgi.IBus
+--}}}
 
 local script = "ibus-cycle.sh"
 
@@ -41,8 +43,10 @@ local list_engine_desc = {--{{{
 
 local describe = function (engine_desc)--{{{
   local result = {}
-  for _, key in pairs(list_engine_desc) do
-    result[key] = engine_desc[key]
+  if engine_desc then
+    for _, key in pairs(list_engine_desc) do
+      result[key] = engine_desc[key]
+    end
   end
   return result
 end--}}}
@@ -84,8 +88,11 @@ end
 module.cycle = function (self, engines)
   engines = engines or self.engines
   local idx = 1
-  local current_name =
-  self.bus:get_global_engine().name
+  local current_engine = self.bus:get_global_engine()
+  if not current_engine then
+    return
+  end
+  local current_name = current_engine.name
   for i, enginename in ipairs(engines) do
     if enginename == current_name then
       idx = i + 1
