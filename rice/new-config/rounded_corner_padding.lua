@@ -1,14 +1,14 @@
+-- requirements{{{
 local awful = require'awful'
 local beautiful = require'beautiful'
 local shape = require'gears.shape'
 local wibox = require'wibox'
 local pi = math.pi
-
-local helper = require"helper"
-local map = helper.map
-local range = helper.range
-
+local fp = require"helper.fp"
+local map = fp.map
+local range = fp.range
 local radius = beautiful.border_radius or 10
+--}}}
 
 -- corner shapes {{{
 local cornershape = function(cr, w, h)
@@ -30,8 +30,7 @@ end
 local cornershapes = map(aux, range(1, 4))
 --}}}
 
-
--- function that setup the padding area{{{
+-- return function that setup the padding area{{{
 return function(s)
   local w_area = s.workarea -- use workarea to count the wibar padding
   local positions = {

@@ -3,24 +3,17 @@
 pcall(require, "luarocks.loader")
 
 -- Standard awesome library
-local gears =
-  require("gears")
-local awful =
-  require("awful")
+local gears = require("gears")
+local awful = require("awful")
 require("awful.autofocus")
 -- Widget and layout library
-local wibox =
-  require("wibox")
+local wibox = require("wibox")
 -- Theme handling library
-local beautiful =
-  require("beautiful")
+local beautiful = require("beautiful")
 -- Notification library
-local naughty =
-  require("naughty")
-local menubar =
-  require("menubar")
-local hotkeys_popup =
-  require("awful.hotkeys_popup")
+local naughty = require("naughty")
+local menubar = require("menubar")
+local hotkeys_popup = require("awful.hotkeys_popup")
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
@@ -74,7 +67,7 @@ end
 -- Themes define colours, icons, font and wallpapers.
 do
   -- local themefile = "/theme/plain.lua"
-  local themefile = "/new-config/theme/tempus-night.lua"
+  local themefile = "/rice/new-config/theme/tempus-night.lua"
   -- local themefile = "/fleon-gtk.theme"
   beautiful.init(awesomedir .. themefile)
 end
@@ -97,8 +90,8 @@ editor_cmd = terminal .. " -e " .. editor
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
-  awful.layout.suit.max,
   awful.layout.suit.floating,
+  awful.layout.suit.max,
   awful.layout.suit.tile,
   -- awful.layout.suit.tile.left,
   -- awful.layout.suit.tile.bottom,
@@ -129,6 +122,7 @@ myawesomemenu = {
 mymainmenu = awful.menu{
   items = {
     { "awesome", myawesomemenu },
+    { "rices", require("ricemenu").riceitems},
     { "open terminal", terminal }
   }
 }
@@ -289,7 +283,15 @@ root.keys({})
 
 local TaskSwitcher = require("TaskSwitcher")
 local ts = TaskSwitcher()
+local common = require"common"
 
+common:emit_signal("taskswitcher", "Mod4")
+common:emit_signal("rofi")
+
+common.usewith("globalkeys")
+
+
+--[[
 globalkeys = gears.table.join(
   awful.key({modkey}, "j", function() ts:trigger() ts:emit_signal("forward") end),
   awful.key({modkey}, "k", function() ts:trigger() ts:emit_signal("backward") end),
@@ -393,6 +395,7 @@ globalkeys = gears.table.join(
     awful.key({ modkey }, "p", function() menubar.show() end,
               {description = "show the menubar", group = "launcher"})
 )
+--]]
 
 
 clientkeys = gears.table.join(
@@ -414,6 +417,7 @@ clientkeys = gears.table.join(
         function (c)
             -- The client currently has the input focus, so it cannot be
             -- minimized, since minimized clients can't have the focus.
+            c:emit_signal("before::minimize")
             c.minimized = true
         end ,
         {description = "minimize", group = "client"}),
@@ -452,7 +456,7 @@ clientbuttons = gears.table.join(
 )
 
 -- Set keys
-root.keys(globalkeys)
+-- root.keys(globalkeys)
 awful.add_key_binding(
   awful.key({"Mod4", "Shift"}, "r", awesome.restart),
   awful.key({modkey}, "Return", partial(awful.spawn, terminal)),

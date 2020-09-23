@@ -1,7 +1,7 @@
 local awful = require"awful"
 local naughty = require"naughty"
 local gears = require"gears"
-local SingleNotification = require"SingleNotification"
+local SingleNotification = require"common.SingleNotification"
 
 -- shortcut
 local spnw = awful.spawn.easy_async_with_shell

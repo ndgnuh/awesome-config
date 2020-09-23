@@ -1,7 +1,8 @@
--- shorter require
-local re = function(name) return require("helper." .. name) end
+local module, helpers = {}, {"fp", "wm"}
 
-local fp = re"fp"
-local wm = re"wm"
+for _, name in pairs(helpers) do
+  helpers[h] = require("helper." .. name)
+end
 
-return fp
+return helpers
+
