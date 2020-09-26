@@ -1,14 +1,32 @@
--- do not `require` this file
--- it was made only to shorten the common.lua file
-local common = ...
-assert(common, "Do not require this file")
+-- spawner
+-- module.addkey(mod, key, cmd, callback, desc)
+-- * add key to global keys
+-- module.addbutton(mod, key, cmd, callback, desc)
+-- * add button to global buttons
+local module = {}
 
-common:emit_signal("add", "taskswitcher", function(_, mod, key)
-  mod = mod or {"Mod4"}
-  key = key or "r"
-  local wm = require"helper.wm"
+-- module.add(args, fn){{{
+-- where fn = awful.button | awful.key
+module.add = function(fn, mod, key, cmd, callback, desc)
+  assert(type(arg) == "table")
+  local wm = require"wm"
   local awful = require"awful"
-  wm.addkeys(awful.key(mod, key, function()
-    awful.spawn, "rofi -show combi -modi"
-  end))
-end)
+  -- if there's callback
+  local func = nil
+  if type(callback) == "function" then
+    func = function()
+      awful.spawn.easy_async_with_shell(cmd, callback)
+    end
+  else
+    func = function()
+      awful.spawn.with_shell(cmd)
+    end
+  end
+  if fn == awful.button then
+    wm.addkeys(btn(mod, key, func, arg.desc))
+  else
+  end
+end
+--}}}
+
+return module

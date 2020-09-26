@@ -134,4 +134,16 @@ module.globalkeys = function(modkey)
 end
 --}}}
 
+-- brightness{{{
+local nomod = {}
+wm.addkeys(
+  awful.key(nomod, "XF86MonBrightnessUp", function()
+    awful.spawn("light -A 6")
+  end),
+  awful.key(nomod, "XF86MonBrightnessDown", function()
+    awful.spawn("light -U 6")
+  end)
+  )
+-- brightness}}}
+
 return module
