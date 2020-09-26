@@ -36,20 +36,6 @@ do
 end
 --}}}
 
-
-do
-  local ptype = type
-  _G.type = function(x)
-    local pt = ptype(x)
-    if pt == "table" and pt.datatype then
-      return pt.datatype
-    else
-      return pt
-    end
-  end
-end
-
-
 local rice = io.open(wmdir .. "/rice.conf"):read()
 
 local module = loadmodule(rice)
