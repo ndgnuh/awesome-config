@@ -62,10 +62,8 @@ module.dispatches = {
 
 --- setup{{{
 -- connect signals from the rice
-module.setup = mm()
-module.setup.setgeneric(function(self, mode)
-  -- db.dump("generic called")
-  --db.dump(...)
+module.setup = function(self, mode, keys)
+  keys = keys or self.keys
   for sig, func in pairs(self.dispatches) do
     if func then
       self:connect_signal(sig, function(self, ...)
@@ -73,20 +71,8 @@ module.setup.setgeneric(function(self, mode)
       end)
     end
   end
-  if self.keys and mode ~= "m" then
-    if mode == "w" then
-      root.keys(self.keys)
-    else
-      root.keys(gears.table.join(self.keys, root.keys()))
-    end
-  end
-  self:emit_signal("setup::done")
-end)
-module.setup.addmethod("Module", "Keys", function(self, keys, mode)
-  -- db.dump("modules called")
   local actualkeys = {}
   local thekey
-  self:setup("m")
   for _, keypack in ipairs(keys) do
     if keypack.arg then
       thekey = awful.key(keypack[1], keypack[2], function()
@@ -99,12 +85,12 @@ module.setup.addmethod("Module", "Keys", function(self, keys, mode)
     end
     actualkeys = gears.table.join(actualkeys, thekey)
   end
-  root.keys(actualkeys)
-end)
-module.setup.addmethod("Module", "Default", function(self)
-  db.dump("Default")
-  self:setup(self.keys, "w")
-end)
+  if mode == "w" then
+    root.keys(actualkeys)
+  else
+    root.keys(root.keys(), actualkeys)
+  end
+end
 --}}}
 
 local modkey = "Mod4"

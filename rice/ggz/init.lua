@@ -483,4 +483,4 @@ awful.screen.connect_for_each_screen(function(s)
 end) -- connect for each screen?
 
 local common = require"common"
-common:setup(common.Default)
+common:setup("w")
