@@ -1,7 +1,7 @@
 -- assert(awesomedir, "awesomedir is not defined")
 
-local spawn = (re"awful.spawn").easy_async_with_shell
-local gobj = re"gears.object"
+local spawn = (require"awful.spawn").easy_async_with_shell
+local gobj = require"gears.object"
 
 local sh = gobj()
 

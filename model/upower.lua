@@ -1,10 +1,10 @@
 local re = require
 local lgi = require"lgi"
-local wibox = re"wibox"
-local beautiful = re"beautiful"
-local awful = re"awful"
-local gears = re"gears"
-local sh = re"sh"
+local wibox = require"wibox"
+local beautiful = require"beautiful"
+local awful = require"awful"
+local gears = require"gears"
+local sh = require"sh"
 
 local ok, UPower = pcall(lgi.require, "UPowerGlib")
 
@@ -82,8 +82,7 @@ end
 [upower.DeviceState.CHARGING]          = "Charging",
 [upower.DeviceState.UNKNOWN]           = "N/A"
 ]]
-module.ischarging =
-function(self)
+module.ischarging = function(self)
   local state = self.battery.state
   return
   state == UPower.DeviceState.PENDING_CHARGE or
@@ -91,19 +90,18 @@ function(self)
   state == UPower.DeviceState.FULLY_CHARGED
 end
 
-module.isfull =
-  function(self)
-    return
-      self.battery.state == upower.DeviceState.FULLY_CHARGED
-  end
+module.isfull = function(self)
+  return
+  self.battery.state == upower.DeviceState.FULLY_CHARGED
+end
 
-  module.getstate = function (self)
-    return self.battery.state_string
-  end
+module.getstate = function (self)
+  return self.battery.state_string
+end
 
-  module.percentage = function(self)
-    return self.battery.percentage
-  end
+module.percentage = function(self)
+  return self.battery.percentage
+end
 
 return module
 

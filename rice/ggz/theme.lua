@@ -3,9 +3,10 @@ local gears = require("gears")
 local transparent = "#FFFFFF00"
 local dpi = require"beautiful.xresources".apply_dpi
 
-beautiful.font = 'Segoe UI 11'
-beautiful.boldfont = 'Segoe UI Bold 11'
-beautiful.boldfontsmall = 'Segoe UI Bold 9'
+local fontbase = 'sans'
+beautiful.font = fontbase .. '11'
+beautiful.boldfont = fontbase .. ' 11'
+beautiful.boldfontsmall = fontbase .. ' 9'
 beautiful.icon_dir = debug.getinfo(1).source:sub(2):match("(.*/)") .. "/icons/"
 beautiful.font = beautiful.boldfont
 beautiful.fonts = {
