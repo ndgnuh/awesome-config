@@ -6,7 +6,7 @@ local dpi = require"beautiful.xresources".apply_dpi
 beautiful.font = 'Segoe UI 11'
 beautiful.boldfont = 'Segoe UI Bold 11'
 beautiful.boldfontsmall = 'Segoe UI Bold 9'
-beautiful.icon_dir = os.getenv("HOME") .. "/.config/awesome/ggz/icons/"
+beautiful.icon_dir = debug.getinfo(1).source:sub(2):match("(.*/)") .. "/icons/"
 beautiful.font = beautiful.boldfont
 beautiful.fonts = {
    normal = "Segoe UI ",
@@ -120,11 +120,11 @@ beautiful.taglist_spacing            = dpi(16)
 beautiful.taglist_border_width       = dpi(2)
 beautiful.taglist_border_color       = beautiful.white
 beautiful.taglist_icon               = {
-   Term  = os.getenv("HOME") .. '/.config/awesome/ggz/icons/term.png',
-   Web   = os.getenv("HOME") .. '/.config/awesome/ggz/icons/web.png',
-   Doc   = os.getenv("HOME") .. '/.config/awesome/ggz/icons/doc.png',
-   Media = os.getenv("HOME") .. '/.config/awesome/ggz/icons/media.png',
-   Extra = os.getenv("HOME") .. '/.config/awesome/ggz/icons/extra.png',
+   Term  = beautiful.icon_dir .. 'term.png',
+   Web   = beautiful.icon_dir .. 'web.png',
+   Doc   = beautiful.icon_dir .. 'doc.png',
+   Media = beautiful.icon_dir .. 'media.png',
+   Extra = beautiful.icon_dir .. 'extra.png',
 }
 
 ------------

@@ -30,7 +30,7 @@ iglevel = 374 -- this will be displayed on the info panel
 ------------------------------------------------------------------------
 -- beautiful.init(gears.filesystem.get_themes_dir() .. "gtk/theme.lua")
 require("ggz.theme")
-beautiful.wallpaper = "/home/hung/Pictures/wallpaper/index"
+beautiful.wallpaper = os.getenv("HOME") .. "/Pictures/wallpaper/index"
 -- beautiful.wallpaper = beautiful.icon_dir .. "wallpaper.png"
 
 ------------------------------------------------------------------------
@@ -415,20 +415,23 @@ client.connect_signal("unfocus", function(c)
 end)
 
 -- wallpaper request
-screen.connect_signal("request::wallpaper", function(s)
-   -- Wallpaper
-   if beautiful.wallpaper then
-      local wallpaper = beautiful.wallpaper
-      -- If wallpaper is a function, call it with the screen
-      if type(wallpaper) == "function" then
-         wallpaper = wallpaper(s)
-      end
+local setwallpaper = function(s)
+  -- Wallpaper
+  if beautiful.wallpaper then
+    local wallpaper = beautiful.wallpaper
+    -- If wallpaper is a function, call it with the screen
+    if type(wallpaper) == "function" then
+      wallpaper = wallpaper(s)
+    else
       gears.wallpaper.maximized(wallpaper, s, true)
-   end
-end)
+    end
+  end
+end
+screen.connect_signal("request::wallpaper", setwallpaper)
 
 
 awful.screen.connect_for_each_screen(function(s)
+  setwallpaper(s)
    -- Each screen has its own tag table.
    for _,tag in pairs(beautiful.tags) do
       awful.tag.add(tag, {
