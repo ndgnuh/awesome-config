@@ -1,149 +1,191 @@
 local awful = require"awful"
 local gears = require"gears"
 local wm = require"helper.wm"
+local partial = require"util.Partial"
+local mm = require"util.MultiMethod2"
+local Val = require"util.Val"
+local db = require"util.Debug"
 
-local module = gears.object{}
+local module = gears.object{class = {
+  __datatype = "Module",
+  Default = {__datatype = "Default"}
+}}
 
-local dir = debug.getinfo(1).source:sub(2):match("(.*/)")
-local re = function(f)
-  local filename = dir .. "common/" .. f .. ".lua"
-  dump(filename)
-  local ok, result = pcall(loadfile, filename)
-  if type(result) == "function" then
-    result(module)
-  else
-    dump(result)
-  end
+--- module.dispatches {{{
+-- keys = signals, values = function to call
+-- Why use signal? So that other widget can intercept.
+-- This table contains dispatches which is used by every rice.
+-- * To change behaviour for one rice, do it in the rice, THEN call setup()
+-- * To change behaviour for all rices, change the behavior here
+-- The need to call setup() will be remove in the future by
+-- using a proxy for (dis)connecting dispatches from the module
+local spawn = function(x) awful.spawn(x) end
+local focus = awful.client.focus
+local focusedtoggle = function(prop)
+  local c = client.focus
+  if c then c[prop] = not c[prop] end
+  return prop
 end
-
-module:connect_signal("add", function(self, signal, callback)
-  self:connect_signal(signal, callback)
-end)
-
-re("taskswitcher")
-module:emit_signal("add", "rofi", function(_, mod, key)
-  mod = mod or {"Mod4"}
-  key = key or "r"
-  local wm = require"helper.wm"
-  local awful = require"awful"
-  wm.addkeys(awful.key(mod, key, function()
-    awful.spawn("rofi -show combi -modi")
-  end))
-end)
-
--- use/usewith{{{
--- use(...): use some module without argument
--- usewith(name, ...): use a module with some arguments
-module.use = function(...)
-  local narg = select("#", ...)
-  for i = 1, narg do
-    module[select(i, ...)]()
-  end
+local focusedcall = function(method)
+  local c = client.focus
+  local f = c and c[method] or nil
+  if f then f(c) end
+  return method
 end
-module.usewith = function(use, ...)
-  return module[use](...)
-end
---}}}
+module.dispatches = {
+  ["app/launcher"] = partial(spawn, "rofi -show run"),
+  ["app/menu"] = partial(spawn, "rofi -show run"),
+  ["app/terminal"] = partial(spawn, "x-terminal-emulator"),
+  ["wm/restart"] = awesome.restart,
+  ["wm/quit"] = awesome.quit,
+  ["client/focus-next"] = partial(focus.byidx, 1),
+  ["client/focus-previous"] = partial(focus.byidx, -1),
+  ["client/focus-last"] = partial(focus.history, -1),
+  ["client/restore"] = awful.client.restore,
+  ["client/toggle-maximize"] = partial(focusedtoggle, "maximized"),
+  ["client/toggle-fullscreen"] = partial(focusedtoggle, "fullscreen"),
+  ["client/toggle-floating"] = partial(focusedtoggle, "floating"),
+  ["client/toggle-mark"] = partial(focusedtoggle, "marked"),
+  ["client/minimize"] = partial(focusedtoggle, "minimized"),
+  ["client/kill"] = partial(focusedcall, "kill"),
+  ["media/audio+"] = partial(spawn, "pactl set-sink-volume @DEFAULT_SINK@ +5%"),
+  ["media/audio-"] = partial(spawn, "pactl set-sink-volume @DEFAULT_SINK@ -5%"),
+  ["media/audio!"] = partial(spawn, "pactl set-sink-mute @DEFAULT_SINK@ toggle"),
+  ["media/micro+"] = partial(spawn, "pactl set-source-volume @DEFAULT_SOURCE@ +5%"),
+  ["media/micro-"] = partial(spawn, "pactl set-source-volume @DEFAULT_SOURCE@ -5%"),
+  ["media/micro!"] = partial(spawn, "pactl set-source-mute @DEFAULT_SOURCE@ toggle"),
+  ["media/brightness+"] = partial(spawn, "light -A 10"),
+  ["media/brightness-"] = partial(spawn, "light -U 10"),
+  ["media/display"] = partial(awful.spawn.raise_or_spawn, "arandr"),
+  ["debug/test-signal"] = partial(db.dump, "Test signal"),
+}--}}}
 
--- environment{{{
-module.environment = {}
-module.environment.__call = function(self, ...)
-  local narg = select("#", ...)
-  if narg == 0 then
-    return self
-  else
-    local key = select(1, ...)
-    if narg == 1 then
-      return rawget(self, key)
-    elseif narg == 2 then
-      local val = select(2, ...)
-      rawset(self, key, val)
-      return val
+--- setup{{{
+-- connect signals from the rice
+module.setup = mm()
+module.setup.setgeneric(function(self, mode)
+  -- db.dump("generic called")
+  --db.dump(...)
+  for sig, func in pairs(self.dispatches) do
+    if func then
+      self:connect_signal(sig, function(self, ...)
+        func(...)
+      end)
     end
   end
-end
-module.environment = setmetatable(module.environment, {__call = module.environment.__call})
+  if self.keys and mode ~= "m" then
+    if mode == "w" then
+      root.keys(self.keys)
+    else
+      root.keys(gears.table.join(self.keys, root.keys()))
+    end
+  end
+  self:emit_signal("setup::done")
+end)
+module.setup.addmethod("Module", "Keys", function(self, keys, mode)
+  -- db.dump("modules called")
+  local actualkeys = {}
+  local thekey
+  self:setup("m")
+  for _, keypack in ipairs(keys) do
+    if keypack.arg then
+      thekey = awful.key(keypack[1], keypack[2], function()
+        self:emit_signal(keypack[3], keypack.argf())
+      end, keypack[4])
+    else
+      thekey = awful.key(keypack[1], keypack[2], function()
+        self:emit_signal(keypack[3])
+      end, keypack[4])
+    end
+    actualkeys = gears.table.join(actualkeys, thekey)
+  end
+  root.keys(actualkeys)
+end)
+module.setup.addmethod("Module", "Default", function(self)
+  db.dump("Default")
+  self:setup(self.keys, "w")
+end)
 --}}}
 
--- modifier{{{
-module.modifier = function(self, modkey)
-  assert(modkey, "Must call with modkey")
-  self.environment("modkey", modkey)
-  return modkey
-end
---}}}
+local modkey = "Mod4"
+local Mod = {modkey}
+local ModShift = {modkey, "Shift"}
+local ModCtrl = {modkey, "Control"}
+module.keys = {
+  __datatype = "Keys",
 
--- globalkeys{{{
-module.globalkeys = function(modkey)
-  local modkey = "Mod4"
-  local mod = {modkey}
-  local modshift = {modkey, "Shift"}
-  local modctrl = {modkey, "Control"}
-  wm.addkeys(
-    awful.key(mod, "Left", awful.tag.viewprev,
-      {description = "view previous", group = "tag"}),
-    awful.key(mod, "Right", awful.tag.viewnext,
-      {description = "view next", group = "tag"}),
-    awful.key(mod, "Escape", awful.tag.history.restore,
-      {description = "go back", group = "tag"}),
-    awful.key(modshift, "j", function () awful.client.swap.byidx( 1) end,
-      {description = "swap with next client by index", group = "client"}),
-    awful.key(modshift, "k", function () awful.client.swap.byidx( -1) end,
-      {description = "swap with previous client by index", group = "client"}),
-    awful.key(modctrl, "j", function () awful.screen.focus_relative( 1) end,
-      {description = "focus the next screen", group = "screen"}),
-    awful.key(modctrl, "k", function () awful.screen.focus_relative(-1) end,
-      {description = "focus the previous screen", group = "screen"}),
-    awful.key(mod, "u", awful.client.urgent.jumpto,
-      {description = "jump to urgent client", group = "client"}),
-    -- Standard program
-    awful.key(modctrl, "r", awesome.restart,
-      {description = "reload awesome", group = "awesome"}),
-    awful.key(modshift, "e", awesome.quit,
-      {description = "quit awesome", group = "awesome"}),
+  -- app related
+  {Mod, "Return", "app/terminal"},
+  {Mod, "w", "app/menu"},
+  {Mod, "r", "app/launcher"},
 
-    awful.key(mod, "l", function () awful.tag.incmwfact( 0.05) end,
-      {description = "increase master width factor", group = "layout"}),
-    awful.key(mod, "h", function () awful.tag.incmwfact(-0.05) end,
-      {description = "decrease master width factor", group = "layout"}),
-    awful.key(modshift, "h", function () awful.tag.incnmaster( 1, nil, true) end,
-      {description = "increase the number of master clients", group = "layout"}),
-    awful.key(modshift, "l", function () awful.tag.incnmaster(-1, nil, true) end,
-      {description = "decrease the number of master clients", group = "layout"}),
-    awful.key(modctrl, "h", function () awful.tag.incncol( 1, nil, true) end,
-      {description = "increase the number of columns", group = "layout"}),
-    awful.key(modctrl, "l", function () awful.tag.incncol(-1, nil, true) end,
-      {description = "decrease the number of columns", group = "layout"}),
-    awful.key(modshift, "space", function () awful.layout.inc(-1) end,
-      {description = "select previous", group = "layout"}),
-    awful.key(modshift, "n",
-      function ()
-        local c = awful.client.restore()
-        -- Focus restored client
-        if c then
-          c:emit_signal(
-            "request::activate", "key.unminimize", {raise = true}
-            )
-        end
-      end,
-      {description = "restore minimized", group = "client"}),
-    -- Menubar
-    awful.key(mod, "p", function() require"menubar".show() end,
-      {description = "show the menubar", group = "launcher"})
-    )
-end
---}}}
+  -- wm related
+  {ModShift, "r", "wm/restart"},
+  {ModShift, "e", "wm/quit"},
 
--- brightness{{{
-local nomod = {}
-wm.addkeys(
-  awful.key(nomod, "XF86MonBrightnessUp", function()
-    awful.spawn("light -A 6")
-  end),
-  awful.key(nomod, "XF86MonBrightnessDown", function()
-    awful.spawn("light -U 6")
-  end)
-  )
--- brightness}}}
+  -- client related
+  {Mod, "j", "client/focus-next"},
+  {Mod, "k", "client/focus-previous"},
+  {ModShift, "q", "client/kill"},
+  {Mod, "m", "client/toggle-maximize"},
+  {Mod, "f", "client/toggle-fullscreen"},
+  {ModShift, "f", "client/toggle-floating"},
+  {ModShift, "m", "client/toggle-mark"},
+  {Mod, "n", "client/minimize"},
+  {ModShift, "n", "client/restore"},
+
+  -- media keys related
+  {Nothing, "XF86AudioRaiseVolume", "media/audio+"},
+  {Nothing, "XF86AudioLowerVolume", "media/audio-"},
+  {Nothing, "XF86AudioMute", "media/audio!"},
+  {Nothing, "XF86MonBrightnessUp", "media/brightness+"},
+  {Nothing, "XF86MonBrightnessDown", "media/brightness-"},
+  {Nothing, "XF86Display", "media/display"},
+}
+
+--do{{{
+--  local Nothing = {}
+--  local focusedtoggle = function(prop)
+--    local c = client.focus
+--    if c then c[prop] = not c[prop] end
+--    return prop
+--  end
+--  local focusedcall = function(method)
+--    local c = client.focus
+--    local f = c and c[method] or nil
+--    if f then f(c) end
+--    return method
+--  end
+--  local modkey = "Mod4"
+--  local Mod = {modkey}
+--  local ModShift = {modkey, "Shift"}
+--  local ModCtrl = {modkey, "Control"}
+--  local key, spawn = awful.key, awful.spawn
+--  local globalkeys = gears.table.join(
+--
+--
+--  key(Mod, "j", partial(awful.client.focus.byidx, 1)),
+--  key(Mod, "k", partial(awful.client.focus.byidx, -1)),{{{
+--  key(ModShift, "n", awful.client.restore),
+--  key(Mod, "r", partial(spawn, "rofi -show run")),
+--  key(Mod, "w", partial(spawn, "rofi -show run")),
+--  key(Mod, "Return", partial(spawn, "x-terminal-emulator")),
+--  key(ModShift, "r", awesome.restart),
+--
+--  key(Mod, "m", partial(focusedtoggle, "maximized")),
+--  key(Mod, "f", partial(focusedtoggle, "fullscreen")),
+--  key(Mod, "n", partial(focusedtoggle, "minimized")),
+--  key(ModShift, "q", partial(focusedmethod, "kill")),
+--
+--  key(Nothing, "XF86AudioRaiseVolume", partial(spawn, "pactl set-sink-volume @DEFAULT_SINK@ +5%")),
+--  key(Nothing, "XF86AudioLowerVolume", partial(spawn, "pactl set-sink-volume @DEFAULT_SINK@ -5%")),
+--  key(Nothing, "XF86AudioMute", partial(spawn, "pactl set-sink-mute @DEFAULT_SINK@ toggle")),
+--  key(Nothing, "XF86MonBrightnessUp", partial(spawn, "light -A 10")),
+--  key(Nothing, "XF86MonBrightnessDown", partial(spawn, "light -U 10")),
+--  key(Nothing, "XF86Display", partial(spawn.raise_or_spawn, "arandr")),
+--  {})
+--
+--  --root.keys(globalkeys)
+--end}}}}}}
 
 return module

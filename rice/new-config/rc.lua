@@ -283,12 +283,6 @@ root.keys({})
 
 local TaskSwitcher = require("TaskSwitcher")
 local ts = TaskSwitcher()
-local common = require"common"
-
-common:emit_signal("taskswitcher", "Mod4")
-common:emit_signal("rofi")
-
-common.usewith("globalkeys")
 
 
 --[[
@@ -405,52 +399,50 @@ clientkeys = gears.table.join(
             c:raise()
         end,
         {description = "toggle fullscreen", group = "client"}),
-    awful.key({ modkey, "Shift"   }, "q",      function (c) c:kill()                         end,
-              {description = "close", group = "client"}),
     awful.key({ modkey, "Control" }, "space",  awful.client.floating.toggle                     ,
               {description = "toggle floating", group = "client"}),
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end,
               {description = "move to master", group = "client"}),
     awful.key({ modkey,           }, "o",      function (c) c:move_to_screen()               end,
-              {description = "move to screen", group = "client"}),
-    awful.key({ modkey,           }, "n",
-        function (c)
-            -- The client currently has the input focus, so it cannot be
-            -- minimized, since minimized clients can't have the focus.
-            c:emit_signal("before::minimize")
-            c.minimized = true
-        end ,
-        {description = "minimize", group = "client"}),
-    awful.key({ modkey,           }, "m",
-        function (c)
-            c.maximized = not c.maximized
-            c:raise()
-        end ,
-        {description = "(un)maximize", group = "client"}),
-    awful.key({ modkey, "Control" }, "m",
-        function (c)
-            c.maximized_vertical = not c.maximized_vertical
-            c:raise()
-        end ,
-        {description = "(un)maximize vertically", group = "client"}),
-    awful.key({ modkey, "Shift"   }, "m",
-        function (c)
-            c.maximized_horizontal = not c.maximized_horizontal
-            c:raise()
-        end ,
-        {description = "(un)maximize horizontally", group = "client"})
+              {description = "move to screen", group = "client"})
+--    awful.key({ modkey,           }, "n",
+--        function (c)
+--            -- The client currently has the input focus, so it cannot be
+--            -- minimized, since minimized clients can't have the focus.
+--            c:emit_signal("before::minimize")
+--            c.minimized = true
+--        end ,
+--  {description = "minimize", group = "client"}),
+--    awful.key({ modkey,           }, "m",
+--        function (c)
+--            c.maximized = not c.maximized
+--            c:raise()
+--        end ,
+--        {description = "(un)maximize", group = "client"}),
+--    awful.key({ modkey, "Control" }, "m",
+--        function (c)
+--            c.maximized_vertical = not c.maximized_vertical
+--            c:raise()
+--        end ,
+--        {description = "(un)maximize vertically", group = "client"}),
+--    awful.key({ modkey, "Shift"   }, "m",
+--        function (c)
+--            c.maximized_horizontal = not c.maximized_horizontal
+--            c:raise()
+--        end ,
+--        {description = "(un)maximize horizontally", group = "client"})
 )
 
 clientbuttons = gears.table.join(
     awful.button({ }, 1, function (c)
-        c:emit_signal("request::activate", "mouse_click", {raise = true})
+        c:emit_signal("request::activate", "mouse", {raise = true})
     end),
     awful.button({ modkey }, 1, function (c)
-        c:emit_signal("request::activate", "mouse_click", {raise = true})
+        c:emit_signal("request::activate", "mouse", {raise = true})
         awful.mouse.client.move(c)
     end),
     awful.button({ modkey }, 3, function (c)
-        c:emit_signal("request::activate", "mouse_click", {raise = true})
+        c:emit_signal("request::activate", "mouse", {raise = true})
         awful.mouse.client.resize(c)
     end)
 )
@@ -592,7 +584,7 @@ end)
 
 -- Enable sloppy focus, so that focus follows mouse.
 client.connect_signal("mouse::enter", function(c)
-    c:emit_signal("request::activate", "mouse_enter", {raise = false})
+    c:emit_signal("request::activate", "mouse", {raise = false})
 end)
 
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
@@ -626,3 +618,9 @@ client.connect_signal("manage", function(c)
 		c.icon = gears.color.recolor_image(icon"mdi/application.svg", "#FFFFFF")._native
 	end
 end)
+
+local common = require"common"
+common.dispatches["app/menu"] = function() mymainmenu:show() end
+common:setup()
+
+require"common"

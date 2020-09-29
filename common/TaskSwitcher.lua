@@ -123,10 +123,7 @@ local new = function(args)
     stop_event = 'release',
     stop_callback = function()
       box.visible = false
-      client.focus = box.client[box.focus_idx]
-      if client.focus then
-        client.focus:raise()
-      end
+      box.client[box.focus_idx]:emit_signal("request::activate", "TaskSwicher", {raise = true})
     end,
     export_keybinding = true
   }

@@ -38,4 +38,15 @@ end
 
 local rice = io.open(wmdir .. "/rice.conf"):read()
 
+-- local Keys = require("util.Key")
+
+-- Keys:modkey("Mod4")
+--
+-- require("naughty").notify{
+--   text = require('gears').debug.dump_return{
+--     Keys,
+--     Keys:modkey(),
+--   }
+-- }
+
 local module = loadmodule(rice)

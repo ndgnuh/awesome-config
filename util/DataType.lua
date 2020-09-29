@@ -1,4 +1,4 @@
-local DataType = {}
+local DataType = {byname = {}, datatype = "DataType"}
 
 do
   local ptype = type
@@ -57,6 +57,15 @@ DataType.new = function(name, constructor, meta)
   return setmetatable(thetype, {__call = call, __tostring = function(self) return "[DataType] " .. self.name end})
 end
 
-DataType = setmetatable(DataType, {__call = function(self, ...) return self.new(...) end})
+DataType = setmetatable(DataType, {
+    __call = function(self, name, ...)
+      local ret = self.new(name, ...)
+      self.byname[name] = ret
+      return ret
+    end,
+    __index = function(self, name)
+      return rawget(rawget(self, "byname"), name)
+    end,
+  })
 
 return DataType

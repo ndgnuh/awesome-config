@@ -22,7 +22,7 @@ dpi = beautiful.xresources.apply_dpi
 -------------------
 --  some config  --
 -------------------
-ign = os.getenv("USER") .. "@ArchBtw" -- this will be displayed on the info panel
+ign = os.getenv("USER") .. "@" .. io.popen("hostname"):read():match(".+") -- this will be displayed on the info panel
 iglevel = 374 -- this will be displayed on the info panel
 
 ------------------------------------------------------------------------
@@ -481,3 +481,6 @@ awful.screen.connect_for_each_screen(function(s)
       top = beautiful.wibar_height + beautiful.wibar_border_width * 2
    }
 end) -- connect for each screen?
+
+local common = require"common"
+common:setup(common.Default)
