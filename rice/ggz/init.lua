@@ -167,7 +167,7 @@ menu_awesome = {
 
 menu = awful.menu({
    { "Awesome", menu_awesome, beautiful.awesome_icon },
-   { "Set config", configsets },
+   { "Set config", require"ricemenu".riceitems },
    { "Session", powermenu },
    { "Terminal", terminal },
    { "Cancel", 'echo &' },
@@ -486,4 +486,7 @@ awful.screen.connect_for_each_screen(function(s)
 end) -- connect for each screen?
 
 local common = require"common"
+common.dispatches["app/menu"] = function()
+  menu:show()
+end
 common:setup("w")
