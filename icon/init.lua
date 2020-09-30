@@ -1,8 +1,9 @@
 -- assert(awesomedir, "awesomedir not defined")
 -- local iconDir = awesomedir .. "/icon"
-local iconDir = debug.getinfo(1).source:sub(2):match("(.*/)")
+local Dir = require"Dir"
+iconDir = Dir()
 
-local gfs = re"gears.filesystem"
+local gfs = require"gears.filesystem"
 
 return function(name)
 	assert(name, "icon name must not be nil")

@@ -72,8 +72,8 @@ beautiful.tasklist_shape_border_width = dpi(2)
 ---------------------------
 --  spacing and borders  --
 ---------------------------
-beautiful.useless_gap = dpi(4)
-beautiful.border_width = dpi(4)
+beautiful.useless_gap = dpi(2)
+beautiful.border_width = dpi(2)
 beautiful.border_normal = beautiful.shade
 beautiful.border_focus = beautiful.blue
 

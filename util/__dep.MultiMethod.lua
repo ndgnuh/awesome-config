@@ -16,16 +16,15 @@ local module, private
 private = {}
 
 -- override the type function
-do
-  local ptype = _G.type
-  _G.type = function(x)
-    local pt = ptype(x)
-    if pt == "table" then
-      return x.__datatype or pt
-    end
-    return pt
+local ptype = type
+local isa = function(x)
+  local pt = ptype(x)
+  if pt == "table" then
+    return x.__datatype or x.widget_name or pt
   end
+  return pt
 end
+--type = isa
 
 -- get/set recursively{{{
 private._setr = function(t, ind, maxind, ...)
@@ -71,7 +70,7 @@ module = function(vtable)
     return f(...)
   end
   -- if there's a vtable then append the method
-  if type(vtable) == "table" then
+  if isa(vtable) == "table" then
     for dispatch, method in pairs(vtable) do
       table.insert(dispatch, method)
       chainset(vt, unpack(dispatch))

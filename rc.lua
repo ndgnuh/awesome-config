@@ -50,6 +50,7 @@ local rice = io.open(wmdir .. "/rice.conf"):read()
 -- }
 
 package.path = package.path .. (";" .. wmdir .. "util/?.lua")
+  .. (";" .. wmdir .. "model/?.lua")
 
 urequire = function(x) return require("util." .. x) end
 mrequire = function(x) return require("model." .. x) end

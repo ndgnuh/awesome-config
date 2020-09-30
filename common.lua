@@ -19,6 +19,7 @@ local module = gears.object{class = {
 -- * To change behaviour for all rices, change the behavior here
 -- The need to call setup() will be remove in the future by
 -- using a proxy for (dis)connecting dispatches from the module
+local IBus = require"IBus"
 local spawn = function(x) awful.spawn(x) end
 local focus = awful.client.focus
 local focusedtoggle = function(prop)
@@ -58,6 +59,8 @@ module.dispatches = {
   ["media/brightness-"] = partial(spawn, "light -U 10"),
   ["media/display"] = partial(awful.spawn.raise_or_spawn, "arandr"),
   ["debug/test-signal"] = partial(db.dump, "Test signal"),
+
+  ["misc/ibus-cycle"] = partial(IBus.cycle, IBus, {"xkb:us::eng", "Bamboo"})
 }--}}}
 
 --- setup{{{
@@ -85,10 +88,10 @@ module.setup = function(self, mode, keys)
     end
     actualkeys = gears.table.join(actualkeys, thekey)
   end
-  if mode == "w" then
-    root.keys(actualkeys)
-  else
+  if mode == "a" then
     root.keys(root.keys(), actualkeys)
+  else
+    root.keys(actualkeys)
   end
 end
 --}}}
@@ -119,6 +122,9 @@ module.keys = {
   {ModShift, "m", "client/toggle-mark"},
   {Mod, "n", "client/minimize"},
   {ModShift, "n", "client/restore"},
+
+  -- misc
+  {Mod, "space", "misc/ibus-cycle"},
 
   -- media keys related
   {Nothing, "XF86AudioRaiseVolume", "media/audio+"},

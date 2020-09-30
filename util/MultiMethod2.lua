@@ -1,8 +1,12 @@
 local typesep, mm
-local ptype = type
-type = function(x)
-    local pt = ptype(x)
-    return pt == "table" and x.__datatype or pt
+local isa = function(x)
+    local pt = type(x)
+    -- patch so that it fit awesomewm usage
+    if pt == "table" then
+      return x.widget_name or x.__datatype
+    else
+      return pt
+    end
 end
 
 local db = require"util.Debug"
@@ -32,7 +36,7 @@ mm = function(gen, return_function_only)
     -- the proper method will be found
     -- if no method is found the generic will be called
     for i = 1, nargs do
-      types = types .. type(select(i, ...))
+      types = types .. isa(select(i, ...))
       if f[types] then
         method = f[types]
       end

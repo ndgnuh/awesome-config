@@ -621,6 +621,6 @@ end)
 
 local common = require"common"
 common.dispatches["app/menu"] = function() mymainmenu:show() end
-common:setup()
+common:setup("w")
 
 require"common"
