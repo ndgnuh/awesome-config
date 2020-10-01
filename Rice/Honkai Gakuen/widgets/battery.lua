@@ -25,7 +25,7 @@ local battery_widget = wibox.widget({
    layout = wibox.layout.stack,
 })
 
-local updatefunction = function(bat)
+local updatefunction = function()
   local percentage = UPower:percentage()
   battery_bar.value = percentage
   local status_text = tostring(percentage):match("%d%d%d?") .. "% " .. (UPower:getstate() or 'Unknown')
@@ -34,6 +34,7 @@ end
 
 UPower.watch(updatefunction)
 updatefunction()
+
 --battery_bar:connect_signal(api.battery.signal.update, function(_, device)
 --   battery_bar.value = device.percentage
 --   local status_text = math.floor(device.percentage + 0.5) .. "/100 ".. api.battery.status[device.state]
@@ -47,4 +48,5 @@ updatefunction()
 --   end
 --end)
 --api.battery.attach(battery_bar)
+
 return battery_widget

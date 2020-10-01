@@ -66,10 +66,9 @@ end
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
 do
-  -- local themefile = "/theme/plain.lua"
-  local themefile = "/rice/new-config/theme/tempus-night.lua"
-  -- local themefile = "/fleon-gtk.theme"
-  beautiful.init(awesomedir .. themefile)
+  local cdir = require("Dir")()
+  local themefile = cdir .. "theme/tempus-night.lua"
+  beautiful.init(themefile)
 end
 
 -- {{{ @libs
@@ -122,7 +121,7 @@ myawesomemenu = {
 mymainmenu = awful.menu{
   items = {
     { "awesome", myawesomemenu },
-    { "rices", require("ricemenu").riceitems},
+    require("rice").menu,
     { "open terminal", terminal }
   }
 }

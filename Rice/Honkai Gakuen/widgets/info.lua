@@ -5,8 +5,8 @@ local beautiful = require("beautiful")
 
 local oldfont = beautiful.font
 beautiful.font = beautiful.fonts.bold .. 9
-local widget_volume = require("ggz.widgets.volume")
-local widget_battery = require("ggz.widgets.battery")
+local widget_volume = require("Honkai Gakuen.widgets.volume")
+local widget_battery = require("Honkai Gakuen.widgets.battery")
 local widget_calendar = awful.widget.calendar_popup.month()
 widget_calendar.shape = beautiful.common_shape(dpi(16))
 widget_calendar.border_width = dpi(2)

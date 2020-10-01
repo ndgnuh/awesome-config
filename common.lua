@@ -6,10 +6,12 @@ local mm = require"util.MultiMethod2"
 local Val = require"util.Val"
 local db = require"util.Debug"
 
+-- {{{
 local module = gears.object{class = {
   __datatype = "Module",
   Default = {__datatype = "Default"}
 }}
+-- }}}
 
 --- module.dispatches {{{
 -- keys = signals, values = function to call
@@ -33,6 +35,33 @@ local focusedcall = function(method)
   if f then f(c) end
   return method
 end
+local tagcall = function(method, i)
+  local s = awful.screen.focused()
+  local tag
+  if i then
+    tag = s.tags[i]
+  else
+    tag = awful.tag.selected()
+  end
+  if tag then
+    tag[method](tag)
+  end
+end
+
+local Stateful = require"Stateful"
+local tagtoggle = Stateful(function(self)
+  if self.__tag then
+    self.__tag:view_only()
+    self.__tag = nil
+  else
+    local t = awful.tag.selected()
+    if t then
+      self.__tag = t
+      awful.tag.viewnone()
+    end
+  end
+end)
+
 module.dispatches = {
   ["app/launcher"] = partial(spawn, "rofi -show run"),
   ["app/menu"] = partial(spawn, "rofi -show run"),
@@ -60,8 +89,25 @@ module.dispatches = {
   ["media/display"] = partial(awful.spawn.raise_or_spawn, "arandr"),
   ["debug/test-signal"] = partial(db.dump, "Test signal"),
 
-  ["misc/ibus-cycle"] = partial(IBus.cycle, IBus, {"xkb:us::eng", "Bamboo"})
-}--}}}
+  ["misc/ibus-cycle"] = partial(IBus.cycle, IBus, {"xkb:us::eng", "Bamboo"}),
+
+  -- tag involved
+  ["tag/view-1"] = partial(tagcall, "view_only", 1),
+  ["tag/view-2"] = partial(tagcall, "view_only", 2),
+  ["tag/view-3"] = partial(tagcall, "view_only", 3),
+  ["tag/view-4"] = partial(tagcall, "view_only", 4),
+  ["tag/view-5"] = partial(tagcall, "view_only", 5),
+  ["tag/view-6"] = partial(tagcall, "view_only", 6),
+  ["tag/view-7"] = partial(tagcall, "view_only", 7),
+  ["tag/view-8"] = partial(tagcall, "view_only", 8),
+  ["tag/view-9"] = partial(tagcall, "view_only", 9),
+  ["tag/view-none"] = tagtoggle,
+  ["client/move-to-tag"] = function(i)
+    local c= client.focus
+    if c then c:move_to_tag(i) end
+  end,
+}
+--}}}
 
 --- setup{{{
 -- connect signals from the rice
@@ -79,7 +125,7 @@ module.setup = function(self, mode, keys)
   for _, keypack in ipairs(keys) do
     if keypack.arg then
       thekey = awful.key(keypack[1], keypack[2], function()
-        self:emit_signal(keypack[3], keypack.argf())
+        self:emit_signal(keypack[3], unpack(keypack.arg))
       end, keypack[4])
     else
       thekey = awful.key(keypack[1], keypack[2], function()
@@ -96,6 +142,7 @@ module.setup = function(self, mode, keys)
 end
 --}}}
 
+-- common key {{{
 local modkey = "Mod4"
 local Mod = {modkey}
 local ModShift = {modkey, "Shift"}
@@ -133,7 +180,29 @@ module.keys = {
   {Nothing, "XF86MonBrightnessUp", "media/brightness+"},
   {Nothing, "XF86MonBrightnessDown", "media/brightness-"},
   {Nothing, "XF86Display", "media/display"},
+
+  -- tags related
+  {Mod, "#19", "tag/view-none"},
+  {Mod, "#10" , "tag/view-1"},
+  {Mod, "#11", "tag/view-2"},
+  {Mod, "#12", "tag/view-3"},
+  {Mod, "#13", "tag/view-4"},
+  {Mod, "#14", "tag/view-5"},
+  {Mod, "#15", "tag/view-6"},
+  {Mod, "#16", "tag/view-7"},
+  {Mod, "#17", "tag/view-8"},
+  {Mod, "#18", "tag/view-9"},
+  {ModShift, "#10", "client/move-to-tag", arg = {1}},
+  {ModShift, "#11", "client/move-to-tag", arg = {2}},
+  {ModShift, "#12", "client/move-to-tag", arg = {3}},
+  {ModShift, "#13", "client/move-to-tag", arg = {4}},
+  {ModShift, "#14", "client/move-to-tag", arg = {5}},
+  {ModShift, "#15", "client/move-to-tag", arg = {6}},
+  {ModShift, "#16", "client/move-to-tag", arg = {7}},
+  {ModShift, "#17", "client/move-to-tag", arg = {8}},
+  {ModShift, "#18", "client/move-to-tag", arg = {9}},
 }
+-- }}}
 
 --do{{{
 --  local Nothing = {}
@@ -179,5 +248,13 @@ module.keys = {
 --
 --  --root.keys(globalkeys)
 --end}}}}}}
+
+-- basic layout {{{
+awful.layout.layouts = {
+  awful.layout.suit.floating,
+  awful.layout.suit.max,
+  awful.layout.suit.tile,
+}
+-- }}}
 
 return module

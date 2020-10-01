@@ -23,25 +23,27 @@ dpi = beautiful.xresources.apply_dpi
 --  some config  --
 -------------------
 ign = os.getenv("USER") .. "@" .. io.popen("hostname"):read():match(".+") -- this will be displayed on the info panel
-iglevel = 374 -- this will be displayed on the info panel
+iglevel = 380 -- this will be displayed on the info panel
 
 ------------------------------------------------------------------------
 --                           theming stuffs                           --
 ------------------------------------------------------------------------
 -- beautiful.init(gears.filesystem.get_themes_dir() .. "gtk/theme.lua")
-require("ggz.theme")
+local Rice = require"Rice"
+-- local module_prefix = Rice.module_prefix()
+require("theme")
 beautiful.wallpaper = os.getenv("HOME") .. "/Pictures/wallpaper/index"
 -- beautiful.wallpaper = beautiful.icon_dir .. "wallpaper.png"
 
 ------------------------------------------------------------------------
 --                           custom widgets                           --
 ------------------------------------------------------------------------
-local ggz_layoutbox = require("ggz.widgets.layoutbox")
--- require("ggz.mediapopup")
-require("ggz.widgets.tasklist")
-require("ggz.widgets.taglist")
-require("ggz.widgets.promptbox")
-require("ggz.widgets.info")
+local ggz_layoutbox = require("widgets.layoutbox")
+-- require("mediapopup")
+require("widgets.tasklist")
+require("widgets.taglist")
+require("widgets.promptbox")
+require("widgets.info")
 local Testprompt = require("awesome-prompt")
 local prompt = Testprompt({
    placement = 'top',
@@ -154,10 +156,10 @@ editor = os.getenv("EDITOR") or "nvim"
 editor_cmd = terminal .. " -e " .. editor
 mod = "Mod1"
 
-awful.layout.layouts = {
-   awful.layout.suit.tile,
-   awful.layout.suit.floating,
-} -- list of layouts
+-- awful.layout.layouts = {
+--    awful.layout.suit.tile,
+--    awful.layout.suit.floating,
+-- } -- list of layouts
 
 menu_awesome = {
    { "Hotkeys", function() popup_hotkeys.show_help(nil, awful.screen.focused()) end },
@@ -167,7 +169,7 @@ menu_awesome = {
 
 menu = awful.menu({
    { "Awesome", menu_awesome, beautiful.awesome_icon },
-   { "Set config", require"ricemenu".riceitems },
+   Rice.menu,
    { "Session", powermenu },
    { "Terminal", terminal },
    { "Cancel", 'echo &' },
@@ -436,7 +438,7 @@ awful.screen.connect_for_each_screen(function(s)
    for _,tag in pairs(beautiful.tags) do
       awful.tag.add(tag, {
          screen = s,
-         layout = awful.layout.suit.tile,
+         layout = awful.layout.layouts[1],
          icon = gears.color.recolor_image(beautiful.taglist_icon[tag], beautiful.white)
       })
    end
