@@ -25,34 +25,6 @@ module.rice_dir = setmetatable({__ricedir = ricedir}, {
 })
 --}}}
 
--- switch rice, replace config file{{{
-module.switchrice = function(name)
-  local cmd = "echo " .. name .. " | tee " .. module.ricefield
-  awful.spawn.easy_async_with_shell(cmd, awesome.restart)
-end
---}}}
-
--- list rices {{{
-module.rices = {}
-module.riceitems = {}
--- this is only called once, and it's just ls
--- so it's ok to use popen here
--- also, more work would be done if we make this asynchorous
-do
-  local cmd = string.format(
-  --[[>]][=[ls -d %s/*/ | xargs -I {} -P 4 basename '{}']=]
-  --[[>]], module.rice_dir())
-  local fs = io.popen(cmd)
-  local f = fs:read()
-  while f do
-    table.insert(module.rices, f)
-    table.insert(module.riceitems, {f, partial(module.switchrice, f)})
-    f = fs:read()
-  end
-end
-module.menu = {"Rices", module.riceitems}
---}}}
-
 -- read/write config{{{
 -- use cache dir to store config
 local gfs = require("gears.filesystem")
@@ -83,7 +55,7 @@ module.write_config = function(self)
   local f = io.open(self.config_file, "w")
   local output = ""
   for key, val in pairs(self.config) do
-    if type(key) == "number" then
+    if type(key) ~= "number" then
       output = output .. key .. " = " .. val .. "\n"
     end
   end
@@ -100,9 +72,12 @@ module.get_current_rice = function(self)
   return module.config.rice or "default"
 end
 module.set_current_rice = function(self, rice, theme)
-  self.config.rice = rice
+  if not self.config then
+    self.config = {}
+  end
+  self.config.rice = tostring(rice)
   if theme then
-    self.config.theme = theme
+    self.config.theme = tostring(theme)
   end
   self:write_config()
   --[[ @TODO validate the rice ]]
@@ -136,6 +111,25 @@ module.load_rice = function(self)
   end
   return require(ricename)
 end
+--}}}
+
+-- list rices {{{
+module.rices = {}
+module.riceitems = {}
+-- this is only called once, and it's just ls
+-- so it's ok to use popen here
+-- also, more work would be done if we make this asynchorous
+do
+  local cmd = string.format(
+  --[[>]][=[ls -d %s/*/ | xargs -I {} -P 4 basename '{}']=]
+  --[[>]], module.rice_dir())
+  local out = io.popen(cmd)
+  for line in out:lines() do
+    table.insert(module.rices, line)
+    table.insert(module.riceitems, {line, partial(module.set_current_rice, module, line)})
+  end
+end
+module.menu = {"Rices", module.riceitems}
 --}}}
 
 return module

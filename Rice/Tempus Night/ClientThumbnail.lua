@@ -1,7 +1,7 @@
-local wibox = re"wibox"
-local shape = re"gears.shape"
-local surface = re"gears.surface"
-local beautiful = re"beautiful"
+local wibox = require"wibox"
+local shape = require"gears.shape"
+local surface = require"gears.surface"
+local beautiful = require"beautiful"
 
 local module = {}
 local cachedSurface = {}

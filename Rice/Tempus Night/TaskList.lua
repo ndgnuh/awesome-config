@@ -1,13 +1,14 @@
 -- @TODO:
 -- [done] hover on button show thumbnail, ~~with delay of 500ms~~
 -- [done] resize the thumbnail to the client size
-local awful = re"awful"
-local wibox = re"wibox"
-local gears = re"gears"
-local shape = re"gears.shape"
-local beautiful = re"beautiful"
-local ClientThumbnail = re"ClientThumbnail"
-local icon = re"icon"
+local awful = require"awful"
+local wibox = require"wibox"
+local gears = require"gears"
+local shape = require"gears.shape"
+local beautiful = require"beautiful"
+local dpi = beautiful.xresources.apply_dpi
+local ClientThumbnail = require"ClientThumbnail"
+local icon = require"icon"
 
 -- thumbnail{{{
 local thumbHeight = 248
