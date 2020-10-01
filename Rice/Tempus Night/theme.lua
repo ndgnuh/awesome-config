@@ -3,7 +3,7 @@
 --   by Yauhen Kirylau                      --
 ----------------------------------------------
 
-local ic = re"icon"
+local ic = require"icon"
 local theme_assets = require("beautiful.theme_assets")
 local dpi = require("beautiful.xresources").apply_dpi
 local gfs = require("gears.filesystem")
@@ -152,8 +152,8 @@ theme.fg_normal     = "#ffffff"
 
 theme.wibar_bg      = "#3B4252"
 theme.wibar_fg      = "#57BB8A"
-theme.wibar_height = dp(24 * 3)
-theme.wibar_width = dp(24 * 3)
+theme.wibar_height = 24 * 3
+theme.wibar_width = 24 * 3
 
 theme.bg_focus      = theme.bg_normal
 theme.fg_focus      = "#7BAAF7"
@@ -195,7 +195,7 @@ theme.tasklist_fg_normal = theme.wibar_fg
 theme.tasklist_bg_normal = theme.wibar_bg
 theme.tasklist_fg_focus = theme.tasklist_fg_normal
 theme.tasklist_bg_focus = "#63C5EA"
-theme.tasklist_bg_minimized = grayscale(theme.tasklist_fg_normal)
+-- theme.tasklist_bg_minimized = grayscale(theme.tasklist_fg_normal)
 
 theme.tasklist_font_focus = theme.gtk.bold_font
 

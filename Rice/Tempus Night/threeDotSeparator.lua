@@ -1,6 +1,6 @@
-local awful = re"awful"
-local wibox = re"wibox"
-local gears = re"gears"
+local awful =require"awful"
+local wibox =require"wibox"
+local gears =require"gears"
 
 return {
 	{

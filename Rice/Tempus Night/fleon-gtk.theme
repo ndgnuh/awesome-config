@@ -1,9 +1,9 @@
-local icon = re"icon"
+local icon =require"icon"
 local theme_assets = require("beautiful.theme_assets")
 local dpi = require("beautiful.xresources").apply_dpi
 local gfs = require("gears.filesystem")
 local themes_path = gfs.get_themes_dir()
-local gears = re"gears"
+local gears =require"gears"
 local gears_shape = require("gears.shape")
 local wibox = require("wibox")
 local awful_widget_clienticon = require("awful.widget.clienticon")

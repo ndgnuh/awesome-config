@@ -1,7 +1,7 @@
 local re = require
-local common = re"awful.widget.common"
-local awful = re"awful"
-local wibox = re"wibox"
+local common =require"awful.widget.common"
+local awful =require"awful"
+local wibox =require"wibox"
 
 local wb = wibox{
 	x = 100, y = 100,

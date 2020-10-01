@@ -1,10 +1,10 @@
 local re = require
 local lgi = require"lgi"
-local wibox = re"wibox"
-local beautiful = re"beautiful"
-local awful = re"awful"
-local gears = re"gears"
-local sh = re"sh"
+local wibox =require"wibox"
+local beautiful =require"beautiful"
+local awful =require"awful"
+local gears =require"gears"
+local sh =require"sh"
 
 local ok, UPower = pcall(lgi.require, "UPowerGlib")
 

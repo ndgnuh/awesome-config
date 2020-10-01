@@ -109,6 +109,11 @@ module.load_rice = function(self)
   for _, dir in ipairs(addtopath) do
     package.path = package.path .. ";"  .. wmdir .. dir
   end
+  -- monkey patching is bad, i know, i know
+  gears.filesystem.get_real_configuration_dir = gears.filesystem.get_configuration_dir
+  gears.filesystem.get_configuration_dir = function()
+    return self.rice_dir() .. "/" .. ricename
+  end
   return require(ricename)
 end
 --}}}

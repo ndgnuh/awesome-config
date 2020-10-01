@@ -11,6 +11,7 @@ local sh = require"sh"
 local ic = require"icon"
 local awful = require"awful"
 local gobject = require"gears.object"
+local partial = require"Partial"
 local lgi = require"lgi"
 local IBus = lgi.IBus
 --}}}
@@ -113,11 +114,11 @@ end
 -- for binding
 module.key = function (mod, key, engines)
   return
-    awful.key(mod, key, partial2(module.cycle, module, engines))
+    awful.key(mod, key, partial(module.cycle, module, engines))
 end
 module.button = function (mod, btn, engines)
   return
-    awful.button(mod, btn, partial2(module.cycle, module, engines))
+    awful.button(mod, btn, partial(module.cycle, module, engines))
 end
 --}}}
 
