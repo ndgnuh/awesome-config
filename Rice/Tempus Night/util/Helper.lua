@@ -1,8 +1,8 @@
 re = require
 local pow = math.pow or function(x, y) return x^y end
 local unpack = unpack or table.unpack
-local naughty = re"naughty"
-local gears = re"gears"
+local naughty =require"naughty"
+local gears =require"gears"
 
 dpi = require("beautiful.xresources").apply_dpi
 

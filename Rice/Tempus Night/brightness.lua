@@ -1,9 +1,9 @@
 --[[ @requirements --]]
-local sh = re"sh"
-local ic = re"icon"
-local awful = re"awful"
-local naughty = re"naughty"
-local timer = re"gears.timer"
+local sh =require"sh"
+local ic =require"icon"
+local awful =require"awful"
+local naughty =require"naughty"
+local timer =require"gears.timer"
 
 local exp = math.exp
 local min = math.min

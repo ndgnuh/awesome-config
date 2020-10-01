@@ -1,5 +1,5 @@
-# awesome-config
-Config set(s) for awesomewm
+# Awesome config(s)
+Multi rice based Awesomewm config
 
 Table of contents:
 - [Preview](#some-setups)
