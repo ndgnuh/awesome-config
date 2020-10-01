@@ -23,8 +23,6 @@ module.rice_dir = setmetatable({__ricedir = ricedir}, {
   end,
   __tostring = function(self) return self.__ricedir end
 })
--- pun intended, welcome to the rice field motherf*cker
-module.ricefield = wmdir .. "/rice.conf"
 --}}}
 
 -- switch rice, replace config file{{{
@@ -43,7 +41,7 @@ module.riceitems = {}
 do
   local cmd = string.format(
   --[[>]][=[ls -d %s/*/ | xargs -I {} -P 4 basename '{}']=]
-  --[[>]], module.ricedir)
+  --[[>]], module.rice_dir())
   local fs = io.popen(cmd)
   local f = fs:read()
   while f do

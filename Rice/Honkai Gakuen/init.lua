@@ -44,74 +44,74 @@ require("widgets.tasklist")
 require("widgets.taglist")
 require("widgets.promptbox")
 require("widgets.info")
-local Testprompt = require("awesome-prompt")
-local prompt = Testprompt({
-   placement = 'top',
-   forced_width = awful.screen.focused().geometry.width / 3,
-   -- forced_height = awful.screen.focused().geometry.height,
-   style = {
-      prompt_item_bg = {beautiful.shade},
-      prompt_item_fg = {"#f2f3f4"},
-      prompt_item_bg_selected = beautiful.blue,
-      prompt_item_fg_selected = beautiful.shade,
-   }
-})
-local powermenu = Testprompt({})
-powermenu = Testprompt({
-   -- no_prompt = true,
-   prompt = "What to do? ",
-   style = {
-      prompt_item_bg = {
-         "#323238",
-         "#1d1f21",
-         "#232425"
-      }
-   },
-   buttons = gears.table.join(awful.button({}, 1, function(t, _)
-	if type(t) == "table" then
-		if type(t.exec) == "function" then t.exec()
-		elseif type(t.exec) == "string" then awful.spawn(t.exec)
-		end
-	elseif type(t) == "string" then
-		awful.spawn(t)
-	end
-        powermenu:dismiss()
-   end)),
-   layout = wibox.layout.fixed.vertical,
-   completion_layout = wibox.layout.fixed.horizontal,
-   placement = "top",
-   -- shape = beautiful.common_shape(dpi(16)),
-   execs = {
-      {
-         label = "Say hi",
-         exec = function() notify({ text = "hi" }) end,
-      },
-      {
-         label = "Logout",
-         exec = awesome.quit,
-      },
-      {
-         label = "Reboot",
-         exec = "systemctl reboot"
-      },
-      {
-         label = "Shutdown",
-         exec = "systemctl poweroff"
-      },
-      {
-         label = "Hibernate",
-         exec = "systemctl hibernate"
-      },
-      {
-         label = "Suspend",
-         exec = "systemctl suspend"
-      },
-      {
-         label = "Restart Awesome",
-         exec = awesome.restart,
-      },
-   }
-})
+-- local Testprompt = require("awesome-prompt")
+-- local prompt = Testprompt({
+--    placement = 'top',
+--    forced_width = awful.screen.focused().geometry.width / 3,
+--    -- forced_height = awful.screen.focused().geometry.height,
+--    style = {
+--       prompt_item_bg = {beautiful.shade},
+--       prompt_item_fg = {"#f2f3f4"},
+--       prompt_item_bg_selected = beautiful.blue,
+--       prompt_item_fg_selected = beautiful.shade,
+--    }
+-- })
+-- local powermenu = Testprompt({})
+-- powermenu = Testprompt({
+--    -- no_prompt = true,
+--    prompt = "What to do? ",
+--    style = {
+--       prompt_item_bg = {
+--          "#323238",
+--          "#1d1f21",
+--          "#232425"
+--       }
+--    },
+--    buttons = gears.table.join(awful.button({}, 1, function(t, _)
+-- 	if type(t) == "table" then
+-- 		if type(t.exec) == "function" then t.exec()
+-- 		elseif type(t.exec) == "string" then awful.spawn(t.exec)
+-- 		end
+-- 	elseif type(t) == "string" then
+-- 		awful.spawn(t)
+-- 	end
+--         powermenu:dismiss()
+--    end)),
+--    layout = wibox.layout.fixed.vertical,
+--    completion_layout = wibox.layout.fixed.horizontal,
+--    placement = "top",
+--    -- shape = beautiful.common_shape(dpi(16)),
+--    execs = {
+--       {
+--          label = "Say hi",
+--          exec = function() notify({ text = "hi" }) end,
+--       },
+--       {
+--          label = "Logout",
+--          exec = awesome.quit,
+--       },
+--       {
+--          label = "Reboot",
+--          exec = "systemctl reboot"
+--       },
+--       {
+--          label = "Shutdown",
+--          exec = "systemctl poweroff"
+--       },
+--       {
+--          label = "Hibernate",
+--          exec = "systemctl hibernate"
+--       },
+--       {
+--          label = "Suspend",
+--          exec = "systemctl suspend"
+--       },
+--       {
+--          label = "Restart Awesome",
+--          exec = awesome.restart,
+--       },
+--    }
+-- })
 -- testprompt:run()
 
 ------------------------------------------------------------------------
@@ -154,7 +154,7 @@ end
 terminal = 'x-terminal-emulator'
 editor = os.getenv("EDITOR") or "nvim"
 editor_cmd = terminal .. " -e " .. editor
-mod = "Mod1"
+mod = "Mod4"
 
 -- awful.layout.layouts = {
 --    awful.layout.suit.tile,
@@ -217,21 +217,21 @@ root.buttons(button_root)
 ------------------------------------------------------------------------
 key_root,key_client = table.unpack(require("basic.keys"))
 -- notify({ text= tostring(key_client) })
-key_root = gears.table.join(
-   key_root,
-   api.audio.key,
-   api.brightness.key,
-   awful.key({mod, "Shift"}, "d", function()
-      awful.spawn("rofi -show run")
-   end),
-   awful.key({mod}, "d", function()
-      prompt:run()
-   end),
-   awful.key({mod, "Shift"}, "e", function()
-      powermenu:run()
-   end)
-)
-root.keys(key_root)
+-- key_root = gears.table.join(
+--    key_root,
+--    api.audio.key,
+--    api.brightness.key,
+--    awful.key({mod, "Shift"}, "d", function()
+--       awful.spawn("rofi -show run")
+--    end),
+--    awful.key({mod}, "d", function()
+--       prompt:run()
+--    end),
+--    awful.key({mod, "Shift"}, "e", function()
+--       powermenu:run()
+--    end)
+-- )
+-- root.keys(key_root)
 
 ------------------------------------------------------------------------
 --                               rules                                --
