@@ -3,7 +3,7 @@ local awful = require("awful")
 ------------------------------------------------------------------------
 --                         binding: keyboard                          --
 ------------------------------------------------------------------------
-mod = mod or "Mod1"
+local mod = "Mod4"
 local key_root = gears.table.join(
    awful.key({mod}, '/', function() popup_hotkeys.show_help(nil, awful.screen.focused()) end, {
       description = 'Show/hide help',

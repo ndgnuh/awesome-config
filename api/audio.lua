@@ -3,7 +3,7 @@ local gears = require("gears")
 
 -- {{ commands
 local AUDIO_VOL_TOGGLE = "amixer sset Master toggle"
-local AUDIO_VOL_GET    = "amixer sget Master | tail -n 1 | grep %"
+local AUDIO_VOL_GET    = [[pactl list sinks | grep -P '^\s*(Volume):[^,]*([0-9]+%)+|(Mute): (no)' -o | sed 's/\s*front-left: *[0-9]* *\/ *\|\s\|%//g' | sed 's/no/false/' | awk -F":" '{print "local " (lower $1) " = " $2}; END {print "return Volume, Mute"}']]
 local AUDIO_VOL_UP     = "amixer sset Master 10%+ unmute"
 local AUDIO_VOL_DOWN   = "amixer sset Master 10%- unmute"
 local AUDIO_VOL_SET    = "amixer sset Master "
@@ -62,8 +62,7 @@ function audio.update_vol()
 	awful.spawn.easy_async_with_shell(AUDIO_VOL_GET, function(stdout)
 		-- Sample output
 		-- Mono: Playback 63 [50%] [-32.00dB] [on]
-		local lv, stat = string.match(stdout, ".*%[(%d%d?%d?)%%%].*%[(%a*)].*")
-		if stat == 'on' then muted = false else muted = true end
+		local lv, muted = load(stdout)()
 		audio.status.vol_level = lv
 		audio.status.vol_muted = muted
 		for i=1,#audio.widget do

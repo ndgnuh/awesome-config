@@ -54,12 +54,13 @@ beautiful.useless_gap= 0
 terminal = 'terminal'
 editor = os.getenv("EDITOR") or "nvim"
 editor_cmd = terminal .. " -e " .. editor
-mod = "Mod1"
+mod = "Mod4"
 
-awful.layout.layouts = {
-   awful.layout.suit.tile,
-   awful.layout.suit.floating,
-} -- list of layouts
+-- awful.layout.layouts = {
+--    awful.layout.suit.tile,
+--    awful.layout.suit.max,
+--    awful.layout.suit.floating,
+-- } -- list of layouts
 
 menu_awesome = {
    { "Hotkeys", function() popup_hotkeys.show_help(nil, awful.screen.focused()) end },
