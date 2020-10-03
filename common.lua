@@ -1,7 +1,7 @@
-local awful = require"awful"
-local gears = require"gears"
+local awful = require("awful")
+local gears = require("gears")
 local wm = require"helper.wm"
-local partial = require"util.Partial"
+local partial = require("util.Partial")
 local mm = require"util.MultiMethod2"
 local Val = require"util.Val"
 local db = require"util.Debug"
@@ -256,5 +256,22 @@ awful.layout.layouts = {
   awful.layout.suit.floating,
 }
 -- }}}
+
+local beautiful = require("beautiful")
+module.rules = {
+  {
+    rule = { },
+    properties = {
+      border_width = beautiful.border_width,
+      border_color = beautiful.border_normal,
+      focus = awful.client.focus.filter,
+      raise = true,
+      keys = clientkeys,
+      buttons = clientbuttons,
+      screen = awful.screen.preferred,
+      placement = awful.placement.no_overlap+awful.placement.no_offscreen
+    }
+  }
+}
 
 return module

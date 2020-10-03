@@ -1,0 +1,378 @@
+local icon =require"icon"
+local theme_assets = require("beautiful.theme_assets")
+local dpi = require("beautiful.xresources").apply_dpi
+local gfs = require("gears.filesystem")
+local themes_path = gfs.get_themes_dir()
+local gears =require"gears"
+local gears_shape = require("gears.shape")
+local wibox = require("wibox")
+local awful_widget_clienticon = require("awful.widget.clienticon")
+local gtk = require("beautiful.gtk")
+
+-- inherit xresources theme:
+local theme = dofile(themes_path.."xresources/theme.lua")
+-- load and prepare for use gtk theme:
+theme.gtk = gtk.get_theme_variables()
+if not theme.gtk then
+    local gears_debug = require("gears.debug")
+    gears_debug.print_warning("Can't load GTK+3 theme. Using 'xresources' theme as a fallback.")
+    return theme
+end
+theme.gtk.button_border_radius = dpi(theme.gtk.button_border_radius or 0)
+theme.gtk.button_border_width = dpi(theme.gtk.button_border_width or 1)
+theme.gtk.bold_font = theme.gtk.font_family .. ' Bold ' .. theme.gtk.font_size
+theme.gtk.menubar_border_color = color_mix(
+    theme.gtk.menubar_bg_color,
+    theme.gtk.menubar_fg_color,
+    0.7
+    )
+
+
+-- @newcolors {{{
+-- tput colors
+-- add 8 to each of these to get brighter variants
+-- 0: black
+-- 1: red
+-- 2: green
+-- 3: yellow
+-- 4: blue
+-- 5: magenta
+-- 6: cyan
+theme.color0 = '#373E4D'
+theme.color1 = '#FA74B2'
+theme.color2 = '#2BE491'
+theme.color3 = '#FA946E'
+theme.color4 = '#7ACBEA'
+theme.color5 = '#CF8EF4'
+theme.color6 = '#A1D5F7'
+theme.color7 = '#FFFFFF'
+-- bright colors
+theme.color8 = '#3B4252'
+theme.color9 = '#FA74B2'
+theme.color10 = '#44EB9F'
+theme.color11 = '#FAA687'
+theme.color12 = '#63C5EA'
+theme.color13 = '#D8A6F4'
+theme.color14 = '#A1D5F7'
+theme.color15 = '#F9F9F9'
+-- }}}
+
+theme.font = theme.gtk.font_family .. ' 14'
+
+theme.bg_normal = theme.color0
+theme.fg_normal = theme.color7
+
+theme.wibar_bg = theme.color0
+theme.wibar_fg = theme.color6
+theme.wibar_height = dp(42)
+theme.wibar_width = dpi(42)
+
+theme.bg_focus = theme.bg_normal
+theme.fg_focus = "#7BAAF7"
+
+theme.bg_urgent = theme.gtk.error_bg_color
+theme.fg_urgent = theme.gtk.error_fg_color
+
+theme.bg_minimize = color_mix(theme.wibar_fg, theme.wibar_bg, 0.3)
+theme.fg_minimize = color_mix(theme.wibar_fg, theme.wibar_bg, 0.9)
+
+theme.bg_systray = theme.wibar_bg
+
+theme.border_normal = theme.color0
+theme.border_focus = theme.color8
+theme.border_marked = theme.color2
+
+theme.border_width  = dpi(1)
+theme.border_radius = theme.gtk.button_border_radius
+
+theme.useless_gap   = dpi(0)
+
+local rounded_rect_shape = function(cr,w,h)
+    gears_shape.rounded_rect(cr, w, h, theme.border_radius)
+end
+
+client.connect_signal("manage", function(c)
+    c.shape = rounded_rect_shape
+end)
+
+-- There are other variable sets
+-- overriding the default one when
+-- defined, the sets are:
+-- taglist_[bg|fg|shape|shape_border_color|shape_border_width]_[focus|urgent|occupied|empty|volatile]
+-- tasklist_[bg|fg|shape|shape_border_color|shape_border_width]_[focus|urgent|minimized]
+-- titlebar_[bg|fg]_[normal|focus]
+-- tooltip_[font|opacity|fg_color|bg_color|border_width|border_color]
+-- mouse_finder_[color|timeout|animate_timeout|radius|factor]
+
+theme.tasklist_icon_margin = dpi(0)
+theme.tasklist_fg_normal = theme.wibar_fg
+theme.tasklist_bg_normal = theme.wibar_bg
+theme.tasklist_fg_focus = theme.tasklist_fg_normal
+theme.tasklist_bg_focus = "#63c5ea" -- theme.color10
+theme.tasklist_bg_minimize = color_mix(theme.color11, theme.bg_normal, 0.5)
+theme.tasklist_bg_urgent = theme.color9
+
+theme.tasklist_font_focus = theme.gtk.bold_font
+
+theme.tasklist_shape_minimized = rounded_rect_shape
+theme.tasklist_shape_border_color_minimized = color_mix(
+    theme.bg_minimize,
+    theme.fg_minimize,
+    0.85
+)
+theme.tasklist_shape_border_width_minimized = theme.gtk.button_border_width
+
+theme.tasklist_spacing = theme.gtk.button_border_width
+
+--[[ Advanced taglist and tasklist styling: {{{
+
+--- In order to get taglist and tasklist to follow GTK theme you need to
+-- modify your rc.lua in the following way:
+
+diff --git a/rc.lua b/rc.lua
+index 231a2f68c..533a859d2 100644
+--- a/rc.lua
++++ b/rc.lua
+@@ -217,24 +217,12 @@ awful.screen.connect_for_each_screen(function(s)
+         filter  = awful.widget.taglist.filter.all,
+         buttons = taglist_buttons
+     }
++    -- and apply shape to it
++    if beautiful.taglist_shape_container then
++        local background_shape_wrapper = wibox.container.background(s.mytaglist)
++        background_shape_wrapper._do_taglist_update_now = s.mytaglist._do_taglist_update_now
++        background_shape_wrapper._do_taglist_update = s.mytaglist._do_taglist_update
++        background_shape_wrapper.shape = beautiful.taglist_shape_container
++        background_shape_wrapper.shape_clip = beautiful.taglist_shape_clip_container
++        background_shape_wrapper.shape_border_width = beautiful.taglist_shape_border_width_container
++        background_shape_wrapper.shape_border_color = beautiful.taglist_shape_border_color_container
++        s.mytaglist = background_shape_wrapper
++    end
+
+     -- Create a tasklist widget
+     s.mytasklist = awful.widget.tasklist {
+         screen  = s,
+         filter  = awful.widget.tasklist.filter.currenttags,
++        buttons = tasklist_buttons,
++        widget_template = beautiful.tasklist_widget_template
+-        buttons = tasklist_buttons
+     }
+
+--]]
+theme.tasklist_widget_template = {
+    {
+        {
+            {
+                {
+                    id     = 'clienticon',
+                    widget = awful_widget_clienticon,
+                },
+                margins = dpi(4),
+                widget  = wibox.container.margin,
+            },
+            {
+                id     = 'text_role',
+                widget = wibox.widget.textbox,
+            },
+            layout = wibox.layout.fixed.horizontal,
+        },
+        left  = dpi(2),
+        right = dpi(4),
+        widget = wibox.container.margin
+    },
+    id     = 'background_role',
+    widget = wibox.container.background,
+    create_callback = function(self, c)
+        self:get_children_by_id('clienticon')[1].client = c
+    end,
+}
+
+theme.taglist_shape_container = rounded_rect_shape
+theme.taglist_shape_clip_container = true
+theme.taglist_shape_border_width_container = theme.gtk.button_border_width * 2
+theme.taglist_shape_border_color_container = theme.gtk.header_button_border_color
+-- }}}
+
+theme.taglist_bg_occupied = theme.gtk.header_button_bg_color
+theme.taglist_fg_occupied = theme.gtk.header_button_fg_color
+
+-- theme.taglist_bg_empty = color_mix(
+--     theme.gtk.menubar_bg_color,
+--     theme.gtk.header_button_bg_color,
+--     0.3
+-- )
+-- theme.taglist_fg_empty = color_mix(
+--     theme.gtk.menubar_bg_color,
+--     theme.gtk.header_button_fg_color
+-- )
+
+theme.titlebar_font_normal = theme.gtk.bold_font
+theme.titlebar_bg_normal = "#3B4252"
+theme.titlebar_fg_normal = "#EDFEFE"
+--theme.titlebar_fg_normal = choose_contrast_color(
+    --theme.titlebar_bg_normal,
+    --theme.gtk.menubar_fg_color,
+    --theme.gtk.menubar_bg_color
+--)
+
+theme.titlebar_font_focus = theme.gtk.bold_font
+theme.titlebar_bg_focus = "#3B4252"
+theme.titlebar_fg_focus = "#EDFEFE"
+--theme.titlebar_fg_focus = choose_contrast_color(
+    --theme.titlebar_bg_focus,
+    --theme.gtk.menubar_fg_color,
+    --theme.gtk.menubar_bg_color
+--)
+
+theme.tooltip_fg = theme.gtk.tooltip_fg_color
+theme.tooltip_bg = theme.gtk.tooltip_bg_color
+
+-- Variables set for theming the menu:
+-- menu_[bg|fg]_[normal|focus]
+-- menu_[border_color|border_width]
+
+-- theme.menu_border_width = theme.gtk.button_border_width
+-- theme.menu_border_color = theme.gtk.menubar_border_color
+-- theme.menu_bg_normal = theme.gtk.menubar_bg_color
+-- theme.menu_fg_normal = theme.gtk.menubar_fg_color
+
+-- @TODO: get from gtk menu height
+theme.menu_height = dpi(32)
+theme.menu_width  = dpi(240)
+theme.menu_submenu_icon = nil
+theme.menu_submenu = "≻ "
+theme.menu_bg_normal = theme.color0
+theme.menu_bg_focus = theme.color8
+theme.menu_fg_focus = theme.color11
+
+-- You can add as many variables as
+-- you wish and access them by using
+-- beautiful.variable in your rc.lua
+--theme.bg_widget = "#cc0000"
+
+
+-- Recolor Layout icons:
+-- theme = theme_assets.recolor_layout(theme, theme.wibar_fg)
+
+-- Recolor titlebar icons:
+--
+--theme = theme_assets.recolor_titlebar(
+--    theme, theme.titlebar_fg_normal, "normal"
+--)
+--theme = theme_assets.recolor_titlebar(
+--    theme, reduce_contrast(theme.titlebar_fg_normal, 50), "normal", "hover"
+--)
+--theme = theme_assets.recolor_titlebar(
+--    theme, theme.gtk.error_bg_color, "normal", "press"
+--)
+--theme = theme_assets.recolor_titlebar(
+--    theme, theme.titlebar_fg_focus, "focus"
+--)
+--theme = theme_assets.recolor_titlebar(
+--    theme, reduce_contrast(theme.titlebar_fg_focus, 50), "focus", "hover"
+--)
+--theme = theme_assets.recolor_titlebar(
+--    theme, theme.gtk.error_bg_color, "focus", "press"
+--)
+
+-- Define the icon theme for application icons. If not set then the icons
+-- from /usr/share/icons and /usr/share/icons/hicolor will be used.
+theme.icon_theme = nil
+
+-- Generate Awesome icon:
+-- theme.awesome_icon = theme_assets.awesome_icon(
+--     theme.menu_height, color_mix(theme.bg_focus, theme.fg_normal), theme.wibar_bg
+-- )
+theme.awesome_icon = gears.color.recolor_image(icon'start-here.svg', theme.color6)
+
+-- Generate taglist squares:
+--local taglist_square_size = dpi(4)
+--theme.taglist_squares_sel = theme_assets.taglist_squares_sel(
+    --taglist_square_size, theme.gtk.header_button_border_color
+--)
+--theme.taglist_squares_unsel = theme_assets.taglist_squares_unsel(
+    --taglist_square_size, theme.gtk.header_button_border_color
+--)
+-- Or disable them:
+theme.taglist_squares_sel = nil
+theme.taglist_squares_unsel = nil
+
+-- Generate wallpaper:
+--local wallpaper_bg = theme.gtk.base_color
+--local wallpaper_fg = theme.gtk.bg_color
+--local wallpaper_alt_fg = theme.gtk.selected_bg_color
+--if not isdark(theme.bg_normal) then
+--    wallpaper_bg, wallpaper_fg = wallpaper_fg, wallpaper_bg
+--end
+--wallpaper_bg = reduce_contrast(wallpaper_bg, 50)
+--wallpaper_fg = reduce_contrast(wallpaper_fg, 30)
+--wallpaper_fg = color_mix(wallpaper_fg, wallpaper_bg, 0.4)
+--wallpaper_alt_fg = color_mix(wallpaper_alt_fg, wallpaper_fg, 0.4)
+--theme.wallpaper = function(s)
+--    return theme_assets.wallpaper(wallpaper_bg, wallpaper_fg, wallpaper_alt_fg, s)
+--end
+theme.wallpaper = "~/Pictures/wallpaper/index"
+
+-- naughty
+theme.notification_border_width = dpi(4)
+theme.notification_border_color = theme.color3
+theme.notification_icon_size = dpi(64)
+-- theme.notification_margin = doesn't work
+-- theme.notification_border_color = theme.link
+
+theme.taskSwitcherNormalBackground = theme.bg_normal
+theme.taskSwitcherSelectedBackground = "#434484"
+
+
+-- @titlebar_buttons {{{
+theme.titlebar_close_button_normal = icon"close.svg"
+theme.titlebar_close_button_normal_hover = icon"close-hover.svg"
+theme.titlebar_close_button_normal_press = icon"close-press.svg"
+theme.titlebar_close_button_focus = icon"close.svg"
+theme.titlebar_close_button_focus_hover = icon"close-hover.svg"
+theme.titlebar_close_button_focus_press = icon"close-press.svg"
+
+theme.titlebar_minimize_button_normal = icon"minimize.svg"
+theme.titlebar_minimize_button_normal_hover = icon"minimize-hover.svg"
+theme.titlebar_minimize_button_normal_press = icon"minimize-press.svg"
+theme.titlebar_minimize_button_focus = icon"minimize.svg"
+theme.titlebar_minimize_button_focus_hover = icon"minimize-hover.svg"
+theme.titlebar_minimize_button_focus_press = icon"minimize-press.svg"
+
+theme.titlebar_maximized_button_normal_inactive = icon"maximized-inactive.svg"
+theme.titlebar_maximized_button_normal_inactive_hover = icon"maximized-inactive-hover.svg"
+theme.titlebar_maximized_button_normal_inactive_press = icon"maximized-inactive-press.svg"
+theme.titlebar_maximized_button_focus_inactive = icon"maximized-inactive.svg"
+theme.titlebar_maximized_button_focus_inactive_hover = icon"maximized-inactive-hover.svg"
+theme.titlebar_maximized_button_focus_inactive_press = icon"maximized-inactive-press.svg"
+
+theme.titlebar_maximized_button_normal_active = icon"maximized-active.svg"
+theme.titlebar_maximized_button_normal_active_hover = icon"maximized-active-hover.svg"
+theme.titlebar_maximized_button_normal_active_press = icon"maximized-active-press.svg"
+theme.titlebar_maximized_button_focus_active = icon"maximized-active.svg"
+theme.titlebar_maximized_button_focus_active_hover = icon"maximized-active-hover.svg"
+theme.titlebar_maximized_button_focus_active_press = icon"maximized-active-press.svg"
+
+theme.titlebar_floating_button_normal_inactive = icon"floating-inactive.svg"
+theme.titlebar_floating_button_normal_inactive_hover = icon"floating-inactive-hover.svg"
+theme.titlebar_floating_button_normal_inactive_press = icon"floating-inactive-press.svg"
+theme.titlebar_floating_button_focus_inactive = icon"floating-inactive.svg"
+theme.titlebar_floating_button_focus_inactive_hover = icon"floating-inactive-hover.svg"
+theme.titlebar_floating_button_focus_inactive_press = icon"floating-inactive-press.svg"
+theme.titlebar_floating_button_normal_active = icon"floating-active.svg"
+theme.titlebar_floating_button_normal_active_hover = icon"floating-active-hover.svg"
+theme.titlebar_floating_button_normal_active_press = icon"floating-active-press.svg"
+theme.titlebar_floating_button_focus_active = icon"floating-active.svg"
+theme.titlebar_floating_button_focus_active_hover = icon"floating-active-hover.svg"
+theme.titlebar_floating_button_focus_active_press = icon"floating-active-press.svg"
+-- @end_titlebar_icons }}}
+
+-- @layout_icons {{{
+theme.layout_tile = icon"floating-inactive.svg"
+theme.layout_floating = icon"floating-active.svg"
+theme.layout_max = icon"maximized-active.svg"
+-- @end_layout_icons }}}
+
+return theme
+
+-- vim: filetype=lua:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:textwidth=80:foldmethod=marker
