@@ -5,6 +5,7 @@ local partial = require("util.Partial")
 local mm = require"util.MultiMethod2"
 local Val = require"util.Val"
 local db = require"util.Debug"
+local rules = require("rules")
 
 -- {{{
 local module = gears.object{class = {
@@ -258,20 +259,81 @@ awful.layout.layouts = {
 -- }}}
 
 local beautiful = require("beautiful")
-module.rules = {
-  {
-    rule = { },
-    properties = {
-      border_width = beautiful.border_width,
-      border_color = beautiful.border_normal,
-      focus = awful.client.focus.filter,
-      raise = true,
-      keys = clientkeys,
-      buttons = clientbuttons,
-      screen = awful.screen.preferred,
-      placement = awful.placement.no_overlap+awful.placement.no_offscreen
+local gtable = require("gears.table")
+
+local client_buttons = gtable.join(
+awful.button(Nothing, 1, function(c)
+  c:emit_signal("request::activate", "mouse", {raise = true})
+end),
+awful.button(Mod, 1, function(c)
+  c:emit_signal("request::activate", "mouse", {raise = true})
+  awful.mouse.client.move(c)
+end),
+awful.button(Mod, 3, function(c)
+  c:emit_signal("request::activate", "mouse_click", {raise = true})
+  awful.mouse.client.resize(c)
+end),
+{})
+
+-- all clients{{{
+rules:add("default", {
+  rule = { },
+  properties = {
+    -- border_width = beautiful.border_width,
+    -- border_color = beautiful.border_normal,
+    focus = awful.client.focus.filter,
+    raise = true,
+    -- keys = clientkeys,
+    buttons = client_buttons,
+    screen = awful.screen.preferred,
+    placement = awful.placement.no_overlap+awful.placement.no_offscreen
+  },
+})
+--}}}
+
+-- floating clients rule{{{
+rules:add("floating-clients", {
+  rule_any = {
+    instance = {
+      "DTA",  -- Firefox addon DownThemAll.
+      "copyq",  -- Includes session name in class.
+      "pinentry",
+    },
+    class = {
+      "Arandr",
+      "Blueman-manager",
+      "Gpick",
+      "Kruler",
+      "MessageWin",  -- kalarm.
+      "Sxiv",
+      "Tor Browser", -- Needs a fixed window size to avoid fingerprinting by screen size.
+      "Wpa_gui",
+      "veromix",
+      "xtightvncviewer"
+    },
+    -- Note that the name property shown in xprop might be set slightly after creation of the client
+    -- and the name shown there might not match defined rules here.
+    name = {
+      "Event Tester",  -- xev.
+      "Picture-in-Picture", -- firefox picture in picture
+    },
+    role = {
+      "AlarmWindow",  -- Thunderbird's calendar.
+      "ConfigManager",  -- Thunderbird's about:config.
+      "pop-up",       -- e.g. Google Chrome's (detached) Developer Tools.
     }
-  }
-}
+  },
+  properties = {
+    floating = true
+  },
+})
+--}}}
+
+-- enable titlebar for clients{{{
+rules:add("enable titlebar", {
+  rule_any = { type = { "normal", "dialog" } },
+  properties = { titlebars_enabled = true }
+})
+--}}}
 
 return module
