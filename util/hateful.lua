@@ -54,10 +54,7 @@ end
 
 --[[ read all line in a file and deserialize it ]]
 module.deserialize = function(f, throw)
-  local s = ""
-  for line in f:lines() do
-    s = s .. line .. "\n"
-  end
+  local s = f:read("*all")
   return module.string_deserialize(s, throw)
 end
 
