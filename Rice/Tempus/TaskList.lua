@@ -204,7 +204,7 @@ local tasklist = function(s)
 		screen = s,
 		widget_template = template,
 		source = awful.widget.tasklist.source.all_clients,
-		filter = awful.widget.tasklist.filter.allscreen,
+		filter = awful.widget.tasklist.filter.currenttags,
 		buttons = tasklist_buttons,
 		layout = layout,
 	}
