@@ -6,6 +6,7 @@ local mm = require"util.MultiMethod2"
 local Val = require"util.Val"
 local db = require"util.Debug"
 local rules = require("rules")
+local hprevious = require("history-previous")
 
 -- {{{
 local module = gears.object{class = {
@@ -71,7 +72,7 @@ module.dispatches = {
   ["wm/quit"] = awesome.quit,
   ["client/focus-next"] = partial(focus.byidx, 1),
   ["client/focus-previous"] = partial(focus.byidx, -1),
-  ["client/focus-last"] = partial(focus.history, -1),
+  ["client/focus-last"] = partial(hprevious.swap, true),
   ["client/restore"] = awful.client.restore,
   ["client/toggle-maximize"] = partial(focusedtoggle, "maximized"),
   ["client/toggle-fullscreen"] = partial(focusedtoggle, "fullscreen"),
@@ -163,6 +164,7 @@ module.keys = {
   -- client related
   {Mod, "j", "client/focus-next"},
   {Mod, "k", "client/focus-previous"},
+  {Mod, "Tab", "client/focus-last"},
   {ModShift, "q", "client/kill"},
   {Mod, "m", "client/toggle-maximize"},
   {Mod, "f", "client/toggle-fullscreen"},
@@ -204,51 +206,6 @@ module.keys = {
   {ModShift, "#18", "client/move-to-tag", arg = {9}},
 }
 -- }}}
-
---do{{{
---  local Nothing = {}
---  local focusedtoggle = function(prop)
---    local c = client.focus
---    if c then c[prop] = not c[prop] end
---    return prop
---  end
---  local focusedcall = function(method)
---    local c = client.focus
---    local f = c and c[method] or nil
---    if f then f(c) end
---    return method
---  end
---  local modkey = "Mod4"
---  local Mod = {modkey}
---  local ModShift = {modkey, "Shift"}
---  local ModCtrl = {modkey, "Control"}
---  local key, spawn = awful.key, awful.spawn
---  local globalkeys = gears.table.join(
---
---
---  key(Mod, "j", partial(awful.client.focus.byidx, 1)),
---  key(Mod, "k", partial(awful.client.focus.byidx, -1)),{{{
---  key(ModShift, "n", awful.client.restore),
---  key(Mod, "r", partial(spawn, "rofi -show run")),
---  key(Mod, "w", partial(spawn, "rofi -show run")),
---  key(Mod, "Return", partial(spawn, "x-terminal-emulator")),
---  key(ModShift, "r", awesome.restart),
---
---  key(Mod, "m", partial(focusedtoggle, "maximized")),
---  key(Mod, "f", partial(focusedtoggle, "fullscreen")),
---  key(Mod, "n", partial(focusedtoggle, "minimized")),
---  key(ModShift, "q", partial(focusedmethod, "kill")),
---
---  key(Nothing, "XF86AudioRaiseVolume", partial(spawn, "pactl set-sink-volume @DEFAULT_SINK@ +5%")),
---  key(Nothing, "XF86AudioLowerVolume", partial(spawn, "pactl set-sink-volume @DEFAULT_SINK@ -5%")),
---  key(Nothing, "XF86AudioMute", partial(spawn, "pactl set-sink-mute @DEFAULT_SINK@ toggle")),
---  key(Nothing, "XF86MonBrightnessUp", partial(spawn, "light -A 10")),
---  key(Nothing, "XF86MonBrightnessDown", partial(spawn, "light -U 10")),
---  key(Nothing, "XF86Display", partial(spawn.raise_or_spawn, "arandr")),
---  {})
---
---  --root.keys(globalkeys)
---end}}}}}}
 
 -- basic layout {{{
 awful.layout.layouts = {
