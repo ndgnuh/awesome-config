@@ -35,6 +35,14 @@ do
   beautiful.border_width = dpi(2)
   beautiful.border_focus = "#1d1f21"
   beautiful.border_normal = "#999999"
+
+  beautiful.menu_bg_normal = "#fefefe"
+  beautiful.menu_fg_normal = "#1d1f21"
+  beautiful.menu_border_width = 0
+  beautiful.menu_width = dpi(220)
+  beautiful.menu_height = beautiful.wibar_height
+  beautiful.menu_bg_focus = "#2367be"
+  beautiful.menu_fg_focus = "#fefefe"
 end
 
 require("awful.autofocus")
