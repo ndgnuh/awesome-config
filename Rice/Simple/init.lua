@@ -31,6 +31,10 @@ do
 
   beautiful.titlebar_fg_normal = "#999999"
   beautiful.titlebar_fg_focus = "#1d1f21"
+
+  beautiful.border_width = dpi(2)
+  beautiful.border_focus = "#1d1f21"
+  beautiful.border_normal = "#999999"
 end
 
 require("awful.autofocus")
@@ -128,6 +132,7 @@ awful.screen.connect_for_each_screen(function(s)
           }
         -- close button
         , { widget = wibox.container.margin
+          , id = 'kill_button_clickbox'
           , margins = dpi(8)
           , { widget = wibox.container.place
             , forced_width = dpi(20)
@@ -139,8 +144,8 @@ awful.screen.connect_for_each_screen(function(s)
           }
         }
       , create_callback = function(self, c, index, object)
-          local kill_button = self:get_children_by_id("kill_button")[1]
-          kill_button:connect_signal("button::press", function()
+          local kill_button_clickbox = self:get_children_by_id("kill_button_clickbox")[1]
+          kill_button_clickbox:connect_signal("button::press", function()
             c:kill()
           end)
 
@@ -210,3 +215,22 @@ end)
 common.dispatches["app/menu"] = function() menu:show() end
 common:setup("w")
 
+local setfloating = function(c)
+  if not c.floating then
+    c.border_width = 0
+  else
+    c.border_width = beautiful.border_width
+  end
+end
+client.connect_signal("focus", function(c)
+  setfloating(c)
+  c.border_color = beautiful.border_focus
+end)
+client.connect_signal("unfocus", function(c)
+  setfloating(c)
+  c.border_color = beautiful.border_normal
+end)
+client.connect_signal("property::floating", setfloating)
+client.connect_signal("mouse::enter", function(c)
+  c:emit_signal("request::activate", "mouse::enter", {raise = false})
+end)
