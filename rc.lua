@@ -22,5 +22,3 @@ if display == ":1" then
 else
   Rice:load_rice()
 end
-local db = require("util.Debug")
-db.dump(display)
