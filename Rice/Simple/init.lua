@@ -14,9 +14,11 @@ local dpi = beautiful.xresources.apply_dpi
 do
   beautiful.font = "sans 12"
   beautiful.bg_normal = "#cecece"
-  beautiful.fg_normal = "#999999"
+  beautiful.fg_normal = "#1d1f21"
   beautiful.bg_focus = "#fefefe"
   beautiful.fg_focus = "#1d1f21"
+
+  beautiful.wallpaper = os.getenv("HOME") .. "/Pictures/wallpaper/index"
 
   beautiful.wibar_bg = "#bebebe"
   beautiful.wibar_width = dpi(32)
@@ -26,6 +28,9 @@ do
   beautiful.tasklist_fg_normal = "#999999"
   beautiful.tasklist_bg_focus = "#fefefe"
   beautiful.tasklist_fg_focus = "#1d1f21"
+
+  beautiful.titlebar_fg_normal = "#999999"
+  beautiful.titlebar_fg_focus = "#1d1f21"
 end
 
 require("awful.autofocus")
@@ -45,14 +50,10 @@ local menu = awful.menu
       }
     }
   , Rice.menu
+  , { "Refresh", awesome.restart }
   , { "terminal", "x-terminal-emulator" }
   }
 }
-
-local rootbuttons = gears.table.join(
-  awful.button({}, 1, awesome.restart),
-  awful.button({}, 3, partial(awful.spawn, "urxvt"))
-)
 
 local set_wallpaper = function(s)
   local wallpaper = beautiful.wallpaper
@@ -63,8 +64,13 @@ local set_wallpaper = function(s)
   end
 end
 
+screen.connect_signal("request::geometry", set_wallpaper)
+
 awful.screen.connect_for_each_screen(function(s)
-  awful.tag({1}, s, awful.layout.layouts[1])
+  -- set wallpaper when screen size changes
+  set_wallpaper(s)
+
+  awful.tag({1}, s, awful.layout.suit.max)
 
   s.topbar = awful.wibar
   { screen = s
@@ -173,7 +179,34 @@ awful.screen.connect_for_each_screen(function(s)
   -- }
 end)
 
-root.buttons(rootbuttons)
+local titlebar = {}
+titlebar.dialog = function(c)
+  local buttons = gears.table.join(
+    awful.button({}, 1, function() awful.mouse.client.move(c) end)
+  , awful.button({}, 3, function() awful.mouse.client.resize(c) end)
+  )
+  local b = awful.titlebar(c, {size = beautiful.wibar_height})
+
+  b:setup
+  { layout = wibox.container.place
+  , nil
+  , awful.titlebar.widget.titlewidget(c)
+  , buttons = buttons
+  }
+end
+client.connect_signal("request::titlebars", function(c)
+  if c.type then
+    local ttb = titlebar[c.type]
+    if ttb then
+      ttb(c)
+    end
+  end
+end)
+
+-- root.buttons(gears.table.join(
+--   awful.button({}, 3, function() menu:show() end)
+-- ))
 
 common.dispatches["app/menu"] = function() menu:show() end
 common:setup("w")
+
