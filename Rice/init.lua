@@ -93,9 +93,11 @@ end
 --}}}
 
 -- load rice{{{
-module.load_rice = function(self)
+module.load_rice = function(self, ricename)
   local wmdir = gears.filesystem.get_configuration_dir()
-  local ricename = self.current_rice()
+  if not ricename then
+    ricename = self.current_rice()
+  end
   local ricedir = self.rice_dir():match("[^/]+$")
   -- add the rice root to path
   -- the reason is the same as above

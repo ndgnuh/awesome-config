@@ -1,9 +1,7 @@
 local gtable = require("gears.table")
 local gobject = require("gears.object")
 local gtimer = require("gears.timer")
-local prev_client = nil
 local dump = require("Debug").dump
-
 local insert = table.insert
 
 -- module.history
@@ -13,8 +11,13 @@ local insert = table.insert
 -- then c1 is the previous client of c2
 local module = gobject{
   class = {
+    lock = false,
+    max_sparsity = 100,
+    sparsity = 0,
+    maxn = 0,
     managed = {},
     history = {},
+    invindex = {},
     __previous = nil
   }
 }
@@ -23,8 +26,14 @@ local module = gobject{
 module.cleaner_timer = gtimer {
   timeout = 180,
   callback = function()
-    module.history = gtable.from_sparse(module.history)
-    module:emit_signal("sparse::clean")
+    if not module.lock then
+      module.history = gtable.from_sparse(module.history)
+      for i, c in ipairs(module.history) do
+        module.invindex[c] = i
+      end
+      module.maxn = #module.history
+      module:emit_signal("sparse::clean")
+    end
   end
 }
 module.cleaner_timer:start()
@@ -38,15 +47,21 @@ module.clear_timeout = function(timeout)
   end
 end
 
--- module.previous
+-- module.previous()
 -- get previous client
 -- the loop is in case there's nil value (client unmanaged)
 module.previous = function()
+  module.lock = true
   local top = #module.history - 1
-  while not module.history[top] and top > 0 do
+  while not module.history[top]
+    and module.history[top] == client.focus
+    and top > 0 do
     top = top - 1
   end
-  return module.history[top] -- it can still be nil
+  dump(client.focus, module.history, module.invindex)
+  local prev = module.history[top]
+  module.lock = false
+  return prev -- it can still be nil
 end
 
 -- swap with the previous client
@@ -68,10 +83,15 @@ end
 -- because somehow, module.history is run after the signal
 -- so there must be a blockage
 client.connect_signal("focus", function(c)
-  if not module.history then
-    module.history = {}
+  module.lock = true
+  local pos = module.invindex[c]
+  if pos then
+    module.history[pos] = nil
   end
   table.insert(module.history, c)
+  module.maxn = module.maxn + 1
+  module.invindex[c] = module.maxn
+  module.lock = false
 end)
 
 -- signal/unmanage
@@ -79,13 +99,13 @@ end)
 -- then remove it from module.history (set to nil)
 -- and from module.managed
 client.connect_signal("unmanage", function(c)
-  if module.history then
-    for idx in ipairs(module.history) do
-      if module.history[idx] == c then
-        module.history[idx] = nil
-      end
-    end
+  module.lock = true
+  local pos = module.invindex[c]
+  if pos then
+    module.history[pos] = nil
+    module.invindex[c] = nil
   end
+  module.lock = false
 end)
 
 -- signal/unfocus

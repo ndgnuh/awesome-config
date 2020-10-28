@@ -16,4 +16,11 @@ welcome to the rice field, motherfucker
 -- Papa Franku
 ]]
 local Rice = require("Rice")
-return Rice:load_rice()
+local display = os.getenv("DISPLAY")
+if display == ":1" then
+  Rice:load_rice("Simple")
+else
+  Rice:load_rice()
+end
+local db = require("util.Debug")
+db.dump(display)

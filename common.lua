@@ -1,12 +1,8 @@
 local awful = require("awful")
 local gears = require("gears")
-local wm = require"helper.wm"
 local partial = require("util.Partial")
-local mm = require"util.MultiMethod2"
-local Val = require"util.Val"
-local db = require"util.Debug"
 local rules = require("rules")
-local hprevious = require("history-previous")
+local hprevious = require("history-previous-imp2")
 
 -- {{{
 local module = gears.object{class = {
@@ -89,7 +85,6 @@ module.dispatches = {
   ["media/brightness+"] = partial(spawn, "light -A 10"),
   ["media/brightness-"] = partial(spawn, "light -U 10"),
   ["media/display"] = partial(awful.spawn.raise_or_spawn, "arandr"),
-  ["debug/test-signal"] = partial(db.dump, "Test signal"),
 
   ["misc/ibus-cycle"] = partial(IBus.cycle, IBus, {"xkb:us::eng", "Bamboo"}),
 
@@ -218,6 +213,7 @@ awful.layout.layouts = {
 local beautiful = require("beautiful")
 local gtable = require("gears.table")
 
+-- client buttons {{{
 local client_buttons = gtable.join(
 awful.button(Nothing, 1, function(c)
   c:emit_signal("request::activate", "mouse", {raise = true})
@@ -230,7 +226,7 @@ awful.button(Mod, 3, function(c)
   c:emit_signal("request::activate", "mouse_click", {raise = true})
   awful.mouse.client.resize(c)
 end),
-{})
+{})--}}}
 
 -- all clients{{{
 rules:add("default", {

@@ -9,7 +9,6 @@ local sh = require"sh"
 local ok, UPower = pcall(lgi.require, "UPowerGlib")
 
 if not ok then
-  dump("Please install upower")
   return {
 	  percentage = function() return 0 end,
 	  ischarging = function() return false end,
