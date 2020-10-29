@@ -6,9 +6,12 @@ local common = require("common")
 local beautiful = require("beautiful")
 local partial = require("Partial")
 local Rice = require("Rice")
+local upower = require("model.upower")
 local awesome = awesome
 local client = client
 local root = root
+
+local db = require("Debug")
 
 local dpi = beautiful.xresources.apply_dpi
 do
@@ -96,6 +99,57 @@ awful.screen.connect_for_each_screen(function(s)
   --}
 
   -- tasklist{{{
+  local tasklist_template =
+  { widget = wibox.container.background
+  , id = 'background_role'
+  , { layout = wibox.layout.align.horizontal
+    , forced_height = beautiful.wibar_height
+    -- client icon
+    , { widget = wibox.container.margin
+      , forced_width = dpi(35)
+      , margins = dpi(4)
+      , { widget = awful.widget.clienticon
+        , id = 'client_icon'
+        }
+      }
+    -- client title
+    , { widget = wibox.container.margin
+      , margins = dpi(8)
+      , { widget = wibox.widget.textbox
+        , id = 'text_role'
+        , align = 'left'
+        }
+      }
+    -- close button
+    , { widget = wibox.container.margin
+      , id = 'kill_button_clickbox'
+      , margins = dpi(8)
+      , { widget = wibox.container.place
+        , forced_width = dpi(20)
+        , { widget = wibox.widget.textbox
+          , markup = "x"
+          , id = 'kill_button'
+          }
+        }
+      }
+    }
+  , create_callback = function(self, c, index, object)
+      local kill_button_clickbox = self:get_children_by_id("kill_button_clickbox")[1]
+      kill_button_clickbox:connect_signal("button::press", function()
+        c:kill()
+      end)
+
+      self:get_children_by_id("client_icon")[1].client = c
+    end
+  , update_callback = function(self, c, index, object)
+      local kill_button = self:get_children_by_id("kill_button")[1]
+      if client.focus == c then
+        kill_button.markup = string.format("<span color='%s'>x</span>", beautiful.tasklist_fg_focus)
+      else
+        kill_button.markup = string.format("<span color='%s'>x</span>", beautiful.tasklist_fg_normal)
+      end
+    end
+  }
   do
     local buttons = gears.table.join
     ( awful.button({}, 1, function(c)
@@ -112,84 +166,112 @@ awful.screen.connect_for_each_screen(function(s)
 
     s.tasklist = awful.widget.tasklist
     { screen = s
-    , filter = awful.widget.tasklist.filter.currenttags
+    , filter = function(...)
+        return awful.widget.tasklist.filter.currenttags(...) and not awful.widget.tasklist.filter.minimizedcurrenttags(...)
+      end
     , buttons = buttons
     , layout =
       { layout = wibox.layout.flex.horizontal
       , spacing = dpi(8)
       }
-    , widget_template =
-      { widget = wibox.container.background
-      , id = 'background_role'
-      , { layout = wibox.layout.align.horizontal
-        -- client icon
-        , { widget = wibox.container.margin
-          , forced_width = dpi(35)
-          , margins = dpi(4)
-          , { widget = awful.widget.clienticon
-            , id = 'client_icon'
-            }
-          }
-        -- client title
-        , { widget = wibox.container.margin
-          , margins = dpi(8)
-          , { widget = wibox.widget.textbox
-            , id = 'text_role'
-            , align = 'left'
-            }
-          }
-        -- close button
-        , { widget = wibox.container.margin
-          , id = 'kill_button_clickbox'
-          , margins = dpi(8)
-          , { widget = wibox.container.place
-            , forced_width = dpi(20)
-            , { widget = wibox.widget.textbox
-              , markup = "x"
-              , id = 'kill_button'
-              }
-            }
-          }
-        }
-      , create_callback = function(self, c, index, object)
-          local kill_button_clickbox = self:get_children_by_id("kill_button_clickbox")[1]
-          kill_button_clickbox:connect_signal("button::press", function()
-            c:kill()
-          end)
-
-          self:get_children_by_id("client_icon")[1].client = c
-        end
-      , update_callback = function(self, c, index, object)
-          local kill_button = self:get_children_by_id("kill_button")[1]
-          if client.focus == c then
-            kill_button.markup = string.format("<span color='%s'>x</span>", beautiful.tasklist_fg_focus)
-          else
-            kill_button.markup = string.format("<span color='%s'>x</span>", beautiful.tasklist_fg_normal)
-          end
-        end
-      }
+    , widget_template = tasklist_template
     }
   end--}}}
 
+  -- hidden client list{{{
+  do
+    local popup = awful.popup
+    { visible = false
+    , hide_on_right_click = true
+    , ontop = true
+    , widget = awful.widget.tasklist
+      { screen = s
+      , layout = { layout = wibox.layout.fixed.vertical }
+      , filter = awful.widget.tasklist.filter.minimizedcurrenttags
+      , buttons = awful.button({}, 1, function(c)
+          c:emit_signal("request::activate", "hidden_client", {raise = true})
+        end)
+      , widget_template = tasklist_template
+      }
+    }
+    s.hidden_client = wibox.widget.textbox("[H]")
+    s.hidden_client:connect_signal("button::press", function()
+      popup.visible = true
+      popup.ontop = true
+      popup:move_next_to(mouse.current_widget_geometry)
+    end)
+  end
+  --}}}
+
   s.topbar:setup
   { layout = wibox.layout.align.horizontal
-  , s.tasklist
+  , { layout = wibox.layout.fixed.horizontal
+    , s.hidden_client
+    , s.tasklist
+    }
   , nil
   , wibox.widget.textbox(os.getenv("USER") .. "@" .. tostring(io.popen("hostname"):read()))
   }
 
-  -- s.leftbar:setup
-  -- { layout = wibox.layout.align.vertical
-  -- , { layout = wibox.layout.fixed.vertical
-  --   , wibox.widget.textbox("")
-  --   } -- left
-  -- , nil -- middle
-  -- , { layout = wibox.layout.fixed.vertical
-  --   , { widget = wibox.container.place
-  --     , wibox.widget.textclock("<tt>%H\n%M</tt>")
-  --     }
-  --   } -- right
-  -- }
+  -- battery widget{{{
+  do
+    s.battery = wibox.widget.textbox("")
+    local update_function = function()
+      s.battery.markup = "BAT: " .. tostring(upower:percentage())
+    end
+    update_function()
+    upower.watch(update_function)
+  end
+  --}}}
+
+  local separator = wibox.widget.textbox("|")
+  s.floating_bar = awful.popup
+  { visible = true
+  , ontop = true
+  , border_color = "#1d1f21"
+  , border_width = dpi(1)
+  , widget = wibox.widget.textbox("")
+  , bg = "#fefefe"
+  , left = true
+  , widget = wibox.widget
+    { layout = wibox.layout.fixed.horizontal
+    , forced_height = beautiful.wibar_height
+    , spacing = dpi(4)
+    , wibox.widget.textbox("")
+    , { widget = wibox.widget.systray
+      , forced_width = dpi(32)
+      }
+    , separator
+    , s.battery
+    , separator
+    , wibox.widget.textclock("%H:%M")
+    , separator
+    , { widget = wibox.widget.textbox
+      , text = "<>"
+      , id = "mover"
+      }
+    , wibox.widget.textbox("")
+    }
+  }
+  local mover = s.floating_bar.widget:get_children_by_id("mover")[1]
+  mover:connect_signal("mouse::enter", function(self)
+    if self.left then
+      awful.placement.bottom_left(s.floating_bar)
+    else
+      awful.placement.bottom_right(s.floating_bar)
+    end
+    self.left = not self.left
+  end)
+  s.floating_bar:connect_signal("setup", function(self)
+  end)
+  do
+    local set_pos_first_time = {}
+    set_pos_first_time[1] = function()
+      awful.placement.bottom_left(s.floating_bar)
+      s.floating_bar:disconnect_signal("property::height", set_pos_first_time[1])
+    end
+    s.floating_bar:connect_signal("property::height", set_pos_first_time[1])
+  end
 end)
 
 local titlebar = {}
@@ -207,18 +289,17 @@ titlebar.dialog = function(c)
   , buttons = buttons
   }
 end
+titlebar.normal = titlebar.dialog
 client.connect_signal("request::titlebars", function(c)
   if c.type then
-    local ttb = titlebar[c.type]
-    if ttb then
-      ttb(c)
+    if (c.type == "normal" and c.floating) or c.type ~= "normal" then
+      local ttb = titlebar[c.type]
+      if ttb then
+        ttb(c)
+      end
     end
   end
 end)
-
--- root.buttons(gears.table.join(
---   awful.button({}, 3, function() menu:show() end)
--- ))
 
 common.dispatches["app/menu"] = function() menu:show() end
 common:setup("w")
@@ -242,3 +323,14 @@ client.connect_signal("property::floating", setfloating)
 client.connect_signal("mouse::enter", function(c)
   c:emit_signal("request::activate", "mouse::enter", {raise = false})
 end)
+
+do
+  local keys = root.keys()
+  local modkey = "Mod4"
+  root.keys(gears.table.join(keys
+  , awful.key({modkey}, "b", function()
+      local s = awful.screen.focused()
+      s.floating_bar.visible = not s.floating_bar.visible
+    end, { description = "Toggle floating bar", group = "Misc" })
+  ))
+end
