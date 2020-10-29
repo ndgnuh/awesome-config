@@ -289,4 +289,18 @@ rules:add("enable titlebar", {
 })
 --}}}
 
+--{{{
+rules:add("size hint"
+, { rule_any =
+    { class =
+      { "URxvt"
+      , "urxvt"
+      , "x-terminal-emulator"
+      , "firefox"
+      }
+    }
+  , properties = { size_hints_honor = false }
+  })
+--}}}
+
 return module
