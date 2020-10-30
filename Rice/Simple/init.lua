@@ -181,8 +181,8 @@ awful.screen.connect_for_each_screen(function(s)
   -- hidden client list{{{
   do
     local popup = awful.popup
-    { visible = false
-    , hide_on_right_click = true
+    { hide_on_right_click = true
+    , visible = false
     , ontop = true
     , widget = awful.widget.tasklist
       { screen = s
@@ -194,18 +194,31 @@ awful.screen.connect_for_each_screen(function(s)
       , widget_template = tasklist_template
       }
     }
-    s.hidden_client = wibox.widget.textbox("[H]")
-    s.hidden_client:connect_signal("button::press", function()
+    s.hidden_client = wibox.widget
+    { widget = wibox.container.background
+    , bg = beautiful.bg_focus
+    , { widget = wibox.widget.textbox
+      , text = " [H] "
+      }
+    }
+    -- # bind to widget
+    -- popup:bind_to_widget(s.topbar, 1)
+
+    s.hidden_client:buttons(awful.button({}, 1, function()
       popup.visible = true
       popup.ontop = true
-      popup:move_next_to(mouse.current_widget_geometry)
-    end)
+      -- popup:move_next_to(mouse.current_widget_geometry)
+      awful.placement.under_mouse(popup)
+      -- popup._private.show_fct()
+      -- db.dump(123)
+    end))
   end
   --}}}
 
   s.topbar:setup
   { layout = wibox.layout.align.horizontal
   , { layout = wibox.layout.fixed.horizontal
+    , spacing = dpi(4)
     , s.hidden_client
     , s.tasklist
     }
@@ -224,53 +237,66 @@ awful.screen.connect_for_each_screen(function(s)
   end
   --}}}
 
-  local separator = wibox.widget.textbox("|")
-  s.floating_bar = awful.popup
-  { visible = true
-  , ontop = true
-  , border_color = "#1d1f21"
-  , border_width = dpi(1)
-  , widget = wibox.widget.textbox("")
-  , bg = "#fefefe"
-  , left = true
-  , widget = wibox.widget
-    { layout = wibox.layout.fixed.horizontal
-    , forced_height = beautiful.wibar_height
-    , spacing = dpi(4)
-    , wibox.widget.textbox("")
-    , { widget = wibox.widget.systray
-      , forced_width = dpi(32)
+  s.floating_bar = awful.popup{
+    visible = true
+    , ontop = true
+    , border_color = "#1d1f21"
+    , border_width = dpi(1)
+    , widget = wibox.widget.textbox("")
+    , shape = gears.shape.rounded_rect
+    , bg = "#fefefe"
+    , widget = wibox.widget {
+      widget = wibox.container.margin
+      , left = dpi(6)
+      , right = dpi(6)
+      , {
+        layout = wibox.layout.fixed.horizontal
+        , forced_height = beautiful.wibar_height
+        , spacing_widget = wibox.widget{
+          widget = wibox.container.margin
+          , left = dpi(4)
+          , right = dpi(4)
+          , {
+            widget = wibox.widget.separator
+            , shape = gears.shape.circle
+          }
+        }
+        , spacing = dpi(12)
+        , require("common.ibus-indicator")
+        , s.battery
+        , wibox.widget.textclock("%H:%M")
+        , {
+          widget = wibox.widget.textbox
+          , text = "⊕"
+          , id = "mover"
+        }
       }
-    , separator
-    , s.battery
-    , separator
-    , wibox.widget.textclock("%H:%M")
-    , separator
-    , { widget = wibox.widget.textbox
-      , text = "<>"
-      , id = "mover"
-      }
-    , wibox.widget.textbox("")
     }
   }
-  local mover = s.floating_bar.widget:get_children_by_id("mover")[1]
-  mover:connect_signal("mouse::enter", function(self)
-    if self.left then
-      awful.placement.bottom_left(s.floating_bar)
-    else
-      awful.placement.bottom_right(s.floating_bar)
-    end
-    self.left = not self.left
-  end)
-  s.floating_bar:connect_signal("setup", function(self)
-  end)
   do
-    local set_pos_first_time = {}
-    set_pos_first_time[1] = function()
-      awful.placement.bottom_left(s.floating_bar)
-      s.floating_bar:disconnect_signal("property::height", set_pos_first_time[1])
+    local mover = s.floating_bar.widget:get_children_by_id("mover")[1]
+    local off = beautiful.wibar_height / 2
+    local placement =  {
+      awful.placement.bottom_right
+      , awful.placement.bottom_left
+    }
+    local place = 1
+    local offset = {
+      { x = -off, y = -off }
+      , { x = off, y = -off }
+    }
+    mover:connect_signal("mouse::enter", function(self)
+      place = place + 1
+      if place > #offset then
+        place = 1
+      end
+      placement[place](s.floating_bar, {offset = offset[place]})
+    end)
+    local adjust = function()
+      placement[place](s.floating_bar, {offset = offset[place]})
     end
-    s.floating_bar:connect_signal("property::height", set_pos_first_time[1])
+    s.floating_bar:connect_signal("property::height", adjust)
+    s.floating_bar:connect_signal("property::width", adjust)
   end
 end)
 
