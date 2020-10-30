@@ -87,61 +87,75 @@ awful.screen.connect_for_each_screen(function(s)
 
   awful.tag({1}, s, awful.layout.suit.max)
 
-  s.topbar = awful.wibar
-  { screen = s
-  , position = "top"
+  s.topbar = awful.wibar {
+    screen = s
+    , position = "top"
   }
 
-  --s.leftbar = awful.wibar {
-  --  position = "left",
-  --  screen = s,
-  --  stretch = true,
-  --}
-
   -- tasklist{{{
-  local tasklist_template =
-  { widget = wibox.container.background
-  , id = 'background_role'
-  , { layout = wibox.layout.align.horizontal
-    , forced_height = beautiful.wibar_height
-    -- client icon
-    , { widget = wibox.container.margin
-      , forced_width = dpi(35)
-      , margins = dpi(4)
-      , { widget = awful.widget.clienticon
-        , id = 'client_icon'
+  local tasklist_template = {
+    widget = wibox.container.background
+    , id = 'background_role'
+    , {
+      layout = wibox.layout.align.horizontal
+      , forced_height = beautiful.wibar_height
+      -- client icon
+      , {
+        widget = wibox.container.margin
+        , forced_width = dpi(35)
+        , margins = dpi(4)
+        , {
+          widget = awful.widget.clienticon
+          , id = 'client_icon'
         }
       }
-    -- client title
-    , { widget = wibox.container.margin
-      , margins = dpi(8)
-      , { widget = wibox.widget.textbox
-        , id = 'text_role'
-        , align = 'left'
+      -- client title
+      , {
+        widget = wibox.container.margin
+        , margins = dpi(8)
+        , {
+          widget = wibox.widget.textbox
+          , id = 'text_role'
+          , align = 'left'
         }
       }
-    -- close button
-    , { widget = wibox.container.margin
-      , id = 'kill_button_clickbox'
-      , margins = dpi(8)
-      , { widget = wibox.container.place
-        , forced_width = dpi(20)
-        , { widget = wibox.widget.textbox
-          , markup = "x"
-          , id = 'kill_button'
+      -- close button
+      , {
+        widget = wibox.container.background
+        , id = 'kill_button_hover_box'
+        , {
+          widget = wibox.container.margin
+          , id = 'kill_button_clickbox'
+          , margins = dpi(8)
+          , {
+            widget = wibox.container.place
+            , forced_width = dpi(20)
+            , {
+              widget = wibox.widget.textbox
+              , markup = "×"
+              , id = 'kill_button'
+            }
           }
         }
       }
     }
-  , create_callback = function(self, c, index, object)
+    , create_callback = function(self, c, index, object)
       local kill_button_clickbox = self:get_children_by_id("kill_button_clickbox")[1]
       kill_button_clickbox:connect_signal("button::press", function()
         c:kill()
       end)
+      -- kill button hover box
+      local kbhb = self:get_children_by_id("kill_button_hover_box")[1]
+      kbhb:connect_signal("mouse::enter", function(self)
+        self.bg = "#00000010"
+      end)
+      kbhb:connect_signal("mouse::leave", function(self)
+        self.bg = gears.color.transparent
+      end)
 
       self:get_children_by_id("client_icon")[1].client = c
     end
-  , update_callback = function(self, c, index, object)
+    , update_callback = function(self, c, index, object)
       local kill_button = self:get_children_by_id("kill_button")[1]
       if client.focus == c then
         kill_button.markup = string.format("<span color='%s'>x</span>", beautiful.tasklist_fg_focus)
