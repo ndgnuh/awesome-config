@@ -278,6 +278,7 @@ rules:add("floating-clients", {
   },
   properties = {
     floating = true
+    , titlebars_enabled = true
   },
 })
 --}}}
