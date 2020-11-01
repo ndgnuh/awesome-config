@@ -7,6 +7,8 @@ local beautiful = require("beautiful")
 local partial = require("Partial")
 local Rice = require("Rice")
 local upower = require("model.upower")
+local stateful = require("stateful")
+local on_empty_screen = require("on_empty_screen")
 local awesome = awesome
 local client = client
 local root = root
@@ -15,6 +17,7 @@ local db = require("Debug")
 
 local dpi = beautiful.xresources.apply_dpi
 do
+  beautiful.primary = "#2367be"
   beautiful.font = "sans 12"
   beautiful.bg_normal = "#cecece"
   beautiful.fg_normal = "#1d1f21"
@@ -44,7 +47,7 @@ do
   beautiful.menu_border_width = 0
   beautiful.menu_width = dpi(220)
   beautiful.menu_height = beautiful.wibar_height
-  beautiful.menu_bg_focus = "#2367be"
+  beautiful.menu_bg_focus = beautiful.primary
   beautiful.menu_fg_focus = "#fefefe"
 end
 
@@ -85,61 +88,80 @@ awful.screen.connect_for_each_screen(function(s)
   -- set wallpaper when screen size changes
   set_wallpaper(s)
 
-  awful.tag({1}, s, awful.layout.suit.max)
+  awful.tag({1, 2, 3, 4, 5, 6, 7, 8, 9}, s, awful.layout.suit.max)
 
   s.topbar = awful.wibar {
     screen = s
     , position = "top"
   }
+  on_empty_screen{
+    screen = s
+    , callback = function(isempty)
+      if isempty then
+        s.topbar.bg = "#ffffff55"
+      else
+        s.topbar.bg = beautiful.wibar_bg
+      end
+    end
+  }
 
   -- tasklist{{{
+  local tasklist_gap = dpi(13)
   local tasklist_template = {
     widget = wibox.container.background
     , id = 'background_role'
     , {
-      layout = wibox.layout.align.horizontal
-      , forced_height = beautiful.wibar_height
-      -- client icon
+      widget = wibox.container.margin
+      , left = tasklist_gap
+      , right = tasklist_gap
       , {
-        widget = wibox.container.margin
-        , forced_width = dpi(35)
-        , margins = dpi(4)
+        layout = wibox.layout.align.horizontal
+        , forced_height = beautiful.wibar_height
+        -- client icon
         , {
-          widget = awful.widget.clienticon
-          , id = 'client_icon'
+          widget = wibox.container.margin
+          , forced_width = dpi(35)
+          , margins = dpi(4)
+          , {
+            widget = awful.widget.clienticon
+            , id = 'client_icon'
+          }
         }
-      }
-      -- client title
-      , {
-        widget = wibox.container.margin
-        , margins = dpi(8)
+        -- client title
         , {
-          widget = wibox.widget.textbox
-          , id = 'text_role'
-          , align = 'left'
+          widget = wibox.container.margin
+          , margins = dpi(8)
+          , {
+            widget = wibox.widget.textbox
+            , id = 'text_role'
+            , align = 'left'
+          }
         }
-      }
-      -- close button
-      , {
-        widget = wibox.container.background
-        , id = 'kill_button_hover_box'
+        -- close button
         , {
           widget = wibox.container.margin
           , id = 'kill_button_clickbox'
-          , margins = dpi(8)
+          , margins = dpi(3)
           , {
-            widget = wibox.container.place
-            , forced_width = dpi(20)
+            widget = wibox.container.background
+            , id = 'kill_button_hover_box'
+            , shape = gears.shape.circle
             , {
-              widget = wibox.widget.textbox
-              , markup = "×"
-              , id = 'kill_button'
+              widget = wibox.container.place
+              , forced_width = dpi(20)
+              , {
+                widget = wibox.widget.textbox
+                , markup = "×"
+                , id = 'kill_button'
+              }
             }
           }
         }
       }
     }
     , create_callback = function(self, c, index, object)
+      local background_role = self:get_children_by_id("background_role")[1]
+
       local kill_button_clickbox = self:get_children_by_id("kill_button_clickbox")[1]
       kill_button_clickbox:connect_signal("button::press", function()
         c:kill()
@@ -147,7 +169,7 @@ awful.screen.connect_for_each_screen(function(s)
       -- kill button hover box
       local kbhb = self:get_children_by_id("kill_button_hover_box")[1]
       kbhb:connect_signal("mouse::enter", function(self)
-        self.bg = "#00000010"
+        self.bg = "#1d1f213a"
       end)
       kbhb:connect_signal("mouse::leave", function(self)
         self.bg = gears.color.transparent
@@ -178,44 +200,67 @@ awful.screen.connect_for_each_screen(function(s)
       end)
     )
 
-    s.tasklist = awful.widget.tasklist
-    { screen = s
-    , filter = function(...)
+    s.tasklist = awful.widget.tasklist {
+      screen = s
+      , filter = function(...)
         return awful.widget.tasklist.filter.currenttags(...) and not awful.widget.tasklist.filter.minimizedcurrenttags(...)
       end
-    , buttons = buttons
-    , layout =
-      { layout = wibox.layout.flex.horizontal
-      , spacing = dpi(8)
+      , buttons = buttons
+      , layout = {
+        layout = wibox.layout.flex.horizontal
+        , spacing = -tasklist_gap
       }
-    , widget_template = tasklist_template
+      , style = {
+        shape = function(cr, w, h)
+          cr:move_to(tasklist_gap, 0)
+          cr:line_to(w - tasklist_gap, 0)
+          cr:line_to(w, h)
+          cr:line_to(0, h)
+          cr:close_path()
+        end
+      }
+      , widget_template = tasklist_template
     }
   end--}}}
 
   -- hidden client list{{{
   do
-    local popup = awful.popup
-    { hide_on_right_click = true
-    , visible = false
-    , ontop = true
-    , widget = awful.widget.tasklist
-      { screen = s
-      , layout = { layout = wibox.layout.fixed.vertical }
-      , filter = awful.widget.tasklist.filter.minimizedcurrenttags
-      , buttons = awful.button({}, 1, function(c)
+    local popup = awful.popup {
+      hide_on_right_click = true
+      , visible = false
+      , ontop = true
+      , widget = awful.widget.tasklist {
+        screen = s
+        , layout = { layout = wibox.layout.fixed.vertical }
+        , filter = awful.widget.tasklist.filter.minimizedcurrenttags
+        , buttons = awful.button({}, 1, function(c)
           c:emit_signal("request::activate", "hidden_client", {raise = true})
         end)
-      , widget_template = tasklist_template
+        , widget_template = tasklist_template
       }
     }
-    s.hidden_client = wibox.widget
-    { widget = wibox.container.background
-    , bg = beautiful.bg_focus
-    , { widget = wibox.widget.textbox
-      , text = " [H] "
+    s.hidden_client = wibox.widget {
+      widget = wibox.container.background
+      , bg = beautiful.primary
+      , shape = function(cr, w, h)
+        cr:move_to(0, 0)
+        cr:line_to(w, 0)
+        cr:line_to(w - tasklist_gap, h)
+        cr:line_to(0, h)
+        cr:close_path()
+      end
+      , {
+        widget = wibox.container.margin
+        , left = tasklist_gap / 2
+        , right = tasklist_gap
+        , {
+          widget = wibox.widget.textbox
+          , markup = " <span color='#fefefe'>H/</span> "
+        }
       }
     }
-    -- # bind to widget
+    -- bind to widget
+    -- doesn't work???
     -- popup:bind_to_widget(s.topbar, 1)
 
     s.hidden_client:buttons(awful.button({}, 1, function()
@@ -229,15 +274,16 @@ awful.screen.connect_for_each_screen(function(s)
   end
   --}}}
 
-  s.topbar:setup
-  { layout = wibox.layout.align.horizontal
-  , { layout = wibox.layout.fixed.horizontal
-    , spacing = dpi(4)
-    , s.hidden_client
-    , s.tasklist
+  s.topbar:setup {
+    layout = wibox.layout.align.horizontal
+    , {
+      layout = wibox.layout.fixed.horizontal
+      , spacing = -tasklist_gap
+      , s.hidden_client
+      , s.tasklist
     }
-  , nil
-  , wibox.widget.textbox(os.getenv("USER") .. "@" .. tostring(io.popen("hostname"):read()))
+    , nil
+    , wibox.widget.textbox(os.getenv("USER") .. "@" .. tostring(io.popen("hostname"):read()))
   }
 
   -- battery widget{{{
