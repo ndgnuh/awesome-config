@@ -7,6 +7,7 @@
 local gears = require"gears"
 local wmdir = gears.filesystem.get_configuration_dir()
 package.path = package.path --[[
+--]].. (";" .. wmdir .. "common/?.lua") --[[ common dir, util and model merged
 --]].. (";" .. wmdir .. "util/?.lua") --[[ utilities like partial, debug...
 --]].. (";" .. wmdir .. "model/?.lua") --[[ model for os watching, should be merged to util soon
 --]]
