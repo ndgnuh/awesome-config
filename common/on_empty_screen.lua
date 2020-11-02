@@ -12,9 +12,13 @@ return function(arg)
     return callback(isempty)
   end
   callback(true)
-  client.connect_signal("manage", real_callback)
-  client.connect_signal("property::minimized", real_callback)
+  -- this signal doesn't work on c:kill()
+  -- client.connect_signal("manage", real_callback)
+  client.connect_signal("list", real_callback)
   -- this signal doesn't work on tag.viewnone()
   -- s:connect_signal("tag::history::update", real_callback)
   tag.connect_signal("property::selected", real_callback)
+  if arg.count_minimized ~= true then
+    client.connect_signal("property::minimized", real_callback)
+  end
 end
