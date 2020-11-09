@@ -98,7 +98,7 @@ awful.screen.connect_for_each_screen(function(s)
     screen = s
     , callback = function(isempty)
       if isempty then
-        s.topbar.bg = "#ffffff55"
+        s.topbar.bg = beautiful.bg_focus
       else
         s.topbar.bg = beautiful.wibar_bg
       end
