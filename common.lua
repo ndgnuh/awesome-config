@@ -3,6 +3,7 @@ local gears = require("gears")
 local partial = require("util.Partial")
 local rules = require("rules")
 local hprevious = require("history-previous-imp2")
+local stateful = require("stateful")
 
 -- {{{
 local module = gears.object{class = {
@@ -46,8 +47,7 @@ local tagcall = function(method, i)
   end
 end
 
-local Stateful = require"Stateful"
-local tagtoggle = Stateful(function(self)
+local tagtoggle = stateful(function(self)
   if self.__tag then
     self.__tag:view_only()
     self.__tag = nil
@@ -103,6 +103,9 @@ module.dispatches = {
     local c= client.focus
     if c then c:move_to_tag(i) end
   end,
+
+  ["layout/next"] = partial(awful.layout.inc, 1),
+  ["layout/prev"] = partial(awful.layout.inc, -1)
 }
 --}}}
 
@@ -199,6 +202,7 @@ module.keys = {
   {ModShift, "#16", "client/move-to-tag", arg = {7}},
   {ModShift, "#17", "client/move-to-tag", arg = {8}},
   {ModShift, "#18", "client/move-to-tag", arg = {9}},
+  {ModShift, "space", "layout/next", arg = {}},
 }
 -- }}}
 
