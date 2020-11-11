@@ -9,6 +9,7 @@ local Rice = require("Rice")
 local upower = require("model.upower")
 local stateful = require("stateful")
 local on_empty_screen = require("on_empty_screen")
+-- local nightlight = require("common.nightlight")
 local awesome = awesome
 local client = client
 local root = root
@@ -17,38 +18,8 @@ local db = require("Debug")
 
 local dpi = beautiful.xresources.apply_dpi
 do
-  beautiful.primary = "#2367be"
-  beautiful.font = "sans 12"
-  beautiful.bg_normal = "#cecece"
-  beautiful.fg_normal = "#1d1f21"
-  beautiful.bg_focus = "#fefefe"
-  beautiful.fg_focus = "#1d1f21"
-
-  beautiful.wallpaper = os.getenv("HOME") .. "/Pictures/wallpaper/index"
-
-  beautiful.wibar_bg = "#bebebe"
-  beautiful.wibar_width = dpi(32)
-  beautiful.wibar_height = dpi(32)
-
-  beautiful.tasklist_bg_normal = "#cecece"
-  beautiful.tasklist_fg_normal = "#999999"
-  beautiful.tasklist_bg_focus = "#fefefe"
-  beautiful.tasklist_fg_focus = "#1d1f21"
-
-  beautiful.titlebar_fg_normal = "#999999"
-  beautiful.titlebar_fg_focus = "#1d1f21"
-
-  beautiful.border_width = dpi(2)
-  beautiful.border_focus = "#1d1f21"
-  beautiful.border_normal = "#999999"
-
-  beautiful.menu_bg_normal = "#fefefe"
-  beautiful.menu_fg_normal = "#1d1f21"
-  beautiful.menu_border_width = 0
-  beautiful.menu_width = dpi(220)
-  beautiful.menu_height = beautiful.wibar_height
-  beautiful.menu_bg_focus = beautiful.primary
-  beautiful.menu_fg_focus = "#fefefe"
+  local theme = require("light-theme")
+  beautiful.init(theme)
 end
 
 require("awful.autofocus")
@@ -87,6 +58,9 @@ screen.connect_signal("request::geometry", set_wallpaper)
 awful.screen.connect_for_each_screen(function(s)
   -- set wallpaper when screen size changes
   set_wallpaper(s)
+
+  -- nightlight
+  -- s.nightlight = nightlight(s, 0.4)
 
   awful.tag({1, 2, 3, 4, 5, 6, 7, 8, 9}, s, awful.layout.suit.max)
 
@@ -378,13 +352,12 @@ end
 titlebar.normal = titlebar.dialog
 client.connect_signal("request::titlebars", function(c)
   if c.type then
-    if (c.type == "normal" and c.floating) or c.type ~= "normal" then
-      local ttb = titlebar[c.type]
-      if ttb then
-        ttb(c)
-      end
+    local ttb = titlebar[c.type]
+    if ttb then
+      ttb(c)
     end
   end
+  decide_titlebar(c)
 end)
 
 common.dispatches["app/menu"] = function() menu:show() end
@@ -420,3 +393,14 @@ do
     end, { description = "Toggle floating bar", group = "Misc" })
   ))
 end
+
+local decide_titlebar = function(c)
+  if c.floating then
+    awful.titlebar.show(c)
+  else
+    awful.titlebar.hide(c)
+  end
+end
+client.connect_signal("manage", decide_titlebar)
+client.connect_signal("property::floating", decide_titlebar)
+
