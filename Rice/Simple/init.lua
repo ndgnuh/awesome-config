@@ -18,7 +18,7 @@ local db = require("Debug")
 
 local dpi = beautiful.xresources.apply_dpi
 do
-  local theme = require("light-theme")
+  local theme = require("dark-theme")
   beautiful.init(theme)
 end
 
@@ -143,7 +143,7 @@ awful.screen.connect_for_each_screen(function(s)
       -- kill button hover box
       local kbhb = self:get_children_by_id("kill_button_hover_box")[1]
       kbhb:connect_signal("mouse::enter", function(self)
-        self.bg = "#1d1f213a"
+        self.bg = beautiful.tasklist_bg_normal
       end)
       kbhb:connect_signal("mouse::leave", function(self)
         self.bg = gears.color.transparent
@@ -274,11 +274,11 @@ awful.screen.connect_for_each_screen(function(s)
   s.floating_bar = awful.popup{
     visible = true
     , ontop = true
-    , border_color = "#1d1f21"
+    , border_color = beautiful.border_focus
     , border_width = dpi(1)
     , widget = wibox.widget.textbox("")
     , shape = gears.shape.rounded_rect
-    , bg = "#fefefe"
+    , bg = beautiful.bg_normal
     , widget = wibox.widget {
       widget = wibox.container.margin
       , left = dpi(6)
