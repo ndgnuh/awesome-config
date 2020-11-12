@@ -361,6 +361,10 @@ client.connect_signal("request::titlebars", function(c)
 end)
 
 common.dispatches["app/menu"] = function() menu:show() end
+common.dispatches["client/toggle-maximize"] = function()
+	local c = client.focus
+	if c then c.fullscreen = not c.fullscreen end
+end
 common:setup("w")
 
 local setfloating = function(c)
@@ -407,3 +411,8 @@ end
 client.connect_signal("manage", decide_titlebar)
 client.connect_signal("property::floating", decide_titlebar)
 
+local decide_maximize = function(c)
+	c.maximized = false
+end
+client.connect_signal("manage", decide_maximize)
+client.connect_signal("property::maximized", decide_maximize)
