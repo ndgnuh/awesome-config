@@ -416,3 +416,8 @@ local decide_maximize = function(c)
 end
 client.connect_signal("manage", decide_maximize)
 client.connect_signal("property::maximized", decide_maximize)
+
+wibox {
+	widget = wibox.widget.systray()
+	, visible = false
+}
