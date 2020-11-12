@@ -419,5 +419,10 @@ client.connect_signal("property::maximized", decide_maximize)
 
 wibox {
 	widget = wibox.widget.systray()
-	, visible = false
+	, visible = true
+	, ontop = false
+	, x = -1
+	, y = -1
+	, width = 1
+	, height = 1
 }
