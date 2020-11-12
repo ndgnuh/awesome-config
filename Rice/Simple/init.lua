@@ -395,11 +395,14 @@ do
 end
 
 local decide_titlebar = function(c)
-  if c.floating then
-    awful.titlebar.show(c)
-  else
-    awful.titlebar.hide(c)
-  end
+	-- do not count maximized clients
+	if c.floating then
+		if not c.maximized then
+			awful.titlebar.show(c)
+		end
+	else
+		awful.titlebar.hide(c)
+	end
 end
 client.connect_signal("manage", decide_titlebar)
 client.connect_signal("property::floating", decide_titlebar)
