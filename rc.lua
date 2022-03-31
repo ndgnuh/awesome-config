@@ -144,8 +144,10 @@ else
 end
 
 -- client action menu
-local function span_client()
-	local c = client.focus
+local function span_client(c)
+	if not c then
+		c = client.focus
+	end
 	if not c then
 		return
 	end
@@ -651,8 +653,12 @@ clientkeys = gears.table.join(
 		c.minimized = true
 	end, { description = "minimize", group = "client" }),
 	awful.key({ modkey, "Shift" }, "m", function(c)
-		c.maximized = not c.maximized
-		c:raise()
+		if c.floating then
+			c.ontop = false
+			c.floating = false
+		else
+			span_client(c)
+		end
 	end, { description = "(un)maximize horizontally", group = "client" })
 )
 
