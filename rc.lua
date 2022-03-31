@@ -143,6 +143,68 @@ else
 	})
 end
 
+-- client action menu
+local function span_client()
+	local c = client.focus
+	if not c then
+		return
+	end
+	local right_most, left_most, top_most, bottom_most
+	local minx, maxx, miny, maxy = 30000, 0, 30000, 0
+	for s in screen do
+		local g = s.geometry
+		if g.x > maxx then
+			right_most = s
+			maxx = g.x
+		end
+		if g.y > maxy then
+			bottom_most = s
+			maxy = g.y
+		end
+		if g.x <= minx then
+			left_most = s
+			minx = g.x
+		end
+		if g.y <= miny then
+			top_most = s
+			miny = g.y
+		end
+	end
+	local x = left_most.workarea.x
+	local y = top_most.workarea.y
+	local w = right_most.workarea.x + right_most.workarea.width - x
+	local h = right_most.workarea.y + right_most.workarea.height - y
+	c.floating = true
+	c.ontop = true
+	c:geometry({ x = x, y = y, width = w, height = h })
+end
+
+local function c_toggle(attr, value)
+	return function()
+		local c = client.focus
+		if c then
+			c[attr] = value or not c[attr]
+		end
+	end
+end
+
+local client_action_menu = awful.menu({
+	items = {
+		{ "Span", span_client },
+		{
+			"Unspan",
+			function()
+				c_toggle("floating")()
+				c_toggle("ontop")()
+			end,
+		},
+		{ "Float", c_toggle("floating") },
+		{ "Sticky", c_toggle("sticky") },
+		{ "Ontop", c_toggle("ontop") },
+		{ "Fullscreen", c_toggle("fullscreen") },
+	},
+})
+
 mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon, menu = mymainmenu })
 
 -- Menubar configuration
@@ -562,6 +624,9 @@ clientkeys = gears.table.join(
 		end
 		c:raise()
 	end, { description = "toggle fullscreen", group = "client" }),
+	awful.key({ modkey }, "c", function(c)
+		client_action_menu:show()
+	end, { description = "action menu", group = "client" }),
 	awful.key({ modkey, "Shift" }, "c", function(c)
 		c:kill()
 	end, { description = "close", group = "client" }),
@@ -826,19 +891,19 @@ end)
 -- dump({ pcall(require, "ibus") })
 -- awesome.connect_signal("pulseaudio", function(...) end)
 -- client.connect_signal("property::floating", function(c)
--- 	if c.floating then
--- 		c.border_width = beautiful.border_width
--- 		c.shape = gears.shape.rounded_rect
--- 	else
--- 		c.shape = nil
--- 	end
+--	if c.floating then
+--		c.border_width = beautiful.border_width
+--		c.shape = gears.shape.rounded_rect
+--	else
+--		c.shape = nil
+--	end
 -- end)
 
 -- client.connect_signal("property::fullscreen", function(c)
--- 	if c.fullscreen then
--- 		c.shape = nil
--- 	else
--- 		c.border_width = beautiful.border_width
--- 		c.shape = gears.shape.rounded_rect
--- 	end
+--	if c.fullscreen then
+--		c.shape = nil
+--	else
+--		c.border_width = beautiful.border_width
+--		c.shape = gears.shape.rounded_rect
+--	end
 -- end)
