@@ -144,15 +144,16 @@ else
 end
 
 -- client action menu
-local function span_client(c)
-	if not c then
-		c = client.focus
-	end
+local function span_client(c, cw, ch)
+	-- constraint width/height
+	cw = cw or false
+	ch = ch or true
+	c = c or client.focus
 	if not c then
 		return
 	end
 	local right_most, left_most, top_most, bottom_most
-	local minx, maxx, miny, maxy = 30000, 0, 30000, 0
+	local minx, maxx, miny, maxy, minw, minh = 30000, 0, 30000, 0, 30000, 30000
 	for s in screen do
 		local g = s.geometry
 		if g.x > maxx then
@@ -171,11 +172,15 @@ local function span_client(c)
 			top_most = s
 			miny = g.y
 		end
+		minw = math.min(s.workarea.width, minw)
+		minh = math.min(s.workarea.height, minh)
 	end
 	local x = left_most.workarea.x
 	local y = top_most.workarea.y
 	local w = right_most.workarea.x + right_most.workarea.width - x
 	local h = right_most.workarea.y + right_most.workarea.height - y
+	w = cw and math.min(minw, w) or w
+	h = ch and math.min(minh, h) or h
 	c.floating = true
 	c.ontop = true
 	c:geometry({ x = x, y = y, width = w, height = h })
