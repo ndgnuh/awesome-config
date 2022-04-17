@@ -898,6 +898,14 @@ end)
 client.connect_signal("unfocus", function(c)
 	c.border_color = beautiful.border_normal
 end)
+
+-- Enable border for floating clients
+client.connect_signal("property::floating", function(c)
+	if c.floating then
+		c.border_width = beautiful.border_width
+	end
+end)
+
 -- }}}
 
 -- dump({ pcall(require, "ibus") })
