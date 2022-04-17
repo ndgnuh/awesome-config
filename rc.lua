@@ -18,6 +18,18 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
 
+-- config
+local default_config = require("default_config")
+local ok, config = pcall(require, "config")
+if not ok then
+	config = {}
+end
+for k, v in pairs(default_config) do
+	if config[k] == nil then
+		config[k] = v
+	end
+end
+
 -- Load Debian menu entries
 local debian = require("debian.menu")
 local has_fdo, freedesktop = pcall(require, "freedesktop")
@@ -497,6 +509,9 @@ awful.screen.connect_for_each_screen(function(s)
 		font = "monospace",
 		format = "%H\n%M",
 	})
+	s.clock:connect_signal("button::press", function()
+		awful.spawn.with_shell(config.calendar_command, false)
+	end)
 
 	s.vbar:setup({
 		layout = wibox.layout.align.vertical,
@@ -588,7 +603,7 @@ globalkeys = gears.table.join(
 
 	-- Standard program
 	awful.key({ modkey }, "Return", function()
-		awful.spawn(terminal)
+		awful.spawn.with_shell(config.terminal_command, false)
 	end, { description = "open a terminal", group = "launcher" }),
 	awful.key({ modkey, "Shift" }, "r", awesome.restart, { description = "reload awesome", group = "awesome" }),
 	awful.key({ modkey, "Shift" }, "q", awesome.quit, { description = "quit awesome", group = "awesome" }),
@@ -628,7 +643,7 @@ globalkeys = gears.table.join(
 
 	-- Prompt
 	awful.key({ modkey }, "r", function()
-		awful.screen.focused().mypromptbox:run()
+		awful.spawn.with_shell(config.launcher_command, false)
 	end, { description = "run prompt", group = "launcher" }),
 
 	awful.key({ modkey }, "x", function()
