@@ -87,6 +87,30 @@ function dump(x)
 	})
 end
 
+-- swap two screen
+local function swap_screen()
+	local focused = awful.screen.focused()
+	local focused_tag = focused.selected_tag
+	local clients = {}
+	-- list clients on each one
+	for s in screen do
+		clients[s] = s.clients
+	end
+
+	-- move to the relative screen
+	-- since list of client are change, we
+	-- have to collect them above
+	for _, clients_i in pairs(clients) do
+		for _, c in ipairs(clients_i) do
+			c:move_to_screen()
+		end
+	end
+
+	-- focus the currently focused screen
+	awful.screen.focus(focused)
+	awful.tag.viewidx(focused_tag.index, focused)
+end
+
 -- Default modkey.
 -- Usually, Mod4 is the key with a logo between Control and Alt.
 -- If you do not like this or do not have such a key,
@@ -537,6 +561,9 @@ globalkeys = gears.table.join(
 	awful.key({ modkey }, "w", function()
 		mymainmenu:show()
 	end, { description = "show main menu", group = "awesome" }),
+	awful.key({ modkey, "Shift" }, "o", function()
+		swap_screen()
+	end, { description = "Swap two screen", group = "awesome" }),
 
 	-- Layout manipulation
 	awful.key({ modkey, "Shift" }, "j", function()
