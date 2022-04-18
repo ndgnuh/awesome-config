@@ -121,6 +121,7 @@ local function swap_screen()
 	-- focus the currently focused screen
 	awful.screen.focus(focused)
 	awful.tag.viewidx(focused_tag.index, focused)
+	focused_tag:view_only()
 end
 
 -- Default modkey.
