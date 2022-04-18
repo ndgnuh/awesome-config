@@ -545,6 +545,8 @@ root.buttons(gears.table.join(
 
 -- {{{ Key bindings
 globalkeys = gears.table.join(
+	awful.key({modkey}, "v", function() awful.spawn("ibus engine Bamboo", false) end),
+	awful.key({modkey}, "e", function() awful.spawn("ibus engine xkb:us::eng", false) end),
 	awful.key({ modkey }, "m", function()
 		awful.layout.set(max_layout)
 	end, { description = "Set max layout for current tag", group = "tag" }),
