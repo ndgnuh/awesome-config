@@ -98,6 +98,7 @@ function dump(x)
 		timeout = 0,
 	})
 end
+-- dump(beautiful.xresources.get_dpi())
 
 -- swap two screen
 local function swap_screen()
@@ -545,8 +546,12 @@ root.buttons(gears.table.join(
 
 -- {{{ Key bindings
 globalkeys = gears.table.join(
-	awful.key({modkey}, "v", function() awful.spawn("ibus engine Bamboo", false) end),
-	awful.key({modkey}, "e", function() awful.spawn("ibus engine xkb:us::eng", false) end),
+	awful.key({ modkey }, "v", function()
+		awful.spawn("ibus engine Bamboo", false)
+	end),
+	awful.key({ modkey }, "e", function()
+		awful.spawn("ibus engine xkb:us::eng", false)
+	end),
 	awful.key({ modkey }, "m", function()
 		awful.layout.set(max_layout)
 	end, { description = "Set max layout for current tag", group = "tag" }),
@@ -570,7 +575,7 @@ globalkeys = gears.table.join(
 	awful.key({ modkey }, "Right", awful.tag.viewnext, { description = "view next", group = "tag" }),
 	awful.key({ modkey }, "Tab", awful.tag.history.restore, { description = "go back", group = "tag" }),
 
-	awful.key({ modkey }, "j", function()
+	awful.key(config.focus_next_key[1], config.focus_next_key[2], function()
 		awful.client.focus.byidx(1)
 	end, { description = "focus next by index", group = "client" }),
 	awful.key({ modkey }, "k", function()

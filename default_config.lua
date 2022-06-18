@@ -26,8 +26,21 @@ local function notify_default(name, default)
 	return string.format(cmd, default, default, name, name, default, default)
 end
 
+--[[
+-- DEFAULT COMMAND
+--]]
 config.calendar_command = notify_unset("calendar", "gsimplecal")
 config.launcher_command = notify_default("launcher", "dmenu2")
 config.terminal_command = notify_default("terminal", "xterm")
+
+--[[
+-- DEFAULT KEY BINDING
+--]]
+local modkey = "Mod4"
+config.modkey = modkey
+config.kill_client_key = { { modkey, "Shift" }, "c" }
+config.focus_next_key = { { modkey }, "j" }
+config.focus_previous_key = { { modkey }, "k" }
+config.focus_history_key = { { modkey }, "tab" }
 
 return config
