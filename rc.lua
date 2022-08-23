@@ -573,7 +573,7 @@ globalkeys = gears.table.join(
 	end, { description = "focus next screen", group = "screen" }),
 	awful.key({ modkey }, "Left", awful.tag.viewprev, { description = "view previous", group = "tag" }),
 	awful.key({ modkey }, "Right", awful.tag.viewnext, { description = "view next", group = "tag" }),
-	awful.key({ modkey }, "Tab", awful.tag.history.restore, { description = "go back", group = "tag" }),
+	awful.key({ modkey, "Shift" }, "Tab", awful.tag.history.restore, { description = "go back", group = "tag" }),
 
 	awful.key(config.focus_next_key[1], config.focus_next_key[2], function()
 		awful.client.focus.byidx(1)
@@ -602,7 +602,7 @@ globalkeys = gears.table.join(
 		awful.screen.focus_relative(-1)
 	end, { description = "focus the previous screen", group = "screen" }),
 	awful.key({ modkey }, "u", awful.client.urgent.jumpto, { description = "jump to urgent client", group = "client" }),
-	awful.key({ modkey, "Shift" }, "Tab", function()
+	awful.key({ modkey }, "Tab", function()
 		awful.client.focus.history.previous()
 		if client.focus then
 			client.focus:raise()
@@ -798,6 +798,9 @@ awful.rules.rules = {
 			buttons = clientbuttons,
 			screen = awful.screen.preferred,
 			placement = awful.placement.no_overlap + awful.placement.no_offscreen,
+			maximized = false,
+			maximized_horizontal = false,
+			maximized_vertical = false,
 		},
 		callback = function(c)
 			awful.client.setslave(c)
@@ -942,6 +945,13 @@ client.connect_signal("mouse::enter", function(c)
 	c:emit_signal("request::activate", "mouse_enter", { raise = false })
 end)
 
+client.connect_signal("tagged", function(c)
+	if c.maximized then
+		c.maximized = false
+		c.maximized_horizontal = false
+		c.maximized_vertical = false
+	end
+end)
 client.connect_signal("focus", function(c)
 	c.border_color = beautiful.border_focus
 end)
