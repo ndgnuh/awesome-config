@@ -36,6 +36,10 @@ local has_fdo, freedesktop = pcall(require, "freedesktop")
 local max_layout = require("max_layout")
 local tile_layout = require("tile_layout")
 
+-- animation
+local has_rubato, rubato = pcall(require, "lib.rubato")
+local dualbar = require("widgets.dualbar")
+
 -- lol
 -- tile_layout.name = "[]="
 -- awful.layout.suit.floating.name = "><>"
@@ -77,10 +81,10 @@ end
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
 beautiful.border_width = 3
 beautiful.master_width_factor = 0.55 -- learn from dwm guys
-beautiful.font_size = 12
-beautiful.font_size_px = beautiful.font_size * beautiful.xresources.get_dpi() / 72
+beautiful.font_size = 9
+beautiful.font_size_px = beautiful.font_size * beautiful.xresources.get_dpi() / 71
 beautiful.font = "sans " .. beautiful.font_size
-beautiful.wibar_height = beautiful.font_size_px * 2
+beautiful.wibar_height = math.ceil(beautiful.font_size_px * 2)
 beautiful.useless_gap = beautiful.font_size_px / 4
 beautiful.wibar_width = beautiful.wibar_height
 beautiful.menu_width = beautiful.font_size_px * 15
@@ -457,53 +461,17 @@ awful.screen.connect_for_each_screen(function(s)
 	})
 
 	-- Create the wibox
-
-	s.vbar = wibox({
-		x = x,
-		y = y,
-		bg = bg,
-		width = bw,
-		height = h,
-		visible = true,
-		type = "dock",
+	local clock = wibox.widget({
+		widget = awful.widget.textclock,
+		font = "monospace",
+		format = "%H\n%M",
 	})
-
-	s.vbar:struts({ left = s.vbar.width })
-
-	s.wibar = awful.wibar({
-		heigth = beautiful.wibar_height,
-		width = s.geometry.width - beautiful.wibar_width,
-		x = s.geometry.x + beautiful.wibar_width,
-		y = s.geometry.y,
-		screen = s,
-		widget = s.mytasklist,
-		bg = beautiful.wibar_bg,
-	})
-
-	s.wibar:geometry({
-		x = s.geometry.x + beautiful.wibar_width,
-		y = s.geometry.y,
-		width = s.geometry.width - beautiful.wibar_width,
-		height = beautiful.wibar_height,
-	})
-
-	-- ibus engine
-	s.ibus_engine = wibox.widget.textbox(io.popen("ibus engine"):read("*a"))
-	awesome.connect_signal("ibus-engine", function(engine)
-		s.ibus_engine:set_markup("IBUS " .. engine .. " ")
+	clock:connect_signal("button::press", function()
+		awful.spawn.with_shell(config.calendar_command, false)
 	end)
 
-	--	-- Add widgets to the wibox
-	--	s.wibar:setup({
-	--		layout = wibox.layout.fixed.horizontal,
-	--		s.mytasklist,
-	--	})
-
 	local function place(w)
-		return {
-			widget = wibox.container.place,
-			w,
-		}
+		return wibox.container.place(w)
 	end
 
 	s.clock = wibox.widget({
@@ -514,21 +482,34 @@ awful.screen.connect_for_each_screen(function(s)
 	s.clock:connect_signal("button::press", function()
 		awful.spawn.with_shell(config.calendar_command, false)
 	end)
-
-	s.vbar:setup({
+	dualbar.setup_hbar(s, {
+		layout = wibox.layout.fixed.horizontal,
+		s.mylayoutbox,
+		s.mytasklist,
+	})
+	dualbar.setup_vbar(s, {
 		layout = wibox.layout.align.vertical,
 		{
 			layout = wibox.layout.fixed.vertical,
-			s.mylayoutbox,
 			s.mytaglist,
 		},
 		nil,
 		{
 			layout = wibox.layout.fixed.vertical,
-			place(wibox.container.rotate(wibox.widget.systray(s), "west")),
-			-- place(require("widgets.ibus")),
-			place(sep),
-			place(s.clock),
+			{
+				widget = wibox.container.place,
+				{
+					widget = wibox.container.rotate,
+					direction = "west",
+					{
+						widget = wibox.widget.systray,
+						screen = s,
+						id = "systray",
+					},
+				},
+			},
+			wibox.container.place(sep),
+			wibox.container.place(s.clock),
 		},
 	})
 end)
@@ -562,10 +543,18 @@ globalkeys = gears.table.join(
 		awful.layout.set(tile_layout)
 		-- awful.layout.set(awful.layout.suit.tile.left)
 	end, { description = "Set max layout for current tag", group = "tag" }),
+	awful.key({ modkey, "Shift" }, "b", function()
+		dump(timed)
+		if timed.__time % 2 == 0 then
+			timed.target = 100
+		else
+			timed.target = 0
+		end
+		timed.__time = timed.__time + 1
+	end, { description = "show/hide wibar", group = "awesome" }),
 	awful.key({ modkey }, "b", function()
 		local s = awful.screen.focused()
-		s.wibar.visible = not s.wibar.visible
-		s.vbar.visible = not s.vbar.visible
+		dualbar.toggle(s)
 	end, { description = "show/hide wibar", group = "awesome" }),
 	-- awful.key({ modkey }, "s", hotkeys_popup.show_help, { description = "show help", group = "awesome" }),
 	awful.key({ modkey }, "s", function()
@@ -966,6 +955,23 @@ client.connect_signal("property::floating", function(c)
 	end
 end)
 
+-- w = wibox({
+-- 	x = 0,
+-- 	y = 0,
+-- 	width = 200,
+-- 	height = 100,
+-- 	visible = true,
+-- 	ontop = true,
+-- 	bg = "#Ff0",
+-- })
+-- timed = rubato.timed({
+-- 	intro = 0.1,
+-- 	duration = 0.3,
+-- 	subscribed = function(pos)
+-- 		w:geometry({ width = pos + 50 })
+-- 	end,
+-- })
+-- timed.__time = 0
 -- }}}
 
 -- dump({ pcall(require, "ibus") })
