@@ -39,6 +39,13 @@ local tile_layout = require("tile_layout")
 -- animation
 local has_rubato, rubato = pcall(require, "lib.rubato")
 local dualbar = require("widgets.dualbar")
+local taglist = nil
+if has_rubato then
+	taglist = require("widgets.rubato_taglist")
+else
+	dump("Using normal taglist")
+	taglist = require("widgets.normal_taglist")
+end
 
 -- lol
 -- tile_layout.name = "[]="
@@ -89,6 +96,12 @@ beautiful.useless_gap = beautiful.font_size_px / 4
 beautiful.wibar_width = beautiful.wibar_height
 beautiful.menu_width = beautiful.font_size_px * 15
 beautiful.menu_height = beautiful.wibar_height
+beautiful.taglist_bg_focus = beautiful.bg_focus
+beautiful.taglist_bg_normal = beautiful.bg_normal
+beautiful.taglist_fg_focus = beautiful.fg_focus
+beautiful.taglist_fg_occupied = beautiful.fg_normal
+beautiful.taglist_fg_empty = "#444"
+
 -- This is used later as the default terminal and editor to run.
 terminal = "x-terminal-emulator"
 editor = os.getenv("EDITOR") or "editor"
@@ -268,28 +281,6 @@ mykeyboardlayout = awful.widget.keyboardlayout()
 mytextclock = wibox.container.place(wibox.widget.textclock("%H:%M %a, %d/%m/%Y"))
 
 -- Create a wibox for each screen and add it
-local taglist_buttons = gears.table.join(
-	awful.button({}, 1, function(t)
-		t:view_only()
-	end),
-	awful.button({ modkey }, 1, function(t)
-		if client.focus then
-			client.focus:move_to_tag(t)
-		end
-	end),
-	awful.button({}, 3, awful.tag.viewtoggle),
-	awful.button({ modkey }, 3, function(t)
-		if client.focus then
-			client.focus:toggle_tag(t)
-		end
-	end),
-	awful.button({}, 4, function(t)
-		awful.tag.viewnext(t.screen)
-	end),
-	awful.button({}, 5, function(t)
-		awful.tag.viewprev(t.screen)
-	end)
-)
 
 local tasklist_buttons = gears.table.join(
 	awful.button({}, 1, function(c)
@@ -397,32 +388,6 @@ awful.screen.connect_for_each_screen(function(s)
 		end)
 	))
 	-- Create a taglist widget
-	local spacing = 5
-	s.mytaglist = awful.widget.taglist({
-		screen = s,
-		filter = awful.widget.taglist.filter.all,
-		buttons = taglist_buttons,
-		layout = {
-			layout = wibox.layout.fixed.vertical,
-		},
-		widget_template = {
-			widget = wibox.container.place,
-			forced_width = beautiful.wibar_height,
-			{
-				id = "background_role",
-				forced_width = bw,
-				forced_height = bw,
-				widget = wibox.container.background,
-				{
-					id = "text_role",
-					forced_width = beautiful.wibar_height - spacing,
-					widget = wibox.widget.textbox,
-					align = "center",
-					font = "monospace",
-				},
-			},
-		},
-	})
 
 	-- Create a tasklist widget
 	local margin = beautiful.font_size_px / 4
@@ -491,7 +456,7 @@ awful.screen.connect_for_each_screen(function(s)
 		layout = wibox.layout.align.vertical,
 		{
 			layout = wibox.layout.fixed.vertical,
-			s.mytaglist,
+			taglist.setup(s, "vertical"),
 		},
 		nil,
 		{
@@ -544,13 +509,9 @@ globalkeys = gears.table.join(
 		-- awful.layout.set(awful.layout.suit.tile.left)
 	end, { description = "Set max layout for current tag", group = "tag" }),
 	awful.key({ modkey, "Shift" }, "b", function()
-		dump(timed)
-		if timed.__time % 2 == 0 then
-			timed.target = 100
-		else
-			timed.target = 0
-		end
-		timed.__time = timed.__time + 1
+		dump(cache:get(1))
+		dump(cache:get(1))
+		dump(cache:get(1))
 	end, { description = "show/hide wibar", group = "awesome" }),
 	awful.key({ modkey }, "b", function()
 		local s = awful.screen.focused()
