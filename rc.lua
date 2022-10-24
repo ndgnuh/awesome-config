@@ -461,9 +461,7 @@ awful.key({ modkey }, "t", function()
 	-- awful.layout.set(awful.layout.suit.tile.left)
 end, { description = "Set max layout for current tag", group = "tag" }),
 awful.key({ modkey, "Shift" }, "b", function()
-	dump(cache:get(1))
-	dump(cache:get(1))
-	dump(cache:get(1))
+	animate()
 end, { description = "show/hide wibar", group = "awesome" }),
 awful.key({ modkey }, "b", function()
 	local s = awful.screen.focused()
@@ -868,41 +866,35 @@ client.connect_signal("property::floating", function(c)
 	end
 end)
 
+local anime = require("lib.animate")
+
 -- w = wibox({
 --	x = 0,
 --	y = 0,
---	width = 200,
+--	width = 100,
 --	height = 100,
 --	visible = true,
 --	ontop = true,
 --	bg = "#Ff0",
 -- })
--- timed = rubato.timed({
---	intro = 0.1,
---	duration = 0.3,
---	subscribed = function(pos)
---		w:geometry({ width = pos + 50 })
---	end,
--- })
--- timed.__time = 0
--- }}}
 
--- dump({ pcall(require, "ibus") })
--- awesome.connect_signal("pulseaudio", function(...) end)
--- client.connect_signal("property::floating", function(c)
---	if c.floating then
---		c.border_width = beautiful.border_width
---		c.shape = gears.shape.rounded_rect
---	else
---		c.shape = nil
+-- wants = {
+--	-- w:geometry(),
+--	{x = 0, y = 0, width = 100, height = 100},
+--	{x = 100, y = 0, width = 100, height = 100},
+--	{x = 100, y = 100, width = 200, height = 100},
+--	{x = 100, y = 0, width = 100, height = 100},
+--	{x = 10, y = 10, width = 200, height = 200},
+-- }
+-- i = 1
+-- function animate()
+--	if i > #wants then
+--		i = 1
 --	end
--- end)
-
--- client.connect_signal("property::fullscreen", function(c)
---	if c.fullscreen then
---		c.shape = nil
---	else
---		c.border_width = beautiful.border_width
---		c.shape = gears.shape.rounded_rect
---	end
--- end)
+--	want = wants[i]
+--	-- dump({i = i, want = want})
+--	-- dump({w:geometry(), want})
+--	anime.easy_animate(w, want)
+--	i = (i + 1)
+-- end
+-- -- }}}
