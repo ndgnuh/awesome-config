@@ -899,3 +899,17 @@ if false then
 		i = (i + 1)
 	end
 end
+local _, rect_focus = pcall(require, "widgets.rect_focus")
+rect_focus.enable()
+local callback = function(t)
+	if t.layout.name ==  "max" then
+		rect_focus.disable()
+	elseif t.layout.name == "tile" and #t:clients() < 2 then
+		rect_focus.disable()
+
+	else
+		rect_focus.enable()
+	end
+end
+callback(awful.tag.selected())
+tag.connect_signal("property::layout", callback)

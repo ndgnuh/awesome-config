@@ -14,6 +14,7 @@ end
 tile.name = "tile"
 tile.resize_jump_to_corner = true
 tile.mouse_resize_handler = awful.layout.suit.tile.right.mouse_resize_handler
+tile.border_width = beautiful.border_width
 local function tile_recursively(p, n, i)
 	if n == 1 then
 		return max_layout.arrange(p)
@@ -103,7 +104,7 @@ local function do_tile(p)
 			}
 			n_y = n_y + n_h + gap
 		end
-		c.border_width = beautiful.border_width
+		c.border_width = p.border_width
 		-- c.shape = require("gears.shape").rounded_rect
 	end
 end
