@@ -90,7 +90,7 @@ local function setup (s)
 			create_callback = function(self, c, ...)
 				local icon = self:get_children_by_id("icon")[1]
 				icon:set_client(c)
-				-- animation_callback(ref, self, c, ...)
+				animation_callback(ref, self, c, ...)
 			end,
 			update_callback = function(...)
 				animation_callback(ref, ...)

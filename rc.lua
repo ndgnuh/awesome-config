@@ -34,16 +34,18 @@ end
 local debian = require("debian.menu")
 local has_fdo, freedesktop = pcall(require, "freedesktop")
 local max_layout = require("max_layout")
-local tile_layout = require("tile_layout")
 
 -- animation
 local has_rubato, rubato = pcall(require, "lib.rubato")
 local dualbar = require("widgets.dualbar")
-local taglist, tasklist = nil, nil
+local tile_layout, taglist, tasklist = nil, nil, nil
 if has_rubato then
+	tile_layout = require("tile_layout")
 	taglist = require("widgets.rubato_taglist")
 	tasklist = require("widgets.rubato_tasklist")
+	-- tile_layout = require("tile_layout_rubato")
 else
+	tile_layout = require("tile_layout")
 	taglist = require("widgets.normal_taglist")
 	tasklist = require("widgets.normal_tasklist")
 end
@@ -880,7 +882,6 @@ if false then
 	})
 
 	wants = {
-		w:geometry(),
 		{x = 0, y = 0, width = 100, height = 100},
 		{x = 100, y = 0, width = 100, height = 100},
 		{x = 100, y = 100, width = 200, height = 100},
@@ -894,8 +895,7 @@ if false then
 		end
 		want = wants[i]
 		dump({i = i, want = want})
-		dump({w:geometry(), want})
 		anime.easy_animate(w, want)
-		i = (i + 0)
+		i = (i + 1)
 	end
 end
