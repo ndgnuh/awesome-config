@@ -2,15 +2,15 @@ local rubato = require("lib.rubato")
 
 
 local function interpolate(x1, x2, t)
-	-- return x1 * t + x2 * (1 - t)
-	-- if x1 < x2 then
 	return x1 * (1 - t) + x2 * t
-	-- else
-	--	return x1 * t + x2 * (1 - t)
-	-- end
 end
 
-local function easy_animate(drawable, g2)
+local function default_set_geometry(w, g)
+	w:geometry(g)
+end
+
+local function easy_animate(drawable, g2, geometry_setter)
+	geometry_setter = geometry_setter or default_set_geometry
 	current = drawable:geometry()
 
 	local g1 = drawable:geometry()

@@ -866,35 +866,36 @@ client.connect_signal("property::floating", function(c)
 	end
 end)
 
-local anime = require("lib.animate")
+if false then
+	local anime = require("lib.animate")
 
--- w = wibox({
---	x = 0,
---	y = 0,
---	width = 100,
---	height = 100,
---	visible = true,
---	ontop = true,
---	bg = "#Ff0",
--- })
+	w = wibox({
+		x = 0,
+		y = 0,
+		width = 100,
+		height = 100,
+		visible = true,
+		ontop = true,
+		bg = "#Ff0",
+	})
 
--- wants = {
---	-- w:geometry(),
---	{x = 0, y = 0, width = 100, height = 100},
---	{x = 100, y = 0, width = 100, height = 100},
---	{x = 100, y = 100, width = 200, height = 100},
---	{x = 100, y = 0, width = 100, height = 100},
---	{x = 10, y = 10, width = 200, height = 200},
--- }
--- i = 1
--- function animate()
---	if i > #wants then
---		i = 1
---	end
---	want = wants[i]
---	-- dump({i = i, want = want})
---	-- dump({w:geometry(), want})
---	anime.easy_animate(w, want)
---	i = (i + 1)
--- end
--- -- }}}
+	wants = {
+		w:geometry(),
+		{x = 0, y = 0, width = 100, height = 100},
+		{x = 100, y = 0, width = 100, height = 100},
+		{x = 100, y = 100, width = 200, height = 100},
+		{x = 100, y = 0, width = 100, height = 100},
+		{x = 10, y = 10, width = 200, height = 200},
+	}
+	i = 1
+	function animate()
+		if i > #wants then
+			i = 1
+		end
+		want = wants[i]
+		dump({i = i, want = want})
+		dump({w:geometry(), want})
+		anime.easy_animate(w, want)
+		i = (i + 0)
+	end
+end
