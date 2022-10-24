@@ -19,12 +19,10 @@ local function easy_animate(drawable, g2, geometry_setter, args)
 	args.duration = args.duration or 0.2
 	args.override_dt = args.override_dt or false
 	args.subscribed = function(t)
-		local g = {
-			x = interpolate(g1.x, g2.x, t),
-			y = interpolate(g1.y, g2.y, t),
-			width = interpolate(g1.width, g2.width, t),
-			height = interpolate(g1.height, g2.height, t),
-		}
+		local g = {}
+		for k, v in pairs(g1) do
+			g[k] = interpolate(g1[k], g2[k], t)
+		end
 		geometry_setter(drawable, g)
 	end
 
@@ -46,12 +44,10 @@ local function easy_animation(drawable)
 			duration = 0.3,
 			override_dt = true,
 			subscribed = function(t)
-				local g = {
-					x = interpolate(g1.x, g2.x, t),
-					y = interpolate(g1.y, g2.y, t),
-					width = interpolate(g1.width, g2.width, t),
-					height = interpolate(g1.height, g2.height, t),
-				}
+				local g = {}
+				for k, v in pairs(g1) do
+					g[k] = interpolate(g1[k], g2[k], t)
+				end
 				drawable:geometry(g)
 			end,
 		}
