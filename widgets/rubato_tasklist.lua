@@ -3,6 +3,7 @@ local beautiful = require("beautiful")
 local wibox = require("wibox")
 local awful = require("awful")
 local gears = require("gears")
+local throttle = require("lib.throttle")
 
 local tasklist_buttons = gears.table.join(
 awful.button({}, 1, function(c)
@@ -87,13 +88,13 @@ local function setup (s)
 					},
 				},
 			},
-			create_callback = function(self, c, ...)
+			create_callback = function(self, c, idx, all)
 				local icon = self:get_children_by_id("icon")[1]
 				icon:set_client(c)
-				animation_callback(ref, self, c, ...)
+				animation_callback(ref, self, c, idx, all)
 			end,
-			update_callback = function(...)
-				animation_callback(ref, ...)
+			update_callback = function(self, c, idx, all)
+				animation_callback(ref, self, c, idx, all)
 			end
 		},
 	})
@@ -116,18 +117,28 @@ local function setup (s)
 	})
 
 
-	local widget = wibox.widget({
+	ref.widget = wibox.widget({
 		widget = wibox.layout.stack,
 		ref.background,
 		ref.active_background,
 		ref.tasklist,
 	})
 
-	s:connect_signal("tag::history::update", function(s)
-		widget.visible = #s.get_clients() > 0
-	end)
 
-	return widget
+	local callback = function(...)
+		local t = awful.tag.selected()
+		if t then
+			ref.widget.visible = (#t:clients()) > 0
+			ref.active_background.visible = (#t:clients()) > 0
+		end
+	end
+	callback = throttle(0.03, callback)
+
+	s:connect_signal("tag::history::update", callback)
+	client.connect_signal("focus", callback)
+	client.connect_signal("unfocus", callback)
+
+	return ref.widget
 end
 
 return {
