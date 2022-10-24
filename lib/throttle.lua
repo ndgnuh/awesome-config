@@ -1,6 +1,7 @@
+local unpack = unpack or table.unpack
+local gears = require("gears")
 local function throttle(t, func, ...)
 	local ref = {}
-	local unpack = unpack or table.unpack
 	local timer = gears.timer{
 		single_shot = true,
 		timeout = t,
