@@ -867,8 +867,27 @@ client.connect_signal("property::floating", function(c)
 		c.border_width = beautiful.border_width
 	end
 end)
+if true then
+	local function throttle(t, func, ...)
+		local ref = {}
+		local unpack = unpack or table.unpack
+		local timer = gears.timer{
+			single_shot = true,
+			timeout = t,
+			callback = function()
+				func(table.unpack(ref.args))
+			end
+		}
+		return function(...)
+			ref.args = {...}
+			timer:again()
+		end
+	end
+
+end
 
 if false then
+	local throttle = require("lib.throttle")
 	local anime = require("lib.animate")
 
 	w = wibox({
@@ -884,18 +903,24 @@ if false then
 	wants = {
 		{x = 0, y = 0, width = 100, height = 100},
 		{x = 100, y = 0, width = 100, height = 100},
-		{x = 100, y = 100, width = 200, height = 100},
-		{x = 100, y = 0, width = 100, height = 100},
-		{x = 10, y = 10, width = 200, height = 200},
+		{x = 200, y = 0, width = 100, height = 100},
+		{x = 300, y = 0, width = 100, height = 100},
+		{x = 400, y = 0, width = 100, height = 100},
+		-- {x = 100, y = 0, width = 100, height = 100},
+		-- {x = 100, y = 100, width = 200, height = 100},
+		-- {x = 100, y = 0, width = 100, height = 100},
+		-- {x = 10, y = 10, width = 200, height = 200},
+		-- {x = 10, y = 10, width = 250, height = 200},
 	}
 	i = 1
+	local t_animate = throttle(0.2, anime.easy_animate)
 	function animate()
 		if i > #wants then
 			i = 1
 		end
 		want = wants[i]
 		dump({i = i, want = want})
-		anime.easy_animate(w, want)
+		t_animate(w, want)
 		i = (i + 1)
 	end
 end
