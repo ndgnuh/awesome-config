@@ -924,8 +924,12 @@ if false then
 		i = (i + 1)
 	end
 end
-local _, rect_focus = pcall(require, "widgets.rect_focus")
+local ok, rect_focus = pcall(require, "widgets.rect_focus")
+if not ok then
+	dump(rect_focus)
+end
 rect_focus.enable()
+
 local callback = function(t)
 	t = t or awful.tag.selected()
 	if t.layout.name ==  "max" then
