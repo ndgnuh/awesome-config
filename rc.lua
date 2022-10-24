@@ -902,6 +902,7 @@ end
 local _, rect_focus = pcall(require, "widgets.rect_focus")
 rect_focus.enable()
 local callback = function(t)
+	t = t or awful.tag.selected()
 	if t.layout.name ==  "max" then
 		rect_focus.disable()
 	elseif t.layout.name == "tile" and #t:clients() < 2 then
@@ -911,7 +912,8 @@ local callback = function(t)
 		rect_focus.enable()
 	end
 end
-callback(awful.tag.selected())
+callback()
+screen.connect_signal("tag::history::update",function(s) callback() end)
 tag.connect_signal("property::layout", callback)
 tag.connect_signal("tagged", callback)
 tag.connect_signal("untagged", callback)

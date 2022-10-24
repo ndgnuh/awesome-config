@@ -61,8 +61,12 @@ local function set_geometry(rect, geo)
 	local g1 = rect:geometry()
 	local x2 = geo.x + geo.width
 	local y2 = geo.y + geo.height
+
+	-- top
 	rect.top.x = geo.x
 	rect.top.y = geo.y
+
+	--
 	rect.left.x = geo.x
 	rect.left.y = geo.y
 	rect.bottom.x = geo.x
