@@ -913,3 +913,5 @@ local callback = function(t)
 end
 callback(awful.tag.selected())
 tag.connect_signal("property::layout", callback)
+tag.connect_signal("tagged", callback)
+tag.connect_signal("untagged", callback)
