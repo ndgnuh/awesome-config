@@ -36,6 +36,7 @@ local has_fdo, freedesktop = pcall(require, "freedesktop")
 local max_layout = require("max_layout")
 
 -- animation
+local throttle = require("lib.throttle")
 local has_rubato, rubato = pcall(require, "lib.rubato")
 local dualbar = require("widgets.dualbar")
 local tile_layout, taglist, tasklist = nil, nil, nil
@@ -431,6 +432,13 @@ awful.screen.connect_for_each_screen(function(s)
 			wibox.container.place(s.clock),
 		},
 	})
+
+	-- rect focus
+	local ok, rect_focus = pcall(require, "widgets.rect_focus")
+	if not ok then
+		dump(rect_focus)
+	end
+	throttle(0.1, rect_focus.enable)()
 end)
 -- }}}
 
@@ -909,16 +917,17 @@ if false then
 			i = 1
 		end
 		want = wants[i]
-		t_animate({ widget = w, geometry = want })
+		t_animate({
+			widget = w,
+			geometry = want,
+			animation = {
+				duration = 0.2,
+				override_dt = true,
+			},
+		})
 		i = (i + 1)
 	end
 end
-local ok, rect_focus = pcall(require, "widgets.rect_focus")
-if not ok then
-	dump(rect_focus)
-end
-rect_focus.enable()
-local throttle = require("lib.throttle")
 
 local callback = throttle(0.03, function(t)
 	t = t or awful.tag.selected()

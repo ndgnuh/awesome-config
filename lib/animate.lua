@@ -25,7 +25,6 @@ local function animate(args)
 	local animation = args.animation or {}
 	animation.intro = animation.intro or 0.1
 	animation.duration = animation.duration or 0.2
-	animation.override_dt = animation.override_dt or false
 	animation.subscribed = function(t)
 		local g = interpolate(g1, g2, t)
 		set_geometry(drawable, g)

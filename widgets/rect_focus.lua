@@ -1,42 +1,19 @@
-local anime = require("lib.animate")
+local animate = require("lib.animate")
 local throttle = require("lib.throttle")
 local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
+local awful = require("awful")
 
 local bg = beautiful.border_focus
 local bw = beautiful.border_width
 
 local rect = {
 	borders = {
-		left = wibox({
-			x = 0,
-			y = 0,
-			width = bw,
-			height = bw,
-			bg = bg,
-		}),
-		right = wibox({
-			x = 0,
-			y = 0,
-			width = bw,
-			height = bw,
-			bg = bg,
-		}),
-		top = wibox({
-			x = 0,
-			y = 0,
-			width = bw,
-			height = bw,
-			bg = bg,
-		}),
-		bottom = wibox({
-			x = 0,
-			y = 0,
-			width = bw,
-			height = bw,
-			bg = bg,
-		}),
+		left = wibox({ bg = bg }),
+		right = wibox({ bg = bg }),
+		top = wibox({ bg = bg }),
+		bottom = wibox({ bg = bg }),
 	},
 	disabled = true,
 
@@ -93,7 +70,7 @@ local function to_rect_geometry(g)
 
 		-- right
 		right = {
-			x = g.x + g.width,
+			x = g.x + g.width - bw,
 			y = g.y,
 			height = g.height,
 			width = bw,
@@ -101,7 +78,7 @@ local function to_rect_geometry(g)
 		-- bottom
 		bottom = {
 			x = g.x,
-			y = g.y + g.height,
+			y = g.y + g.height - bw,
 			width = g.width,
 			height = bw,
 		},
@@ -110,33 +87,56 @@ local function to_rect_geometry(g)
 	return rg
 end
 
-local callback = function(c)
+local callback = function()
+	local c = client.focus
+	if c == nil then
+		rect.visible(false)
+		return
+	end
 	local rg = to_rect_geometry(c:geometry())
-	rect:geometry(rg)
-	rect.visible(true)
-	return nil
+	-- rect:geometry(rg)
 	-- dump({ rg })
 	-- if rect.disabled then
 	-- 	return
 	-- end
-	-- rect.visible(true)
-	-- animate({
-	-- 	widget = rect,
-	-- 	geometry = to_rect_geometry(c:geometry()),
-	-- })
+	rect.visible(true)
+	ok, res = pcall(animate, {
+		widget = rect,
+		geometry = rg,
+		animation = {
+			intro = 0.05,
+			duration = 0.15,
+			override_dt = true,
+		},
+	})
+	if not ok then
+		dump(res)
+		rect:geometry(rg)
+	end
 end
-callback = throttle(0.05, callback)
+callback = throttle(0.025, callback)
 
 client.connect_signal("property::geometry", function(c)
 	callback(c)
 end)
 
+tag.connect_signal("focus", callback)
 client.connect_signal("focus", callback)
-client.connect_signal("unfocus", function(c)
-	if client.focus == nil then
-		rect.visible(false)
-	end
-end)
+client.connect_signal(
+	"unfocus",
+	throttle(0.025, function()
+		local s = awful.screen.focused()
+		if client.focus == nil then
+			rect.visible(false)
+			rect:geometry(to_rect_geometry({
+				x = s.geometry.width / 2,
+				y = s.geometry.height / 2,
+				width = 1,
+				height = 1,
+			}))
+		end
+	end)
+)
 
 return {
 	disable = function()
