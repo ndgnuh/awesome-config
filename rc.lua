@@ -868,7 +868,7 @@ client.connect_signal("property::floating", function(c)
 	end
 end)
 
-if true then
+if false then
 	local throttle = require("lib.throttle")
 	-- local fake_shadow = require("lib.fake_shadow")
 	local animate = require("lib.animate")
@@ -891,11 +891,11 @@ if true then
 	})
 
 	wants = {
-		{ x = 0, y = 0, width = 100, height = 100 },
 		{ x = 100, width = 200, height = 100 },
 		{ x = 200, width = 200, height = 200 },
 		{ x = 300, width = 200, height = 200 },
 		{ x = 400, height = 400 },
+		{ x = 0, y = 0 },
 		-- {x = 100, y = 0, width = 100, height = 100},
 		-- {x = 100, y = 100, width = 200, height = 100},
 		-- {x = 100, y = 0, width = 100, height = 100},
@@ -917,7 +917,7 @@ local ok, rect_focus = pcall(require, "widgets.rect_focus")
 if not ok then
 	dump(rect_focus)
 end
-rect_focus.disable()
+rect_focus.enable()
 local throttle = require("lib.throttle")
 
 local callback = throttle(0.03, function(t)
