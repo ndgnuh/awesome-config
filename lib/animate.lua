@@ -1,6 +1,5 @@
 local rubato = require("lib.rubato")
 
-
 local function interpolate(x1, x2, t)
 	return x1 * (1 - t) + x2 * t
 end
@@ -9,56 +8,26 @@ local function default_set_geometry(w, g)
 	w:geometry(g)
 end
 
-local function easy_animate(drawable, g2, geometry_setter, args)
-	geometry_setter = geometry_setter or default_set_geometry
-	current = drawable:geometry()
+local function animate(args)
+	local drawable = args.widget
 	local g1 = drawable:geometry()
+	local g2 = args.geometry or {}
+	local set_geometry = args.geometry_setter or default_set_geometry
 
-	args = args or {}
-	args.intro = args.intro or 0.1
-	args.duration = args.duration or 0.2
-	args.override_dt = args.override_dt or false
-	args.subscribed = function(t)
+	local animation = args.animation or {}
+	animation.intro = animation.intro or 0.1
+	animation.duration = animation.duration or 0.2
+	animation.override_dt = animation.override_dt or false
+	animation.subscribed = function(t)
 		local g = {}
-		for k, v in pairs(g1) do
+		for k, v in pairs(g2) do
 			g[k] = interpolate(g1[k], g2[k], t)
 		end
-		geometry_setter(drawable, g)
+		set_geometry(drawable, g)
 	end
 
-	local timed = rubato.timed(args)
+	local timed = rubato.timed(animation)
 	timed.target = 1
 end
 
-local function easy_animation(drawable)
-	-- anything with :geometry(), really
-	local animation = {
-		current = drawable:geometry()
-	}
-
-	animation.run = function(g2)
-		animation.current = drawable:geometry()
-		local g1 = animation.current
-		local timed = rubato.timed{
-			intro = 0.1,
-			duration = 0.3,
-			override_dt = true,
-			subscribed = function(t)
-				local g = {}
-				for k, v in pairs(g1) do
-					g[k] = interpolate(g1[k], g2[k], t)
-				end
-				drawable:geometry(g)
-			end,
-		}
-		timed.target = 1
-		-- dump(g1)
-		animation.current = drawable:geometry()
-	end
-
-	return animation
-end
-
-return {easy_animation= easy_animation,easy_animate=easy_animate}
-
-
+return animate
