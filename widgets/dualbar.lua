@@ -2,6 +2,7 @@ local has_rubato, rubato = pcall(require, "lib.rubato")
 local beautiful = require("beautiful")
 local awful = require("awful")
 local wibox = require("wibox")
+local gears = require("gears")
 
 local bar_names = { hbar = "hbar", vbar = "vbar" }
 local hbar = "hbar"
@@ -96,6 +97,37 @@ local function toggle_rubato(s)
 		vmain.visible = true
 	end
 end
+
+-- container
+local dualbar = gears.cache(function(s)
+	local ob = { [vbar] = s[vbar], [hbar] = s[hbar] }
+
+	ob.get_geometry = function(self)
+		return {
+			v = self[vbar]:geometry(),
+			h = self[hbar]:geometry(),
+		}
+	end
+
+	ob.set_geometry = function(self, geos)
+		self[vbar]:geometry(geos.v)
+		self[hbar]:geometry(geos.h)
+	end
+
+	ob.geometry = function(self, geo)
+		if geo then
+			self:set_geometry(geo)
+		else
+			return self:get_geometry()
+		end
+	end
+
+	return ob
+end)
+
+-- local function toggle_rubato(s)
+-- 	db = dualbar(s)
+-- end
 
 local function toggle_norubato(s)
 	s[vbar].visible = not s[vbar].visible

@@ -6,22 +6,22 @@ local gears = require("gears")
 local throttle = require("lib.throttle")
 
 local tasklist_buttons = gears.table.join(
-awful.button({}, 1, function(c)
-	if c == client.focus then
-		c.minimized = true
-	else
-		c:emit_signal("request::activate", "tasklist", { raise = true })
-	end
-end),
-awful.button({}, 3, function()
-	awful.menu.client_list({ theme = { width = 250 } })
-end),
-awful.button({}, 4, function()
-	awful.client.focus.byidx(1)
-end),
-awful.button({}, 5, function()
-	awful.client.focus.byidx(-1)
-end)
+	awful.button({}, 1, function(c)
+		if c == client.focus then
+			c.minimized = true
+		else
+			c:emit_signal("request::activate", "tasklist", { raise = true })
+		end
+	end),
+	awful.button({}, 3, function()
+		awful.menu.client_list({ theme = { width = 250 } })
+	end),
+	awful.button({}, 4, function()
+		awful.client.focus.byidx(1)
+	end),
+	awful.button({}, 5, function()
+		awful.client.focus.byidx(-1)
+	end)
 )
 
 local animations = gears.cache(function(ref)
@@ -52,10 +52,10 @@ local function animation_callback(ref, tasklist, c, idx, all)
 	end
 end
 
-local function setup (s)
+local function setup(s)
 	local max_width = 300
 	local margin = beautiful.font_size_px / 4
-	local ref = {max_width=max_width, orient="horizontal"}
+	local ref = { max_width = max_width, orient = "horizontal" }
 	ref.tasklist = awful.widget.tasklist({
 		screen = s,
 		filter = awful.widget.tasklist.filter.currenttags,
@@ -64,7 +64,7 @@ local function setup (s)
 			layout = wibox.layout.fixed.horizontal,
 		},
 		style = {
-			bg = gears.color.transparent
+			bg = gears.color.transparent,
 		},
 		widget_template = {
 			id = "root",
@@ -95,7 +95,7 @@ local function setup (s)
 			end,
 			update_callback = function(self, c, idx, all)
 				animation_callback(ref, self, c, idx, all)
-			end
+			end,
 		},
 	})
 
@@ -116,14 +116,12 @@ local function setup (s)
 		},
 	})
 
-
 	ref.widget = wibox.widget({
 		widget = wibox.layout.stack,
 		ref.background,
 		ref.active_background,
 		ref.tasklist,
 	})
-
 
 	local callback = function(...)
 		local t = awful.tag.selected()
@@ -132,7 +130,7 @@ local function setup (s)
 			ref.active_background.visible = (#t:clients()) > 0
 		end
 	end
-	callback = throttle(0.03, callback)
+	callback = throttle.delayed(0.03, callback)
 
 	s:connect_signal("tag::history::update", callback)
 	client.connect_signal("focus", callback)
@@ -142,5 +140,5 @@ local function setup (s)
 end
 
 return {
-	setup = setup
+	setup = setup,
 }

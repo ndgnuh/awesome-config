@@ -114,7 +114,7 @@ local callback = function()
 		rect:geometry(rg)
 	end
 end
-callback = throttle(0.025, callback)
+callback = throttle.delayed(0.025, callback)
 
 client.connect_signal("property::geometry", function(c)
 	callback(c)
@@ -123,19 +123,19 @@ end)
 tag.connect_signal("focus", callback)
 client.connect_signal("focus", callback)
 client.connect_signal(
-"unfocus",
-throttle(0.025, function()
-	local s = awful.screen.focused()
-	if client.focus == nil then
-		rect.visible(false)
-		rect:geometry(to_rect_geometry({
-			x = s.geometry.width / 2,
-			y = s.geometry.height / 2,
-			width = 1,
-			height = 1,
-		}))
-	end
-end)
+	"unfocus",
+	throttle.delayed(0.025, function()
+		local s = awful.screen.focused()
+		if client.focus == nil then
+			rect.visible(false)
+			rect:geometry(to_rect_geometry({
+				x = s.geometry.width / 2,
+				y = s.geometry.height / 2,
+				width = 1,
+				height = 1,
+			}))
+		end
+	end)
 )
 
 return {
