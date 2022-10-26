@@ -34,6 +34,7 @@ end
 local debian = require("debian.menu")
 local has_fdo, freedesktop = pcall(require, "freedesktop")
 local max_layout = require("max_layout")
+require("monkey.layout")
 
 -- animation
 local throttle = require("lib.throttle")
@@ -175,6 +176,25 @@ awful.layout.layouts = {
 	max_layout,
 	tile_layout,
 	awful.layout.suit.floating,
+	-- awful.layout.suit.corner.ne,
+	-- awful.layout.suit.corner.sw,
+	-- awful.layout.suit.corner.se,
+}
+
+awful.layout.layouts = {
+	-- awful.layout.suit.floating,
+	awful.layout.suit.tile,
+	awful.layout.suit.tile.left,
+	awful.layout.suit.tile.bottom,
+	awful.layout.suit.tile.top,
+	awful.layout.suit.fair,
+	awful.layout.suit.fair.horizontal,
+	awful.layout.suit.spiral,
+	awful.layout.suit.spiral.dwindle,
+	awful.layout.suit.max,
+	awful.layout.suit.max.fullscreen,
+	awful.layout.suit.magnifier,
+	awful.layout.suit.corner.nw,
 	-- awful.layout.suit.corner.ne,
 	-- awful.layout.suit.corner.sw,
 	-- awful.layout.suit.corner.se,
@@ -445,11 +465,12 @@ awful.screen.connect_for_each_screen(function(s)
 	})
 
 	-- rect focus
-	local ok, rect_focus = pcall(require, "widgets.rect_focus")
-	if not ok then
-		dump(rect_focus)
-	end
-	throttle.delayed(0.1, rect_focus.enable)()
+	-- local ok, rect_focus = pcall(require, "widgets.rect_focus")
+	-- if not ok then
+	-- 	dump(rect_focus)
+	-- end
+	-- rect_focus.disable()
+	-- throttle.delayed(0.1, rect_focus.enable)()
 end)
 -- }}}
 
@@ -482,7 +503,32 @@ globalkeys = gears.table.join(
 		-- awful.layout.set(awful.layout.suit.tile.left)
 	end, { description = "Set max layout for current tag", group = "tag" }),
 	awful.key({ modkey, "Shift" }, "b", function()
-		animate_()
+		local c = client.focus
+		local g = c:geometry()
+		g.x = g.x + 1
+		c:geometry(g)
+
+		-- move randomy
+		-- local animate = require("lib.animate2")
+		-- local t = awful.tag.selected()
+		-- local init = {}
+		-- local target = {}
+		-- for _, c in ipairs(t:clients()) do
+		-- 	init[c] = c:geometry()
+		-- 	target[c] = {}
+		-- 	for k, v in pairs(init[c]) do
+		-- 		target[c][k] = v + math.random(-30, 40)
+		-- 	end
+		-- end
+		-- pdump(animate, {
+		-- 	init = init,
+		-- 	target = target,
+		-- 	callback = function(t, self, geometry)
+		-- 		for c, geo in pairs(geometry) do
+		-- 			c:geometry(geo)
+		-- 		end
+		-- 	end,
+		-- })
 	end, { description = "show/hide wibar", group = "awesome" }),
 	awful.key({ modkey }, "b", function()
 		local s = awful.screen.focused()
@@ -942,14 +988,15 @@ if false then
 end
 
 local callback = throttle.delayed(0.03, function(t)
-	t = t or awful.tag.selected()
-	if t.layout.name == "max" then
-		rect_focus.disable()
-	elseif t.layout.name == "tile" and #t:clients() < 2 then
-		rect_focus.disable()
-	else
-		rect_focus.enable()
-	end
+	-- t = t or awful.tag.selected()
+	-- if t.layout.name == "max" then
+	-- 	rect_focus.disable()
+	-- elseif t.layout.name == "tile" and #t:clients() < 2 then
+	-- 	rect_focus.disable()
+	-- else
+	-- 	rect_focus.enable()
+	-- end
+	rect_focus.disable()
 end)
 
 callback()
@@ -959,4 +1006,4 @@ end)
 tag.connect_signal("property::layout", callback)
 tag.connect_signal("tagged", callback)
 tag.connect_signal("untagged", callback)
-require("monkey.layout")
+-- require("widgets.rect_focus").enable()

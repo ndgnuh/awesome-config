@@ -104,7 +104,7 @@ local function do_tile(p)
 			}
 			n_y = n_y + n_h + gap
 		end
-		c.border_width = p.border_width
+		c.border_width = beautiful.border_width
 		-- c.shape = require("gears.shape").rounded_rect
 	end
 end

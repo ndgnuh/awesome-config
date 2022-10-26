@@ -25,8 +25,8 @@ local function animate(args)
 	local done_callback = args.done_callback or function(...) end
 	local animation = args.animation or {}
 	local target = 1
+	local run_now = args.run_now or true
 
-	animation.intro = animation.intro or 0.1
 	animation.duration = animation.duration or 0.2
 	animation.subscribed = function(t)
 		local g = interpolate(g1, g2, t)
@@ -37,7 +37,10 @@ local function animate(args)
 	end
 
 	local timed = rubato.timed(animation)
-	timed.target = target
+	if run_now then
+		timed.target = 1
+	end
+	return timed
 end
 
 return animate
