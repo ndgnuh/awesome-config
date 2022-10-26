@@ -28,11 +28,12 @@ local function animate(args)
 
 	animation.intro = animation.intro or 0.1
 	animation.duration = animation.duration or 0.2
-	end_callback = throttle(animation.duration, end_callback)
 	animation.subscribed = function(t)
 		local g = interpolate(g1, g2, t)
 		callback(t, drawable, g)
-		end_callback(t, drawable, g)
+		if t == target then
+			end_callback(t, drawable, g)
+		end
 	end
 
 	local timed = rubato.timed(animation)
