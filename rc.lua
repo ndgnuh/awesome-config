@@ -129,7 +129,7 @@ end
 function pdump(...)
 	ok, err_or_result = pcall(...)
 	if not ok then
-		dump({error = err_or_result, args= {...}})
+		dump({a_error = err_or_result, })
 	else
 		return err_or_result
 	end
@@ -887,10 +887,10 @@ client.connect_signal("property::floating", function(c)
 	end
 end)
 
-if false then
+if true then
 	local throttle = require("lib.throttle")
 	-- local fake_shadow = require("lib.fake_shadow")
-	local animate = require("lib.animate")
+	local animate = require("lib.animate2")
 
 	w = wibox({
 		x = 0,
@@ -928,9 +928,10 @@ if false then
 			i = 1
 		end
 		want = wants[i]
-		t_animate({
+		pdump(animate, {
 			widget = w,
-			geometry = want,
+			init = w:geometry(),
+			target = want,
 			animation = {
 				duration = 0.2,
 				override_dt = true,
