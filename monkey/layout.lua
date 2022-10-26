@@ -255,26 +255,37 @@ layout.arrange = function(screen)
 					animation_lock[c] = nil
 				end
 			end
+			local init = {}
+			local target = {}
 			for c, g in pairs(p.geometries) do
 				g.width = math.max(1, g.width - c.border_width * 2 - useless_gap * 2)
 				g.height = math.max(1, g.height - c.border_width * 2 - useless_gap * 2)
 				g.x = g.x + useless_gap
 				g.y = g.y + useless_gap
-				animation_lock[c] = true
-				animate({
-					init = c:geometry(),
-					target = g,
-					animation = { override_dt = true, duration = 0.15 },
-					callback = function(_, _, geo)
-						if c.valid then
-							c:geometry(geo)
-						end
-					end,
-					done_callback = function(...)
-						animation_lock[c] = nil
-					end,
-				})
+				init[c] = c:geometry()
+				target[c] = g
 			end
+			-- animate all at once
+			animate({
+				init = init,
+				target = target,
+				animation = { override_dt = true, duration = 0.15 },
+				callback = function(_, _, geos)
+					for c, geo in pairs(geos) do
+						if c.valid then
+							animation_lock[c] = true
+							c:geometry(geo)
+						else
+							animation_lock[c] = nil
+						end
+					end
+				end,
+				done_callback = function(t, _, geos)
+					for c, geo in pairs(geos) do
+						animation_lock[c] = nil
+					end
+				end,
+			})
 		end)
 		arrange_lock = false
 		delayed_arrange[screen] = nil
