@@ -70,7 +70,7 @@ local function to_rect_geometry(g)
 
 		-- right
 		right = {
-			x = g.x + g.width - bw,
+			x = g.x + g.width,
 			y = g.y,
 			height = g.height,
 			width = bw,
@@ -78,7 +78,7 @@ local function to_rect_geometry(g)
 		-- bottom
 		bottom = {
 			x = g.x,
-			y = g.y + g.height - bw,
+			y = g.y + g.height,
 			width = g.width,
 			height = bw,
 		},
@@ -97,7 +97,7 @@ local callback = function()
 	-- rect:geometry(rg)
 	-- dump({ rg })
 	-- if rect.disabled then
-	-- 	return
+	--	return
 	-- end
 	rect.visible(true)
 	ok, res = pcall(animate, {
@@ -123,19 +123,19 @@ end)
 tag.connect_signal("focus", callback)
 client.connect_signal("focus", callback)
 client.connect_signal(
-	"unfocus",
-	throttle(0.025, function()
-		local s = awful.screen.focused()
-		if client.focus == nil then
-			rect.visible(false)
-			rect:geometry(to_rect_geometry({
-				x = s.geometry.width / 2,
-				y = s.geometry.height / 2,
-				width = 1,
-				height = 1,
-			}))
-		end
-	end)
+"unfocus",
+throttle(0.025, function()
+	local s = awful.screen.focused()
+	if client.focus == nil then
+		rect.visible(false)
+		rect:geometry(to_rect_geometry({
+			x = s.geometry.width / 2,
+			y = s.geometry.height / 2,
+			width = 1,
+			height = 1,
+		}))
+	end
+end)
 )
 
 return {
