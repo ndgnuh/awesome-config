@@ -181,7 +181,7 @@ awful.layout.layouts = {
 	-- awful.layout.suit.corner.se,
 }
 
-awful.layout.layouts = {
+awful.layout.layouts_ = {
 	-- awful.layout.suit.floating,
 	awful.layout.suit.tile,
 	awful.layout.suit.tile.left,

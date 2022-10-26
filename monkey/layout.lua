@@ -220,7 +220,8 @@ end
 
 --- Arrange a screen using its current layout.
 -- @param screen The screen to arrange.
-layout.arrange = function(screen)
+local throttle = require("lib.throttle")
+layout.arrange = throttle.delayed(0.01, function(screen)
 	screen = get_screen(screen)
 	if not screen or delayed_arrange[screen] then
 		return
@@ -269,7 +270,7 @@ layout.arrange = function(screen)
 			animate({
 				init = init,
 				target = target,
-				animation = { override_dt = true, duration = 0.15 },
+				animation = { override_dt = true, duration = 0.1 },
 				callback = function(_, _, geos)
 					for c, geo in pairs(geos) do
 						if c.valid then
@@ -292,7 +293,7 @@ layout.arrange = function(screen)
 
 		screen:emit_signal("arrange")
 	end)
-end
+end)
 
 --- Get the current layout name.
 -- @param _layout The layout.
