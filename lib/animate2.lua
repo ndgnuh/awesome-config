@@ -22,7 +22,7 @@ local function animate(args)
 	local g1 = args.init
 	local g2 = args.target
 	local callback = args.callback or default_set_geometry
-	local end_callback = args.end_callback or function(...) end
+	local done_callback = args.done_callback or function(...) end
 	local animation = args.animation or {}
 	local target = 1
 
@@ -32,7 +32,7 @@ local function animate(args)
 		local g = interpolate(g1, g2, t)
 		callback(t, drawable, g)
 		if t == target then
-			end_callback(t, drawable, g)
+			done_callback(t, drawable, g)
 		end
 	end
 
