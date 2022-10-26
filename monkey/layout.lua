@@ -253,7 +253,11 @@ layout.arrange = throttle.delayed(0.01, function(screen)
 				end
 				if not c.valid then
 					p.geometries[c] = nil
-					animation_lock[c] = nil
+					for c, timed in pairs(animation_lock) do
+						timed:abort()
+						animation_lock[c] = nil
+					end
+					break
 				end
 			end
 			local init = {}
@@ -265,28 +269,27 @@ layout.arrange = throttle.delayed(0.01, function(screen)
 				g.y = g.y + useless_gap
 				init[c] = c:geometry()
 				target[c] = g
-			end
-			-- animate all at once
-			animate({
-				init = init,
-				target = target,
-				animation = { override_dt = true, duration = 0.1 },
-				callback = function(_, _, geos)
-					for c, geo in pairs(geos) do
-						if c.valid then
-							animation_lock[c] = true
-							c:geometry(geo)
-						else
+				animation_lock[c] = animate({
+					init = init,
+					target = target,
+					animation = { override_dt = true, duration = 0.1 },
+					callback = function(_, _, geos)
+						for c, geo in pairs(geos) do
+							if c.valid then
+								c:geometry(geo)
+							else
+								animation_lock[c] = nil
+							end
+						end
+					end,
+					done_callback = function(t, _, geos)
+						for c, geo in pairs(geos) do
 							animation_lock[c] = nil
 						end
-					end
-				end,
-				done_callback = function(t, _, geos)
-					for c, geo in pairs(geos) do
-						animation_lock[c] = nil
-					end
-				end,
-			})
+					end,
+				})
+			end
+			-- animate all at once
 		end)
 		arrange_lock = false
 		delayed_arrange[screen] = nil
