@@ -887,7 +887,7 @@ client.connect_signal("property::floating", function(c)
 	end
 end)
 
-if true then
+if  false then
 	local throttle = require("lib.throttle")
 	-- local fake_shadow = require("lib.fake_shadow")
 	local animate = require("lib.animate2")
