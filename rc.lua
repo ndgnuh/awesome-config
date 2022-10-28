@@ -34,7 +34,7 @@ end
 local debian = require("debian.menu")
 local has_fdo, freedesktop = pcall(require, "freedesktop")
 local max_layout = require("max_layout")
-require("monkey.layout")
+-- require("monkey.layout")
 
 -- animation
 local throttle = require("lib.throttle")
@@ -128,7 +128,7 @@ function dump(x)
 end
 
 function pdump(...)
-	ok, err_or_result = pcall(...)
+	local ok, err_or_result = pcall(...)
 	if not ok then
 		dump({ a_error = err_or_result })
 	else
@@ -136,6 +136,7 @@ function pdump(...)
 	end
 end
 
+local mediakeys = pdump(require, "mediakeys")
 -- pdump(abc, 123)
 -- dump(beautiful.xresources.get_dpi())
 
@@ -467,7 +468,7 @@ awful.screen.connect_for_each_screen(function(s)
 	-- rect focus
 	-- local ok, rect_focus = pcall(require, "widgets.rect_focus")
 	-- if not ok then
-	-- 	dump(rect_focus)
+	--	dump(rect_focus)
 	-- end
 	-- rect_focus.disable()
 	-- throttle.delayed(0.1, rect_focus.enable)()
@@ -514,20 +515,20 @@ globalkeys = gears.table.join(
 		-- local init = {}
 		-- local target = {}
 		-- for _, c in ipairs(t:clients()) do
-		-- 	init[c] = c:geometry()
-		-- 	target[c] = {}
-		-- 	for k, v in pairs(init[c]) do
-		-- 		target[c][k] = v + math.random(-30, 40)
-		-- 	end
+		--	init[c] = c:geometry()
+		--	target[c] = {}
+		--	for k, v in pairs(init[c]) do
+		--		target[c][k] = v + math.random(-30, 40)
+		--	end
 		-- end
 		-- pdump(animate, {
-		-- 	init = init,
-		-- 	target = target,
-		-- 	callback = function(t, self, geometry)
-		-- 		for c, geo in pairs(geometry) do
-		-- 			c:geometry(geo)
-		-- 		end
-		-- 	end,
+		--	init = init,
+		--	target = target,
+		--	callback = function(t, self, geometry)
+		--		for c, geo in pairs(geometry) do
+		--			c:geometry(geo)
+		--		end
+		--	end,
 		-- })
 	end, { description = "show/hide wibar", group = "awesome" }),
 	awful.key({ modkey }, "b", function()
@@ -557,6 +558,9 @@ globalkeys = gears.table.join(
 
 	-- Layout manipulation
 	awful.key({ modkey, "Shift" }, "j", function()
+		-- local taskswitcher = require("widgets.taskswitcher")
+		-- local ts = taskswitcher.task_switcher(s)
+		-- dump(ts)
 		awful.client.swap.byidx(1)
 	end, { description = "swap with next client by index", group = "client" }),
 	awful.key({ modkey, "Shift" }, "k", function()
@@ -990,11 +994,11 @@ end
 local callback = throttle.delayed(0.03, function(t)
 	-- t = t or awful.tag.selected()
 	-- if t.layout.name == "max" then
-	-- 	rect_focus.disable()
+	--	rect_focus.disable()
 	-- elseif t.layout.name == "tile" and #t:clients() < 2 then
-	-- 	rect_focus.disable()
+	--	rect_focus.disable()
 	-- else
-	-- 	rect_focus.enable()
+	--	rect_focus.enable()
 	-- end
 	rect_focus.disable()
 end)
@@ -1007,3 +1011,13 @@ tag.connect_signal("property::layout", callback)
 tag.connect_signal("tagged", callback)
 tag.connect_signal("untagged", callback)
 -- require("widgets.rect_focus").enable()
+
+-- dump(gears.string.split(package.cpath, ";"))
+local ltl = require("widgets.lazy_task_list")
+pdump(awful.popup, {
+	placement = awful.placement.bottom_right,
+	visible = true,
+	ontop = true,
+	bg = "#ff0",
+	widget = ltl({ screen = awful.screen.focused() }),
+})
