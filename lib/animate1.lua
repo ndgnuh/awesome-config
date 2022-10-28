@@ -1,5 +1,4 @@
 local rubato = require("lib.rubato")
-local throttle = require("lib.throttle")
 
 local function interpolate(x1, x2, t)
 	if type(x2) == "table" then
@@ -13,34 +12,26 @@ local function interpolate(x1, x2, t)
 	end
 end
 
-local function default_set_geometry(t, w, g)
+local function default_set_geometry(w, g)
 	w:geometry(g)
 end
 
 local function animate(args)
 	local drawable = args.widget
-	local g1 = args.init
-	local g2 = args.target
-	local callback = args.callback or default_set_geometry
-	local done_callback = args.done_callback or function(...) end
-	local animation = args.animation or {}
-	local target = 1
-	local run_now = args.run_now or true
+	local g1 = drawable:geometry()
+	local g2 = args.geometry or {}
+	local set_geometry = args.geometry_setter or default_set_geometry
 
+	local animation = args.animation or {}
+	animation.intro = animation.intro or 0.1
 	animation.duration = animation.duration or 0.2
 	animation.subscribed = function(t)
 		local g = interpolate(g1, g2, t)
-		callback(t, drawable, g)
-		if t == target then
-			done_callback(t, drawable, g)
-		end
+		set_geometry(drawable, g)
 	end
 
 	local timed = rubato.timed(animation)
-	if run_now then
-		timed.target = 1
-	end
-	return timed
+	timed.target = 1
 end
 
 return animate
