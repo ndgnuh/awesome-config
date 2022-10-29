@@ -25,7 +25,7 @@ local gtable = require("gears.table")
 local gdebug = require("gears.debug")
 local protected_call = require("gears.protected_call")
 local awful = require("awful")
-local animate = require("lib.animate2")
+local animate = require("lib.animate")
 
 local function get_screen(s)
 	return s and capi.screen[s]

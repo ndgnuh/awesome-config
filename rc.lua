@@ -34,7 +34,7 @@ end
 local debian = require("debian.menu")
 local has_fdo, freedesktop = pcall(require, "freedesktop")
 local max_layout = require("max_layout")
--- require("monkey.layout")
+require("monkey.layout")
 
 -- animation
 local throttle = require("lib.throttle")
@@ -1013,11 +1013,11 @@ tag.connect_signal("untagged", callback)
 -- require("widgets.rect_focus").enable()
 
 -- dump(gears.string.split(package.cpath, ";"))
-local ltl = require("widgets.lazy_task_list")
-pdump(awful.popup, {
-	placement = awful.placement.bottom_right,
-	visible = true,
-	ontop = true,
-	bg = "#ff0",
-	widget = ltl({ screen = awful.screen.focused() }),
-})
+-- local ltl = require("widgets.lazy_task_list")
+-- pdump(awful.popup, {
+-- 	placement = awful.placement.bottom_right,
+-- 	visible = true,
+-- 	ontop = true,
+-- 	bg = "#ff0",
+-- 	widget = ltl({ screen = awful.screen.focused() }),
+-- })
