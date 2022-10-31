@@ -220,8 +220,13 @@ end
 
 --- Arrange a screen using its current layout.
 -- @param screen The screen to arrange.
+-- local animation = animate({
+-- 	init = {},
+-- 	target = {},
+-- 	run_now = false,
+-- })
 local throttle = require("lib.throttle")
-layout.arrange = throttle.delayed(0.01, function(screen)
+layout.arrange = function(screen)
 	screen = get_screen(screen)
 	if not screen or delayed_arrange[screen] then
 		return
@@ -248,16 +253,8 @@ layout.arrange = throttle.delayed(0.01, function(screen)
 			p.geometries = setmetatable({}, { __mode = "k" })
 			layout.get(screen).arrange(p)
 			for c, g in pairs(p.geometries) do
-				if animation_lock[c] then
-					p.geometries[c] = nil
-				end
 				if not c.valid then
 					p.geometries[c] = nil
-					for c, timed in pairs(animation_lock) do
-						timed:abort()
-						animation_lock[c] = nil
-					end
-					break
 				end
 			end
 			local init = {}
@@ -267,28 +264,33 @@ layout.arrange = throttle.delayed(0.01, function(screen)
 				g.height = math.max(1, g.height - c.border_width * 2 - useless_gap * 2)
 				g.x = g.x + useless_gap
 				g.y = g.y + useless_gap
-				init[c] = c:geometry()
-				target[c] = g
-				animation_lock[c] = animate({
-					init = init,
-					target = target,
-					animation = { override_dt = true, duration = 0.1 },
-					callback = function(_, _, geos)
-						for c, geo in pairs(geos) do
-							if c.valid then
-								c:geometry(geo)
-							else
-								animation_lock[c] = nil
-							end
-						end
-					end,
-					done_callback = function(t, _, geos)
-						for c, geo in pairs(geos) do
-							animation_lock[c] = nil
-						end
-					end,
-				})
+				local init = c:geometry()
+				local target = g
+				if animation_lock[c] then
+					local anim = animation_lock[c]
+					rawset(anim.timed, "pos", 0)
+					anim.target = target
+					anim.init = init
+					anim.timed.target = 1
+				else
+					animation_lock[c] = animate({
+						init = init,
+						target = target,
+						animation = { override_dt = true, duration = 0.04 },
+						callback = function(_, _, geos)
+							c:geometry(geos)
+							-- for c, geo in pairs(geos) do
+							-- 	if c.valid then
+							-- 		c:geometry(geo)
+							-- 	else
+							-- 		animation_lock[c] = nil
+							-- 	end
+							-- end
+						end,
+					})
+				end
 			end
+
 			-- animate all at once
 		end)
 		arrange_lock = false
@@ -296,7 +298,7 @@ layout.arrange = throttle.delayed(0.01, function(screen)
 
 		screen:emit_signal("arrange")
 	end)
-end)
+end
 
 --- Get the current layout name.
 -- @param _layout The layout.

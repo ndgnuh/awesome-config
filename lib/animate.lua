@@ -19,8 +19,6 @@ end
 
 local function animate(args)
 	local drawable = args.widget
-	local g1 = args.init
-	local g2 = args.target
 	local callback = args.callback or default_set_geometry
 	local done_callback = args.done_callback or function(...) end
 	local animation = args.animation or {}
@@ -29,10 +27,10 @@ local function animate(args)
 
 	animation.duration = animation.duration or 0.2
 	animation.subscribed = function(t)
-		local g = interpolate(g1, g2, t)
-		callback(t, drawable, g)
+		local g = interpolate(args.init, args.target, t)
+		callback(t, drawable, g, args.timed)
 		if t == target then
-			done_callback(t, drawable, g)
+			done_callback(t, drawable, g, args.timed)
 		end
 	end
 
@@ -40,7 +38,39 @@ local function animate(args)
 	if run_now then
 		timed.target = 1
 	end
-	return timed
+
+	args.timed = timed
+	return args
 end
 
-return animate
+local function create_animation(args)
+	--
+end
+
+local function animation(args)
+	local obj = {}
+	obj.init = args.init
+	obj.target = args.target
+	obj.timed = rubato.timed({
+		duration = args.duration or 0.13,
+		override_dt = args.override_dt or false,
+		subscribed = function(t)
+			local g = interpolate(args.init, args.target, t)
+			callback(obj, g, t)
+		end,
+	})
+	return obj
+end
+
+local module = {
+	animate = animate,
+	animation = animation,
+}
+
+module = setmetatable(module, {
+	__call = function(self, ...)
+		self.animate(...)
+	end,
+})
+
+return module
