@@ -113,9 +113,9 @@ function layout.inc(i, s, layouts)
 		-- Older versions of this function had arguments (layouts, i, s), but
 		-- this was changed so that 'layouts' can be an optional parameter
 		gdebug.deprecate(
-			"Use awful.layout.inc(increment, screen, layouts) instead"
-				.. " of awful.layout.inc(layouts, increment, screen)",
-			{ deprecated_in = 5 }
+		"Use awful.layout.inc(increment, screen, layouts) instead"
+		.. " of awful.layout.inc(layouts, increment, screen)",
+		{ deprecated_in = 5 }
 		)
 
 		layouts, i, s = i, s, layouts
@@ -221,11 +221,10 @@ end
 --- Arrange a screen using its current layout.
 -- @param screen The screen to arrange.
 -- local animation = animate({
--- 	init = {},
--- 	target = {},
--- 	run_now = false,
+--	init = {},
+--	target = {},
+--	run_now = false,
 -- })
-local throttle = require("lib.throttle")
 layout.arrange = function(screen)
 	screen = get_screen(screen)
 	if not screen or delayed_arrange[screen] then
@@ -280,11 +279,11 @@ layout.arrange = function(screen)
 						callback = function(_, _, geos)
 							c:geometry(geos)
 							-- for c, geo in pairs(geos) do
-							-- 	if c.valid then
-							-- 		c:geometry(geo)
-							-- 	else
-							-- 		animation_lock[c] = nil
-							-- 	end
+							--	if c.valid then
+							--		c:geometry(geo)
+							--	else
+							--		animation_lock[c] = nil
+							--	end
 							-- end
 						end,
 					})
@@ -299,6 +298,8 @@ layout.arrange = function(screen)
 		screen:emit_signal("arrange")
 	end)
 end
+local throttle = require("lib.throttle")
+layout.arrange = throttle.delayed(0.01, layout.arrange)
 
 --- Get the current layout name.
 -- @param _layout The layout.
