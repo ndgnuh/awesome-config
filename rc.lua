@@ -93,7 +93,7 @@ end
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
 beautiful.border_width = 3
 beautiful.master_width_factor = 0.55 -- learn from dwm guys
-beautiful.font_size = 9
+beautiful.font_size = 12
 beautiful.font_size_px = beautiful.font_size * beautiful.xresources.get_dpi() / 71
 beautiful.font = "sans " .. beautiful.font_size
 beautiful.wibar_height = math.ceil(beautiful.font_size_px * 2)
