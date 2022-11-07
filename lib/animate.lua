@@ -43,22 +43,35 @@ local function animate(args)
 	return args
 end
 
-local function create_animation(args)
-	--
-end
 
 local function animation(args)
 	local obj = {}
 	obj.init = args.init
 	obj.target = args.target
+	obj.callback = args.callback
 	obj.timed = rubato.timed({
 		duration = args.duration or 0.13,
 		override_dt = args.override_dt or false,
 		subscribed = function(t)
-			local g = interpolate(args.init, args.target, t)
-			callback(obj, g, t)
+			local g = interpolate(obj.init, obj.target, t)
+			obj.callback(obj, g, t)
+			if t == 1 then
+				obj.init = g
+			end
 		end,
 	})
+	obj.odd = true
+
+	obj.fire = function(target)
+		-- target = target or obj.target
+		-- rawset(obj.timed, "pos", 0)
+		if obj.odd then
+			obj.timed.target = 1
+		else
+			obj.timed.target = 0
+		end
+		obj.odd = not obj.odd
+	end
 	return obj
 end
 

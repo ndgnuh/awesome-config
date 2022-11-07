@@ -504,32 +504,7 @@ awful.key({ modkey }, "t", function()
 	-- awful.layout.set(awful.layout.suit.tile.left)
 end, { description = "Set max layout for current tag", group = "tag" }),
 awful.key({ modkey, "Shift" }, "b", function()
-	local c = client.focus
-	local g = c:geometry()
-	g.x = g.x + 1
-	c:geometry(g)
-
-	-- move randomy
-	-- local animate = require("lib.animate2")
-	-- local t = awful.tag.selected()
-	-- local init = {}
-	-- local target = {}
-	-- for _, c in ipairs(t:clients()) do
-	--	init[c] = c:geometry()
-	--	target[c] = {}
-	--	for k, v in pairs(init[c]) do
-	--		target[c][k] = v + math.random(-30, 40)
-	--	end
-	-- end
-	-- pdump(animate, {
-	--	init = init,
-	--	target = target,
-	--	callback = function(t, self, geometry)
-	--		for c, geo in pairs(geometry) do
-	--			c:geometry(geo)
-	--		end
-	--	end,
-	-- })
+	pdump(awesome.emit_signal, "debug")
 end, { description = "show/hide wibar", group = "awesome" }),
 awful.key({ modkey }, "b", function()
 	local s = awful.screen.focused()
@@ -873,151 +848,151 @@ end)
 
 -- Add a titlebar if titlebars_enabled is set to true in the rules.
 --	client.connect_signal("request::titlebars", function(c)
-	--		-- buttons for the titlebar
-	--		local buttons = gears.table.join(
-	--		awful.button({ }, 1, function()
-		--			c:emit_signal("request::activate", "titlebar", {raise = true})
-		--			awful.mouse.client.move(c)
-		--		end),
-		--		awful.button({ }, 3, function()
-			--			c:emit_signal("request::activate", "titlebar", {raise = true})
-			--			awful.mouse.client.resize(c)
-			--		end)
-			--		)
+--		-- buttons for the titlebar
+--		local buttons = gears.table.join(
+--		awful.button({ }, 1, function()
+--			c:emit_signal("request::activate", "titlebar", {raise = true})
+--			awful.mouse.client.move(c)
+--		end),
+--		awful.button({ }, 3, function()
+--			c:emit_signal("request::activate", "titlebar", {raise = true})
+--			awful.mouse.client.resize(c)
+--		end)
+--		)
 
-			--		awful.titlebar(c) : setup {
-				--			{ -- Left
-				--			awful.titlebar.widget.iconwidget(c),
-				--			buttons = buttons,
-				--			layout  = wibox.layout.fixed.horizontal
-				--		},
-				--		{ -- Middle
-				--		{ -- Title
-				--		align  = "center",
-				--		widget = awful.titlebar.widget.titlewidget(c)
-				--	},
-				--	buttons = buttons,
-				--	layout  = wibox.layout.flex.horizontal
-				-- },
-				-- { -- Right
-				-- awful.titlebar.widget.floatingbutton (c),
-				-- awful.titlebar.widget.maximizedbutton(c),
-				-- awful.titlebar.widget.stickybutton   (c),
-				-- awful.titlebar.widget.ontopbutton    (c),
-				-- awful.titlebar.widget.closebutton    (c),
-				-- layout = wibox.layout.fixed.horizontal()
-				--	},
-				--	layout = wibox.layout.align.horizontal
-				-- }
-				-- end)
+--		awful.titlebar(c) : setup {
+--			{ -- Left
+--			awful.titlebar.widget.iconwidget(c),
+--			buttons = buttons,
+--			layout  = wibox.layout.fixed.horizontal
+--		},
+--		{ -- Middle
+--		{ -- Title
+--		align  = "center",
+--		widget = awful.titlebar.widget.titlewidget(c)
+--	},
+--	buttons = buttons,
+--	layout  = wibox.layout.flex.horizontal
+-- },
+-- { -- Right
+-- awful.titlebar.widget.floatingbutton (c),
+-- awful.titlebar.widget.maximizedbutton(c),
+-- awful.titlebar.widget.stickybutton   (c),
+-- awful.titlebar.widget.ontopbutton    (c),
+-- awful.titlebar.widget.closebutton    (c),
+-- layout = wibox.layout.fixed.horizontal()
+--	},
+--	layout = wibox.layout.align.horizontal
+-- }
+-- end)
 
-				-- Enable sloppy focus, so that focus follows mouse.
-				client.connect_signal("mouse::enter", function(c)
-					c:emit_signal("request::activate", "mouse_enter", { raise = false })
-				end)
+-- Enable sloppy focus, so that focus follows mouse.
+client.connect_signal("mouse::enter", function(c)
+	c:emit_signal("request::activate", "mouse_enter", { raise = false })
+end)
 
-				client.connect_signal("tagged", function(c)
-					if c.maximized then
-						c.maximized = false
-						c.maximized_horizontal = false
-						c.maximized_vertical = false
-					end
-				end)
-				client.connect_signal("focus", function(c)
-					c.border_color = beautiful.border_focus
-				end)
-				client.connect_signal("unfocus", function(c)
-					c.border_color = beautiful.border_normal
-				end)
+client.connect_signal("tagged", function(c)
+	if c.maximized then
+		c.maximized = false
+		c.maximized_horizontal = false
+		c.maximized_vertical = false
+	end
+end)
+client.connect_signal("focus", function(c)
+	c.border_color = beautiful.border_focus
+end)
+client.connect_signal("unfocus", function(c)
+	c.border_color = beautiful.border_normal
+end)
 
-				-- Enable border for floating clients
-				client.connect_signal("property::floating", function(c)
-					if c.floating then
-						c.border_width = beautiful.border_width
-					end
-				end)
+-- Enable border for floating clients
+client.connect_signal("property::floating", function(c)
+	if c.floating then
+		c.border_width = beautiful.border_width
+	end
+end)
 
-				if false then
-					local throttle = require("lib.throttle")
-					-- local fake_shadow = require("lib.fake_shadow")
-					local animate = require("lib.animate2")
+if false then
+	local animate = require("lib.animate")
 
-					w = wibox({
-						x = 0,
-						y = 0,
-						width = 100,
-						height = 100,
-						visible = true,
-						ontop = true,
-						bg = "#F00",
-						widget = wibox.widget({
-							widget = wibox.container.background,
-							forced_width = 100 - 4,
-							forced_height = 100 - 4,
-							bg = "#FF0",
-							wibox.widget.textbox(""),
-						}),
-					})
+	w = wibox({
+		x = 0,
+		y = 0,
+		width = 100,
+		height = 100,
+		visible = true,
+		ontop = true,
+		bg = "#F00",
+		widget = wibox.widget({
+			widget = wibox.container.background,
+			forced_width = 100 - 4,
+			forced_height = 100 - 4,
+			bg = "#FF0",
+			wibox.widget.textbox(""),
+		}),
+	})
 
-					wants = {
-						{ x = 100, width = 200, height = 100 },
-						{ x = 200, width = 200, height = 200 },
-						{ x = 300, width = 200, height = 200 },
-						{ x = 400, height = 400 },
-						{ x = 0, y = 0 },
-						-- {x = 100, y = 0, width = 100, height = 100},
-						-- {x = 100, y = 100, width = 200, height = 100},
-						-- {x = 100, y = 0, width = 100, height = 100},
-						-- {x = 10, y = 10, width = 200, height = 200},
-						-- {x = 10, y = 10, width = 250, height = 200},
-					}
-					i = 1
-					local t_animate = throttle(0.03, animate)
-					function animate_()
-						if i > #wants then
-							i = 1
-						end
-						want = wants[i]
-						pdump(animate, {
-							widget = w,
-							init = w:geometry(),
-							target = want,
-							animation = {
-								duration = 0.2,
-								-- override_dt = true,
-							},
-						})
-						i = (i + 1)
-					end
-				end
+	local animation = animate.animation({
+		init = w:geometry(),
+		target = {},
+		callback = function(self, g, t)
+			w:geometry(g)
+		end
+	})
 
-				local callback = throttle.delayed(0.03, function(t)
-					-- t = t or awful.tag.selected()
-					-- if t.layout.name == "max" then
-					--	rect_focus.disable()
-					-- elseif t.layout.name == "tile" and #t:clients() < 2 then
-					--	rect_focus.disable()
-					-- else
-					--	rect_focus.enable()
-					-- end
-					rect_focus.disable()
-				end)
+	wants = {
+		{ x = 100, width = 200, height = 100 },
+		{ x = 200, width = 200, height = 200 },
+		{ x = 300, width = 200, height = 200 },
+		{ x = 400, height = 400 },
+		{ x = 0, y = 0 },
+		-- {x = 100, y = 0, width = 100, height = 100},
+		-- {x = 100, y = 100, width = 200, height = 100},
+		-- {x = 100, y = 0, width = 100, height = 100},
+		-- {x = 10, y = 10, width = 200, height = 200},
+		-- {x = 10, y = 10, width = 250, height = 200},
+	}
+	i = 1
+	-- local t_animate = throttle(0.03, animate)
+	awesome.connect_signal("debug", function()
+		if i > #wants then
+			i = 1
+		end
+		want = wants[i]
+		dump(want)
+		animation.target = want
+		pdump(animation.fire)
+		i = i + 1
+	end)
+end
 
-				callback()
-				screen.connect_signal("tag::history::update", function(s)
-					callback()
-				end)
-				tag.connect_signal("property::layout", callback)
-				tag.connect_signal("tagged", callback)
-				tag.connect_signal("untagged", callback)
-				-- require("widgets.rect_focus").enable()
+local callback = throttle.delayed(0.03, function(t)
+	-- t = t or awful.tag.selected()
+	-- if t.layout.name == "max" then
+	--	rect_focus.disable()
+	-- elseif t.layout.name == "tile" and #t:clients() < 2 then
+	--	rect_focus.disable()
+	-- else
+	--	rect_focus.enable()
+	-- end
+	rect_focus.disable()
+end)
 
-				-- dump(gears.string.split(package.cpath, ";"))
-				-- local ltl = require("widgets.lazy_task_list")
-				-- pdump(awful.popup, {
-					--	placement = awful.placement.bottom_right,
-					--	visible = true,
-					--	ontop = true,
-					--	bg = "#ff0",
-					--	widget = ltl({ screen = awful.screen.focused() }),
-					-- })
+callback()
+screen.connect_signal("tag::history::update", function(s)
+	callback()
+end)
+tag.connect_signal("property::layout", callback)
+tag.connect_signal("tagged", callback)
+tag.connect_signal("untagged", callback)
+-- require("widgets.rect_focus").enable()
+
+-- dump(gears.string.split(package.cpath, ";"))
+-- local ltl = require("widgets.lazy_task_list")
+-- pdump(awful.popup, {
+--	placement = awful.placement.bottom_right,
+--	visible = true,
+--	ontop = true,
+--	bg = "#ff0",
+--	widget = ltl({ screen = awful.screen.focused() }),
+-- })
