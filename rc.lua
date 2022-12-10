@@ -18,7 +18,6 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
 _G.ic = require("icecream")
-require("lib.audio")
 
 -- config
 local default_config = require("default_config")
@@ -379,24 +378,6 @@ awful.screen.connect_for_each_screen(function(s)
 		},
 	})
 
-	s.mypulse = wibox.widget({
-		widget = wibox.container.place,
-		{
-			id = "text",
-			widget = wibox.widget.textbox(),
-			markup = "132",
-			font = "monospace",
-		},
-	})
-
-	awesome.connect_signal("pulseaudio", function(mute, left, right)
-		local text = s.mypulse:get_children_by_id("text")[1]
-		if mute == 1 then
-			text.markup = "VOL muted"
-		else
-			text.markup = ("VOL " .. tostring(left) .. "%")
-		end
-	end)
 
 	s.mylayoutbox:buttons(gears.table.join(
 	awful.button({}, 1, function()
@@ -450,6 +431,7 @@ awful.screen.connect_for_each_screen(function(s)
 		nil,
 		{
 			layout = wibox.layout.fixed.vertical,
+			require("widgets.volume-label"),
 			{
 				widget = wibox.container.place,
 				{
@@ -1008,3 +990,5 @@ awesome.connect_signal("startup", function(...)
 
 	-- wibox { x =100, y = 100, width =100, height=100, visible=true}
 end)
+
+require("lib.audio")

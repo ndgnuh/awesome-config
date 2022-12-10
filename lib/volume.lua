@@ -14,7 +14,7 @@ local function get_audio(line)
 		local volume = out:match("(%d+)%%")
 		local mute = out:match("Mute: yes") ~= nil
 		local result = {mute = mute, volume = volume}
-		capi.awesome.spawn("extra::volume", result)
+		capi.awesome.emit_signal("extra::volume", result)
 	end)
 end
 
@@ -41,4 +41,6 @@ for key, cmd in pairs(commands) do
 	keys = gtable.join(key, keys)
 end
 root.keys(keys)
+
+get_audio("sink")
 
