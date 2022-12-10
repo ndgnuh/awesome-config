@@ -17,6 +17,8 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
+_G.ic = require("icecream")
+require("lib.audio")
 
 -- config
 local default_config = require("default_config")
@@ -707,6 +709,7 @@ for i = 1, 9 do
 	)
 end
 
+
 clientbuttons = gears.table.join(
 awful.button({}, 1, function(c)
 	c:emit_signal("request::activate", "mouse_click", { raise = true })
@@ -996,3 +999,12 @@ tag.connect_signal("untagged", callback)
 --	bg = "#ff0",
 --	widget = ltl({ screen = awful.screen.focused() }),
 -- })
+
+awesome.connect_signal("startup", function(...)
+	-- for s in screen do
+	--	dump(s)
+	-- end
+	gears.wallpaper.maximized("/home/hung/Pictures/wallpaper/pepe-no-good-wp.png")
+
+	-- wibox { x =100, y = 100, width =100, height=100, visible=true}
+end)
