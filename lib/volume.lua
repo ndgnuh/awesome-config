@@ -13,7 +13,7 @@ local function get_audio(line)
 	awful.spawn.easy_async_with_shell("pactl list sinks", function(out)
 		local volume = out:match("(%d+)%%")
 		local mute = out:match("Mute: yes") ~= nil
-		local result = {mute = mute, volume = volume}
+		local result = {mute = mute, volume = tonumber(volume)}
 		capi.awesome.emit_signal("extra::volume", result)
 	end)
 end
