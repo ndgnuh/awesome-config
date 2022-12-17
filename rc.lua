@@ -433,8 +433,7 @@ awful.screen.connect_for_each_screen(function(s)
 		nil,
 		{
 			layout = wibox.layout.fixed.vertical,
-			require("widgets.volume_slider"),
-			require("widgets.volume_label"),
+			require("widgets.volume_item"),
 			{
 				widget = wibox.container.place,
 				{
