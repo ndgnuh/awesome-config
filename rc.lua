@@ -17,6 +17,8 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
+
+_G.rrequire = require("rrequire")
 _G.ic = require("icecream")
 
 -- config
@@ -431,7 +433,8 @@ awful.screen.connect_for_each_screen(function(s)
 		nil,
 		{
 			layout = wibox.layout.fixed.vertical,
-			require("widgets.volume-label"),
+			require("widgets.volume_slider"),
+			require("widgets.volume_label"),
 			{
 				widget = wibox.container.place,
 				{
@@ -991,4 +994,4 @@ awesome.connect_signal("startup", function(...)
 	-- wibox { x =100, y = 100, width =100, height=100, visible=true}
 end)
 
-require("lib.audio")
+require("lib.volume")
