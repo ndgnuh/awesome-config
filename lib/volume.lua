@@ -24,7 +24,7 @@ local cmd = {}
 
 cmd.get_audio  = function()
 	local sink = get_active_sink()
-	if sink == nil then
+	if sink ~= nil then
 		return "pactl list sinks | grep 'Sink \\#" .. sink .. "' -A 15"
 	else
 		return "pactl list sinks "
@@ -32,7 +32,7 @@ cmd.get_audio  = function()
 end
 
 cmd.set_audio = function(change)
-	if sink == nil then
+	if sink ~= nil then
 		return "pactl set-sink-volume " .. sink .. " " .. change
 	else
 		return "pactl set-sink-volume @DEFAULT_SINK@ " .. change
@@ -41,7 +41,7 @@ end
 
 cmd.toggle_audio = function(change)
 	change = change or "toggle"
-	if sink == nil then
+	if sink ~= nil then
 		return "pactl set-sink-mute " .. sink .. " " .. change
 	else
 		return "pactl set-sink-mute @DEFAULT_SINK@ " .. change
