@@ -1,4 +1,4 @@
-local revealer = rrequire("revealer", ...)
+-- local revealer = rrequire("revealer", ...)
 local widget = require("wibox.widget")
 local container = require("wibox.container")
 local layout = require("wibox.layout")
