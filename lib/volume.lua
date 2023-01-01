@@ -55,7 +55,7 @@ fn.raise_volume = function()
 	awful.spawn.with_shell(cmd.set_audio("+5%"), false)
 end
 fn.lower_volume = function()
-	awful.spawn.with_shell(cmd.set_audio("+5%"), false)
+	awful.spawn.with_shell(cmd.set_audio("-5%"), false)
 end
 fn.toggle_mute = function()
 	awful.spawn.with_shell(cmd.toggle_audio(), false)
