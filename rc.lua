@@ -134,6 +134,7 @@ function pdump(...)
 	local ok, err_or_result = pcall(...)
 	if not ok then
 		dump({ a_error = err_or_result })
+		return nil
 	else
 		return err_or_result
 	end
@@ -433,6 +434,7 @@ awful.screen.connect_for_each_screen(function(s)
 		nil,
 		{
 			layout = wibox.layout.fixed.vertical,
+			require("widgets.pomodoro")(s),
 			require("widgets.volume_item"),
 			{
 				widget = wibox.container.place,
@@ -993,4 +995,9 @@ awesome.connect_signal("startup", function(...)
 	-- wibox { x =100, y = 100, width =100, height=100, visible=true}
 end)
 
+
 require("lib.volume")
+local survival = require("lib.survival")
+-- local configio = survival("testing")
+-- configio.serialize(beautiful)
+-- ic(configio.deserialize())

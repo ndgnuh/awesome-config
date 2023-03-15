@@ -1,3 +1,6 @@
+local gfs = require("gears.filesystem")
+local cache_dir = gfs.get_cache_dir ()
+
 local survival = {}
 local function _serialize(obj, lookup, level, indent)
     if type(obj) == "string" then
@@ -35,12 +38,44 @@ local function serialize(object, indent)
 	return "return " .. _serialize(object, lookup, level, indent)
 end
 
-local function deserialize(self, str) end
+local function deserialize(str)
+    return load(str)()
+end
 
-local function new(name) end
+local function serialize_file(file, ...)
+    local fp = io.open(file, "w")
+    fp:write(serialize(...))
+    fp:close()
+end
+
+local function deserialize_file(file)
+    local fp = io.open(file)
+    local obj = deserialize(fp:read("*a"))
+    fp:close()
+    return obj
+end
+
+local function deserialize_file(file)
+    local fp = io.open(file)
+    local obj = deserialize(fp:read("*a"))
+    fp:close()
+    return obj
+end
 
 
-return {
+local function new(name)
+    ic(cache_dir)
+    file = cache_dir .. "/" .. name
+    return {
+        serialize = function(...) return serialize_file(file, ...) end,
+        deserialize = function(...) return deserialize_file(file) end,
+    }
+end
+
+
+return setmetatable({
+    serialize_file = serialize_file,
+    deserialize_file = deserialize_file,
     serialize = serialize,
-    deserialize = deserialize
-}
+    deserialize = deserialize,
+}, { __call = function(self, name) return new(name) end })
