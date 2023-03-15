@@ -61,7 +61,6 @@ end
 
 
 local function new(name)
-    ic(cache_dir)
     file = cache_dir .. "/" .. name
     return {
         serialize = function(...) return serialize_file(file, ...) end,

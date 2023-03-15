@@ -144,7 +144,7 @@ function pdump(...)
 	end
 end
 
-local mediakeys = pdump(require, "mediakeys")
+-- local mediakeys = pdump(require, "mediakeys")
 -- pdump(abc, 123)
 -- dump(beautiful.xresources.get_dpi())
 
