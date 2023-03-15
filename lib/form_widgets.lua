@@ -22,7 +22,7 @@ local global_lock = false -- ensure only 1 prompt is running at a time
 
 local function text_field(args)
 	local label = args.label
-	local value = args.value or ""
+	local value = tostring(args.value) or ""
     local callback = args.callback or function(...) end
     local forced_width = args.width
 
@@ -105,6 +105,7 @@ end
 
 
 return {
-    list_inputs,
-    text_field
+    list_inputs = list_inputs,
+    text_field = text_field,
+    text_input = text_field,
 }

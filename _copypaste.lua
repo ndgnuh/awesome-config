@@ -1,4 +1,5 @@
 local awful = require("awful")
+local image = require("images")
 
 local beautiful = require("beautiful")
 

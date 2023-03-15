@@ -48,18 +48,15 @@ local function serialize_file(file, ...)
     fp:close()
 end
 
-local function deserialize_file(file)
+local function deserialize_file(file, default)
     local fp = io.open(file)
-    local obj = deserialize(fp:read("*a"))
-    fp:close()
-    return obj
-end
-
-local function deserialize_file(file)
-    local fp = io.open(file)
-    local obj = deserialize(fp:read("*a"))
-    fp:close()
-    return obj
+    if not fp then
+        return default
+    else
+        local obj = deserialize(fp:read("*a"))
+        fp:close()
+        return obj
+    end
 end
 
 
@@ -68,7 +65,7 @@ local function new(name)
     file = cache_dir .. "/" .. name
     return {
         serialize = function(...) return serialize_file(file, ...) end,
-        deserialize = function(...) return deserialize_file(file) end,
+        deserialize = function(default) return deserialize_file(file, default) end,
     }
 end
 

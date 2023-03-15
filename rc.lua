@@ -71,6 +71,10 @@ if awesome.startup_errors then
 	})
 end
 
+-- THE NON_CODE CUSTOMIZED CONFIG
+local survival = require("lib.survival")
+local settings = require("lib.settings")
+
 -- Handle runtime errors after startup
 do
 	local in_error = false
@@ -405,7 +409,7 @@ awful.screen.connect_for_each_screen(function(s)
 		format = "%H\n%M",
 	})
 	clock:connect_signal("button::press", function()
-		awful.spawn.with_shell(config.calendar_command, false)
+		awful.spawn.with_shell(settings.calendar, false)
 	end)
 
 	local function place(w)
@@ -418,7 +422,7 @@ awful.screen.connect_for_each_screen(function(s)
 		format = "%H\n%M",
 	})
 	s.clock:connect_signal("button::press", function()
-		awful.spawn.with_shell(config.calendar_command, false)
+		awful.spawn.with_shell(settings.calendar, false)
 	end)
 	dualbar.setup_hbar(s, {
 		layout = wibox.layout.fixed.horizontal,
@@ -434,7 +438,7 @@ awful.screen.connect_for_each_screen(function(s)
 		nil,
 		{
 			layout = wibox.layout.fixed.vertical,
-			require("widgets.pomodoro")(s),
+			require("widgets.settings")(s),
 			require("widgets.volume_item"),
 			{
 				widget = wibox.container.place,
@@ -545,7 +549,7 @@ end, { description = "go back", group = "client" }),
 
 -- Standard program
 awful.key({ modkey }, "Return", function()
-	awful.spawn.with_shell(config.terminal_command, false)
+	awful.spawn.with_shell(settings.terminal, false)
 end, { description = "open a terminal", group = "launcher" }),
 awful.key({ modkey, "Shift" }, "r", awesome.restart, { description = "reload awesome", group = "awesome" }),
 awful.key({ modkey, "Shift" }, "q", awesome.quit, { description = "quit awesome", group = "awesome" }),
@@ -585,7 +589,7 @@ end, { description = "restore minimized", group = "client" }),
 
 -- Prompt
 awful.key({ modkey }, "r", function()
-	awful.spawn.with_shell(config.launcher_command, false)
+	awful.spawn.with_shell(settings.launcher, false)
 end, { description = "run prompt", group = "launcher" }),
 
 awful.key({ modkey }, "x", function()
@@ -997,7 +1001,8 @@ end)
 
 
 require("lib.volume")
-local survival = require("lib.survival")
 -- local configio = survival("testing")
 -- configio.serialize(beautiful)
 -- ic(configio.deserialize())
+--
+pdump(require, "lib.form_widgets")
