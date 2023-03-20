@@ -51,7 +51,7 @@ widgets.panel.widget = widget {
 
 widgets.icon = widget{
     widget = widget.imagebox,
-    image = image("gear.png")
+    image = image("ics/settings.png")
 }
 
 

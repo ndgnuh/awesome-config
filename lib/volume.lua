@@ -1,13 +1,44 @@
+
 -- TODO: make this module more robust incrementally
 -- imports {{{
 local awful = require("awful")
 local naughty = require("naughty")
 local gtable = require("gears.table")
+local gtimer = require("gears.timer")
 local capi = {
 	root = root,
 	awesome = awesome,
 }
 -- }}}
+
+local M = { pulse = {} }
+
+-- do not emit signal
+
+-- pulseaudio interact function
+-- get active sink
+M.pulse.get_active_sink = function(callback)
+	local cmd = "pactl list short | grep RUNNING | grep -v monitor | head -n 1 | sed -e 's,^\\([0-9][0-9]*\\)[^0-9].*,\\1,'"
+	awful.spawn.with_shell(cmd, function(so)
+		callback(tonumber(so))
+	end)
+end
+
+-- get current audio
+M.pulse.get_audio = function(sink, callback)
+	local cmd
+	if sink ~= nil then
+		cmd = "pactl set-sink-volume " .. sink .. " " .. change
+	else
+		cmd = "pactl set-sink-volume @DEFAULT_SINK@ " .. change
+	end
+	awful.spawn.easy_async_with_shell(cmd, function(out)
+		local volume = out:match("(%d+)%%") or -1
+		local mute = out:match("Mute: yes") ~= nil
+		local result = {mute = mute, volume = tonumber(volume)}
+		callback(result)
+	end)
+end
 
 local function get_active_sink()
 	-- evil io.popen, but this command is quick tho
@@ -52,14 +83,15 @@ end
 --- functions {{{
 local fn = {}
 fn.raise_volume = function()
-	awful.spawn.with_shell(cmd.set_audio("+5%"), false)
+	awful.spawn.easy_async(cmd.set_audio("+5%"), false)
 end
 fn.lower_volume = function()
-	awful.spawn.with_shell(cmd.set_audio("-5%"), false)
+	awful.spawn.easy_async(cmd.set_audio("-5%"), false)
 end
 fn.toggle_mute = function()
-	awful.spawn.with_shell(cmd.toggle_audio(), false)
+	awful.spawn.easy_async(cmd.toggle_audio(), false)
 end
+
 
 -- }}}
 
@@ -101,5 +133,13 @@ end
 root.keys(keys)
 
 get_audio("sink")
+
+return {
+	on_change = function(callback)
+		capi.awesome.connect_signal("extra::volume", function(volume)
+			callback(volume)
+		end)
+	end
+}
 
 -- vim: foldmethod=marker

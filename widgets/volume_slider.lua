@@ -30,7 +30,6 @@ local the_slider = widget{
     maximum = 150,
     minimum = 0,
     widget = widget.slider,
-    lock = false
 }
 
 local slider = widget{
@@ -45,18 +44,14 @@ local slider = widget{
 }
 
 the_slider:connect_signal("property::value", throttle(0.01, function(self)
-    self.lock = true
     awful.spawn.easy_async_with_shell(
         "pactl set-sink-volume @DEFAULT_SINK@ " .. self.value .. "% && sleep 0.5", function()
-        self.lock = false
     end)
 end))
 
 capi.awesome.connect_signal("extra::volume", function(volume)
-    if not the_slider.lock then
-        the_slider.lock = true
-        the_slider.value = volume.volume
-        the_slider.lock = false
-    end
+    -- avoid triggering the volume change
+    rawset(the_slider._private, "value", volume.volume)
+    the_slider:emit_signal("widget::redraw_needed")
 end)
 return slider

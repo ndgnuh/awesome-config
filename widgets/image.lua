@@ -11,6 +11,7 @@ return function(name, color, margin)
 		image = gcolor.recolor_image(image, color)
 	end
 	local w = widget.imagebox(image)
+	local image_w = w
 	if margin then
 		w = container.margin(w, margin, margin, margin, margin)
 	end
