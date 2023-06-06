@@ -97,7 +97,11 @@ end
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
+local cs = require("c_hybrid")
+local primary = cs.color2
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
+beautiful.bg_normal = cs.color0
+beautiful.bg_focus = cs.color0
 beautiful.border_width = 3
 beautiful.master_width_factor = 0.55 -- learn from dwm guys
 beautiful.font_size = 12
@@ -108,17 +112,19 @@ beautiful.useless_gap = beautiful.font_size_px / 4
 beautiful.wibar_width = beautiful.wibar_height
 beautiful.menu_width = beautiful.font_size_px * 15
 beautiful.menu_height = beautiful.wibar_height
-beautiful.taglist_bg_focus = beautiful.bg_focus
-beautiful.taglist_bg_normal = beautiful.bg_normal
-beautiful.taglist_fg_focus = beautiful.fg_focus
-beautiful.taglist_fg_occupied = beautiful.fg_normal
-beautiful.taglist_fg_empty = "#444"
+beautiful.taglist_bg_focus = cs.color2
+beautiful.taglist_bg_normal = cs.color0
+beautiful.taglist_bg_occupied = cs.color0
+beautiful.taglist_bg_empty = cs.color0
+beautiful.taglist_fg_focus = cs.color0
+beautiful.taglist_fg_occupied = cs.color15
+beautiful.taglist_fg_empty = cs.color7
 -- tasklist
-beautiful.tasklist_bg_focus = beautiful.bg_focus
-beautiful.tasklist_bg_normal = beautiful.bg_normal
-beautiful.tasklist_fg_focus = beautiful.fg_focus
-beautiful.tasklist_fg_normal = beautiful.taglist_fg_occupied
-beautiful.tasklist_fg_minimize = beautiful.taglist_fg_empty
+beautiful.tasklist_bg_focus = cs.color2
+beautiful.tasklist_bg_normal = cs.color0
+beautiful.tasklist_fg_focus = cs.color0
+beautiful.tasklist_fg_normal = cs.color15
+beautiful.tasklist_fg_minimize = cs.color7
 
 -- This is used later as the default terminal and editor to run.
 terminal = "x-terminal-emulator"
