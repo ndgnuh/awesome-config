@@ -98,33 +98,8 @@ end
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
 local cs = require("c_hybrid")
-local primary = cs.color2
-beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
-beautiful.bg_normal = cs.color0
-beautiful.bg_focus = cs.color0
-beautiful.border_width = 3
-beautiful.master_width_factor = 0.55 -- learn from dwm guys
-beautiful.font_size = 12
-beautiful.font_size_px = beautiful.font_size * beautiful.xresources.get_dpi() / 71
-beautiful.font = "sans " .. beautiful.font_size
-beautiful.wibar_height = math.ceil(beautiful.font_size_px * 2)
-beautiful.useless_gap = beautiful.font_size_px / 4
-beautiful.wibar_width = beautiful.wibar_height
-beautiful.menu_width = beautiful.font_size_px * 15
-beautiful.menu_height = beautiful.wibar_height
-beautiful.taglist_bg_focus = cs.color2
-beautiful.taglist_bg_normal = cs.color0
-beautiful.taglist_bg_occupied = cs.color0
-beautiful.taglist_bg_empty = cs.color0
-beautiful.taglist_fg_focus = cs.color0
-beautiful.taglist_fg_occupied = cs.color15
-beautiful.taglist_fg_empty = cs.color7
--- tasklist
-beautiful.tasklist_bg_focus = cs.color2
-beautiful.tasklist_bg_normal = cs.color0
-beautiful.tasklist_fg_focus = cs.color0
-beautiful.tasklist_fg_normal = cs.color15
-beautiful.tasklist_fg_minimize = cs.color7
+local theme = require("theme")
+beautiful.init(theme)
 
 -- This is used later as the default terminal and editor to run.
 terminal = "x-terminal-emulator"
@@ -997,18 +972,12 @@ tag.connect_signal("untagged", callback)
 -- })
 
 awesome.connect_signal("startup", function(...)
-	-- for s in screen do
-	--	dump(s)
-	-- end
-	gears.wallpaper.maximized("/home/hung/Pictures/wallpaper/pepe-no-good-wp.png")
-
-	-- wibox { x =100, y = 100, width =100, height=100, visible=true}
+	local home = os.getenv("HOME")
+	local search_path = home .. "/Pictures/"
+	local bg = awful.util.geticonpath("background", {"png", "jpg", "jpeg"}, {search_path})
+	gears.wallpaper.maximized(bg)
 end)
 
 
 require("lib.volume")
--- local configio = survival("testing")
--- configio.serialize(beautiful)
--- ic(configio.deserialize())
---
 pdump(require, "lib.form_widgets")
