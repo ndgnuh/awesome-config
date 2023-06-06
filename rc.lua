@@ -886,59 +886,6 @@ client.connect_signal("property::floating", function(c)
 	end
 end)
 
-if false then
-	local animate = require("lib.animate")
-
-	w = wibox({
-		x = 0,
-		y = 0,
-		width = 100,
-		height = 100,
-		visible = true,
-		ontop = true,
-		bg = "#F00",
-		widget = wibox.widget({
-			widget = wibox.container.background,
-			forced_width = 100 - 4,
-			forced_height = 100 - 4,
-			bg = "#FF0",
-			wibox.widget.textbox(""),
-		}),
-	})
-
-	local animation = animate.animation({
-		init = w:geometry(),
-		target = {},
-		callback = function(self, g, t)
-			w:geometry(g)
-		end
-	})
-
-	wants = {
-		{ x = 100, width = 200, height = 100 },
-		{ x = 200, width = 200, height = 200 },
-		{ x = 300, width = 200, height = 200 },
-		{ x = 400, height = 400 },
-		{ x = 0, y = 0 },
-		-- {x = 100, y = 0, width = 100, height = 100},
-		-- {x = 100, y = 100, width = 200, height = 100},
-		-- {x = 100, y = 0, width = 100, height = 100},
-		-- {x = 10, y = 10, width = 200, height = 200},
-		-- {x = 10, y = 10, width = 250, height = 200},
-	}
-	i = 1
-	-- local t_animate = throttle(0.03, animate)
-	awesome.connect_signal("debug", function()
-		if i > #wants then
-			i = 1
-		end
-		want = wants[i]
-		dump(want)
-		animation.target = want
-		pdump(animation.fire)
-		i = i + 1
-	end)
-end
 
 local callback = throttle.delayed(0.03, function(t)
 	-- t = t or awful.tag.selected()
@@ -981,3 +928,7 @@ end)
 
 require("lib.volume")
 pdump(require, "lib.form_widgets")
+pdump(require, "widgets.pill_container")
+if true then
+	pdump(require, "draft")
+end
