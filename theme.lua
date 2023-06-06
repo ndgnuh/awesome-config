@@ -1,12 +1,16 @@
 local beautiful = require("beautiful")
 local C = require("c_hybrid")
-local theme = {}
+local theme = {colors = C}
 
 theme.primary = C.color2
 theme.bg_normal = C.background
 theme.fg_normal = C.foreground
 theme.bg_focus = C.color8
 theme.fg_focus = C.color15
+
+-- custom widget
+theme.pill_padding = 10
+theme.pill_bg = theme.primary
 
 -- border
 theme.border_width = 2
