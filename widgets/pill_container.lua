@@ -8,24 +8,26 @@ local beautiful = require("beautiful")
 
 local pill = {mt = {}}
 
-pill.wrapper = wibox.widget{
-	widget = wibox.container.margin,
-	id = 'margin',
-	{
-		widget = wibox.container.background,
-		shape = shape.rounded_rect,
-		id = 'background',
+local function wrapper()
+	return wibox.widget{
+		widget = wibox.container.margin,
+		id = 'margin',
 		{
-			widget = wibox.container.margin,
-			left = 10,
-			right = 10,
+			widget = wibox.container.background,
+			shape = shape.rounded_rect,
+			id = 'background',
 			{
-				widget = wibox.layout.stack,
-				id = 'content'
+				widget = wibox.container.margin,
+				left = 10,
+				right = 10,
+				{
+					widget = wibox.layout.stack,
+					id = 'content'
+				}
 			}
 		}
 	}
-}
+end
 
 function pill:child(id)
 	return self.wrapper:get_children_by_id(id)[1]
@@ -48,12 +50,17 @@ function pill:set_children(children)
 	self:emit_signal("widget::layout_changed")
 end
 
+function pill:fit(context, width, height)
+    return base.fit_widget(self, context, self.wrapper, width, height)
+end
+
 function pill:layout(_, width, height)
 	return { base.place_widget_at(self.wrapper, 0, 0, width, height) }
 end
 
 local function new(widget, bg, padding)
 	local ret = base.make_widget(nil, nil,  {enable_properties=true})
+	ret.wrapper = wrapper()
 	gtable.crush(ret, pill, true)
 	return ret
 end
