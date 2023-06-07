@@ -20,13 +20,13 @@ theme.font_size = 11
 theme.font_size_px = theme.font_size * beautiful.xresources.get_dpi() / 72
 theme.font = "sans " .. theme.font_size
 theme.useless_gap = theme.font_size_px / 4
-theme.taglist_bg_focus = theme.primary
+theme.taglist_bg_focus = theme.bg_primary
 theme.taglist_bg_normal = theme.bg_normal
-theme.taglist_bg_occupied = theme.bg_normal
+theme.taglist_bg_occupied = theme.bg_focus
 theme.taglist_bg_empty = theme.bg_normal
-theme.taglist_fg_focus = C.color0
-theme.taglist_fg_occupied = C.foreground
-theme.taglist_fg_empty = C.color7
+theme.taglist_fg_focus = theme.fg_primary
+theme.taglist_fg_occupied = theme.fg_focus
+theme.taglist_fg_empty = theme.fg_normal
 
 -- wibar
 theme.wibar_height = math.ceil(theme.font_size_px * 2.5)
