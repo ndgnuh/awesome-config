@@ -55,10 +55,13 @@ else
 	tasklist = require("widgets.normal_tasklist")
 end
 
--- lol
--- tile_layout.name = "[]="
--- awful.layout.suit.floating.name = "><>"
--- max_layout.name = "[M]"
+-- Custom widgets
+local pill = require("widgets.pill_container")
+
+-- Layout name instead of icons
+tile_layout.name = "[]="
+awful.layout.suit.floating.name = "><>"
+max_layout.name = "[M]"
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -346,9 +349,9 @@ awful.screen.connect_for_each_screen(function(s)
 	-- set_wallpaper(s)
 
 	-- Each screen has its own tag table.
-	awful.tag({ "一", "二", "三", "し", "ご" }, s, awful.layout.layouts[1])
-	-- awful.tag({ "一", "二", "三", "し", "ご", "六", "七" }, s, awful.layout.layouts[1])
-	-- awful.tag({ 1, 2, 3, 4 }, s, awful.layout.layouts[1])
+	-- awful.tag({ "一", "二", "三", "し", "ご" }, s, awful.layout.layouts[1])
+	awful.tag({ "一", "二", "三", "し", "ご", "六", "七" }, s, awful.layout.layouts[1])
+	-- awful.tag({ 1, 2, 3, 4, 5, 6, 7, 8, 9 }, s, awful.layout.layouts[1])
 
 	-- Create a promptbox for each screen
 	s.mypromptbox = awful.widget.prompt()
@@ -356,8 +359,10 @@ awful.screen.connect_for_each_screen(function(s)
 	-- Create an imagebox widget which will contain an icon indicating which layout we're using.
 	-- We need one layoutbox per screen.
 	s.mylayoutbox = wibox.widget({
-		widget = wibox.container.background,
+		forced_width = beautiful.wibar_width,
+		widget = pill,
 		bg = beautiful.bg_focus,
+		margins = 4,
 		{
 			widget = wibox.container.place,
 			forced_height = bh,
@@ -400,7 +405,7 @@ awful.screen.connect_for_each_screen(function(s)
 	s.clock = wibox.widget({
 		widget = awful.widget.textclock,
 		font = "monospace",
-		format = "%H\n%M",
+		format = "<span color='" .. beautiful.fg_primary .. "'>%H\n%M</span>",
 	})
 	s.clock:connect_signal("button::press", function()
 		awful.spawn.with_shell(settings.calendar, false)
@@ -419,22 +424,38 @@ awful.screen.connect_for_each_screen(function(s)
 		nil,
 		{
 			layout = wibox.layout.fixed.vertical,
-			require("widgets.settings")(s),
-			require("widgets.volume_item"),
 			{
-				widget = wibox.container.place,
+				widget = pill,
+				bg = beautiful.bg_systray,
+				margins = 5,
+				padding = {top = 10, bottom = 10},
+
 				{
-					widget = wibox.container.rotate,
-					direction = "west",
+					widget = wibox.layout.fixed.vertical,
+					require("widgets.settings")(s),
+					require("widgets.volume_item"),
 					{
-						widget = wibox.widget.systray,
-						screen = s,
-						id = "systray",
+						widget = wibox.container.place,
+						{
+							widget = wibox.container.rotate,
+							direction = "west",
+							{
+								widget = wibox.widget.systray,
+								screen = s,
+								id = "systray",
+							},
+						},
 					},
-				},
+				}
 			},
-			wibox.container.place(sep),
-			wibox.container.place(s.clock),
+
+			{
+				widget = pill,
+				bg = beautiful.bg_primary,
+				margins = 5,
+				padding = {top = 10, bottom = 10},
+				wibox.container.place(s.clock),
+			}
 		},
 	})
 
@@ -928,7 +949,6 @@ end)
 
 require("lib.volume")
 pdump(require, "lib.form_widgets")
-pdump(require, "widgets.pill_container")
-if true then
+if false then
 	pdump(require, "draft")
 end

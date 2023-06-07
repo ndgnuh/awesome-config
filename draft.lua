@@ -3,17 +3,38 @@ local beautiful = require("beautiful")
 local pill = require("widgets.pill_container")
 local awful = require("awful")
 
-p = awful.popup {
-	x = 0,
-	y = 0,
+p = wibox {
+	x = 1920-200,
+	y = 1080-200,
+	width = 200,
+	height = 200,
 	ontop = true,
 	visible = true,
-	placement = awful.placement.top_left,
-	widget = {
-		widget = pill,
-		wibox.widget.textbox("HELLO WORLD")
+	bg = "#ffffff",
+	widget = wibox.widget{
+		widget = wibox.layout.fixed.vertical,
+		{
+			widget = pill,
+			spacing = 10,
+			bg = "#FF0000",
+			margins = 10,
+			{
+				widget = wibox.layout.fixed.horizontal,
+				{
+					widget = wibox.widget.textbox,
+					text = "abc"
+				},
+				{
+					widget = wibox.widget.textbox,
+					text = "Hello world 1"
+				}
+			}
+		},
+		{
+			margins = 10,
+			widget = pill,
+			bg = "#0000FF",
+			wibox.widget.textbox("Hello world 2")
+		}
 	}
 }
-
--- ic(p.widget)
-

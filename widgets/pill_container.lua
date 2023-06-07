@@ -18,11 +18,9 @@ local function wrapper()
 			id = 'background',
 			{
 				widget = wibox.container.margin,
-				left = 10,
-				right = 10,
+				id = 'padding',
 				{
-					widget = wibox.layout.fixed.horizontal,
-					spacing = 10,
+					widget = wibox.layout.stack,
 					id = 'content'
 				}
 			}
@@ -34,8 +32,26 @@ function pill:child(id)
 	return self.wrapper:get_children_by_id(id)[1]
 end
 
+function pill:set_radius(radius)
+	self:child('background').shape = function(cr, w, h)
+		shape.rounded_rect(cr, w, h, radius)
+	end
+	self:emit_signal("widget::redraw_needed")
+end
+
+function pill:set_padding(padding)
+	padding = padding or {}
+	local p = self:child('padding')
+	p.left = padding.left or p.left
+	p.right = padding.right or p.right
+	p.top = padding.top or p.top
+	p.bottom = padding.bottom or p.bottom
+	self:emit_signal("widget::redraw_needed")
+	self:emit_signal("widget::layout_changed")
+end
+
 function pill:set_margins(margins)
-	margins = margins or beautiful.pill_bg or 0
+	margins = margins or beautiful.pill_margins or 0
 	self:child('margin').margins = margins
 	self:emit_signal("widget::redraw_needed")
 end

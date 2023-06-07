@@ -2,6 +2,7 @@ local beautiful = require("beautiful")
 local wibox = require("wibox")
 local awful = require("awful")
 local gears = require("gears")
+local pill = require("widgets.pill_container")
 
 local tasklist_buttons = gears.table.join(
 awful.button({}, 1, function(c)
@@ -30,26 +31,28 @@ local function setup (s)
 		buttons = tasklist_buttons,
 		layout = {
 			layout = wibox.layout.fixed.horizontal,
+			spacing = 10
 		},
 		widget_template = {
 			id = "background_role",
-			forced_width = math.min(s.geometry.width / 4, 400),
-			widget = wibox.container.background,
+			forced_width = math.min(s.geometry.width / 5, 320),
+			widget = pill,
+			padding = {left = 10, right = 10},
+			margins = margin * 1.3,
 			{
-				widget = wibox.container.margin,
-				margins = margin,
+				forced_width = math.min(s.geometry.width / 5, 320),
+				widget = wibox.layout.fixed.horizontal,
+				spacing = margin * 2,
+				expand = "inside",
 				{
-					layout = wibox.layout.fixed.horizontal,
-					spacing = margin,
-					{
-						id = "icon",
-						widget = awful.widget.clienticon,
-					},
-					{
-						id = "text_role",
-						widget = wibox.widget.textbox,
-					},
+					id = "icon",
+					widget = awful.widget.clienticon,
 				},
+				{
+					id = "text_role",
+					widget = wibox.widget.textbox,
+				},
+				nil,
 			},
 			create_callback = function(self, c)
 				local icon = self:get_children_by_id("icon")[1]

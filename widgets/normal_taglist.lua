@@ -2,6 +2,7 @@ local beautiful = require("beautiful")
 local wibox = require("wibox")
 local awful = require("awful")
 local gears = require("gears")
+local pill = require("widgets.pill_container")
 
 local taglist = "normal_taglist"
 
@@ -39,20 +40,16 @@ local function setup(s, orient)
 			layout = wibox.layout.fixed[orient],
 		},
 		widget_template = {
-			widget = wibox.container.place,
-			forced_width = beautiful.wibar_height,
+			id = "background_role",
+			forced_width = beautiful.wibar_width,
+			forced_height = beautiful.wibar_width,
+			widget = pill,
+			margins = 4,
 			{
-				id = "background_role",
-				forced_width = beautiful.wibar_width,
-				forced_height = beautiful.wibar_width,
-				widget = wibox.container.background,
-				{
-					id = "text_role",
-					forced_width = beautiful.wibar_height - spacing,
-					widget = wibox.widget.textbox,
-					align = "center",
-					font = "monospace",
-				},
+				id = "text_role",
+				forced_width = beautiful.wibar_height - spacing,
+				widget = wibox.widget.textbox,
+				align = "center",
 			},
 		},
 	})
