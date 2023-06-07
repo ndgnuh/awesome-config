@@ -3,6 +3,7 @@ local beautiful = require("beautiful")
 local awful = require("awful")
 local wibox = require("wibox")
 local gears = require("gears")
+local pill = require("widgets.pill_container")
 
 local animation = gears.cache(function(ref)
 	local timed = rubato.timed({
@@ -73,16 +74,16 @@ local function setup(s, orient)
 			layout = wibox.layout.fixed[orient],
 		},
 		widget_template = {
-			widget = wibox.container.place,
-			forced_width = beautiful.wibar_height,
-			{
-				forced_width = beautiful.wibar_width,
-				forced_height = beautiful.wibar_width,
-				id = "text_role",
-				widget = wibox.widget.textbox,
-				align = "center",
-				font = "monospace",
-			},
+				widget = wibox.container.place,
+				forced_width = beautiful.wibar_height,
+				{
+					forced_width = beautiful.wibar_width,
+					forced_height = beautiful.wibar_width,
+					id = "text_role",
+					widget = wibox.widget.textbox,
+					align = "center",
+					font = "monospace",
+				},
 			create_callback = function(...)
 				create_callback(ref, ...)
 			end,
@@ -106,7 +107,8 @@ local function setup(s, orient)
 			forced_width = beautiful.wibar_width,
 			forced_height = beautiful.wibar_width,
 			bg = beautiful.taglist_bg_focus,
-			widget = wibox.container.background,
+			margins = 4,
+			widget = pill,
 			wibox.widget.textbox(""),
 		},
 	})

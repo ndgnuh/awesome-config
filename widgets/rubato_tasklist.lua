@@ -4,6 +4,7 @@ local wibox = require("wibox")
 local awful = require("awful")
 local gears = require("gears")
 local throttle = require("lib.throttle")
+local pill = require("widgets.pill_container")
 
 local tasklist_buttons = gears.table.join(
 	awful.button({}, 1, function(c)
@@ -74,7 +75,7 @@ local function setup(s)
 			{
 
 				widget = wibox.container.margin,
-				margins = margin,
+				margins = 10,
 				{
 					layout = wibox.layout.fixed.horizontal,
 					spacing = margin,
@@ -111,7 +112,8 @@ local function setup(s)
 			forced_height = beautiful.wibar_width,
 			point = { x = 0, y = 0 },
 			bg = beautiful.tasklist_bg_focus,
-			widget = wibox.container.background,
+			widget = pill,
+			margins = beautiful.font_size_px / 4 * 1.3,
 			wibox.widget.textbox(""),
 		},
 	})
