@@ -20,8 +20,6 @@ theme.font_size = 11
 theme.font_size_px = theme.font_size * beautiful.xresources.get_dpi() / 72
 theme.font = "sans " .. theme.font_size
 theme.useless_gap = theme.font_size_px / 4
-theme.menu_width = theme.font_size_px * 15
-theme.menu_height = theme.wibar_height
 theme.taglist_bg_focus = theme.primary
 theme.taglist_bg_normal = theme.bg_normal
 theme.taglist_bg_occupied = theme.bg_normal
@@ -38,6 +36,19 @@ theme.wibar_bg = C.background
 -- custom widget
 theme.pill_margins = theme.wibar_width * 0.05
 theme.pill_bg = theme.primary
+
+-- menu
+-- beautiful.menu_submenu_icon 	The icon used for sub-menus.
+-- beautiful.menu_font 	The menu text font.
+theme.menu_height = theme.wibar_height
+theme.menu_width = theme.font_size_px * 18
+theme.menu_border_color = theme.fg_primary
+theme.menu_border_width = theme.border_width
+theme.menu_fg_focus = theme.fg_primary
+theme.menu_bg_focus = theme.bg_primary
+theme.menu_fg_normal = theme.fg_normal
+theme.menu_bg_normal = theme.bg_normal
+-- theme.menu_submenu = ""
 
 theme.bg_systray = theme.bg_focus
 
