@@ -12,7 +12,7 @@ theme.fg_focus = C.color15
 
 -- border
 theme.border_width = 2
-theme.border_focus = theme.bg_focus
+theme.border_focus = theme.bg_primary
 theme.border_normal = theme.bg_normal
 
 theme.master_width_factor = 0.55 -- learn from dwm guys
