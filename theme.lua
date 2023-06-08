@@ -26,10 +26,12 @@ theme.taglist_bg_occupied = theme.bg_focus
 theme.taglist_bg_empty = theme.bg_normal
 theme.taglist_fg_focus = theme.fg_primary
 theme.taglist_fg_occupied = theme.fg_focus
-theme.taglist_fg_empty = theme.fg_normal
+theme.taglist_fg_empty = theme.bg_focus
+
+local em = beautiful.get_font_height(theme.font)
 
 -- wibar
-theme.wibar_height = math.ceil(theme.font_size_px * 2.5)
+theme.wibar_height = math.ceil(2 * em)
 theme.wibar_width = theme.wibar_height
 theme.wibar_bg = C.background
 
@@ -40,8 +42,8 @@ theme.pill_bg = theme.primary
 -- menu
 -- beautiful.menu_submenu_icon 	The icon used for sub-menus.
 -- beautiful.menu_font 	The menu text font.
-theme.menu_height = theme.wibar_height
-theme.menu_width = theme.font_size_px * 18
+theme.menu_height = 1.5 * em
+theme.menu_width = 12 * em
 theme.menu_border_color = theme.fg_primary
 theme.menu_border_width = theme.border_width
 theme.menu_fg_focus = theme.fg_primary
@@ -58,5 +60,8 @@ theme.tasklist_bg_normal = theme.bg_normal
 theme.tasklist_fg_focus = C.color0
 theme.tasklist_fg_normal = theme.fg_normal
 theme.tasklist_fg_minimize = C.color7
+
+theme.wallpaper = function(bg, fg, alt_fg, s)
+end
 
 return theme

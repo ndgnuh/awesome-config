@@ -388,23 +388,14 @@ awful.screen.connect_for_each_screen(function(s)
 	))
 	-- Create a taglist widget
 
-	-- Create the wibox
-	local clock = wibox.widget({
-		widget = awful.widget.textclock,
-		font = "monospace",
-		format = "%H\n%M",
-	})
-	clock:connect_signal("button::press", function()
-		awful.spawn.with_shell(settings.calendar, false)
-	end)
-
 	local function place(w)
 		return wibox.container.place(w)
 	end
 
 	s.clock = wibox.widget({
 		widget = awful.widget.textclock,
-		font = "monospace",
+		font = 'monospace',
+		-- font = "fonts/UbuntuMonoNerdFont-Bold.ttf",
 		format = "<span color='" .. beautiful.fg_primary .. "'>%H\n%M</span>",
 	})
 	s.clock:connect_signal("button::press", function()
