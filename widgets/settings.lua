@@ -51,8 +51,11 @@ widgets.panel.widget = widget {
 }
 
 widgets.icon = widget{
-    widget = widget.imagebox,
-    image = image("ics/settings.png")
+    widget = require("widgets.iconbox"),
+    {
+        widget = widget.imagebox,
+        image = image("ics/settings.png")
+    }
 }
 
 

@@ -7,6 +7,7 @@ local layout = require("wibox.layout")
 local awful = require("awful")
 local image = require("images")
 local capi = {awesome = awesome}
+local iconbox = require("widgets.iconbox")
 
 local function get_image_icon(status)
 
@@ -28,8 +29,8 @@ local function get_image_icon(status)
 end
 
 local icon_widget = widget{
-	widget = widget.imagebox,
-	image = image("ics/volume-3.png", "#fff")
+		widget = widget.imagebox,
+		image = image("ics/volume-3.png", "#fff")
 }
 
 local w = widget {
@@ -37,7 +38,10 @@ local w = widget {
 	spacing = 4,
 	-- container.place(label),
 	slider,
-	icon_widget
+	{
+		widget = iconbox,
+		icon_widget
+	}
 }
 
 capi.awesome.connect_signal("extra::volume", function(volume)

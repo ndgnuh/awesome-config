@@ -1,3 +1,4 @@
+local shape = require("gears.shape")
 local beautiful = require("beautiful")
 local C = require("c_hybrid")
 local theme = {colors = C}
@@ -63,5 +64,24 @@ theme.tasklist_fg_minimize = C.color7
 
 theme.wallpaper = function(bg, fg, alt_fg, s)
 end
+
+-- helpful stuffs
+theme.spacing = 0.25 * em
+
+
+-- slider
+theme.slider_bar_border_width = 0
+-- theme.slider_bar_border_color = nil
+theme.slider_handle_border_color = theme.bg_primary
+theme.slider_handle_color = theme.bg_primary
+-- theme.slider_handle_border_width
+theme.slider_handle_width = (1 - 0.1618) * em
+theme.slider_handle_shape = shape.circle
+theme.slider_bar_shape = shape.rounded_bar
+theme.slider_bar_height = 0.1618 * em
+-- theme.slider_bar_margins
+-- theme.slider_handle_margins
+theme.slider_bar_color = theme.fg_primary
+theme.slider_bar_active_color = theme.bg_primary
 
 return theme

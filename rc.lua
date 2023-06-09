@@ -423,10 +423,12 @@ awful.screen.connect_for_each_screen(function(s)
 
 				{
 					widget = wibox.layout.fixed.vertical,
+					spacing = beautiful.spacing,
 					require("widgets.settings")(s),
 					require("widgets.volume_item"),
 					{
 						widget = wibox.container.place,
+						forced_width = beautiful.em,
 						{
 							widget = wibox.container.rotate,
 							direction = "west",

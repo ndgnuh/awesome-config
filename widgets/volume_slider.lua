@@ -5,6 +5,7 @@ local layout = require("wibox.layout")
 local beautiful = require("beautiful")
 local shape = require("gears.shape")
 local color = require("gears.color")
+local slider = require("widgets.slider")
 local awful = require("awful")
 
 local capi = {
@@ -18,18 +19,18 @@ local delayed = throttle.delayed
 local throttle = throttle.throttle
 
 local the_slider = widget{
-    bar_shape= shape.rounded_rect,
-    bar_height= 3,
-    handle_color= beautiful.bg_focus,
-    handle_shape= shape.circle,
-    bar_active_color = beautiful.bg_focus,
-    bar_color = beautiful.fg_normal,
-    handle_border_color = beautiful.border_color,
-    handle_border_width = 1,
+    -- bar_shape= shape.rounded_rect,
+    -- bar_height= 3,
+    -- handle_color= beautiful.bg_focus,
+    -- handle_shape= shape.circle,
+    -- bar_active_color = beautiful.bg_focus,
+    -- bar_color = beautiful.fg_normal,
+    -- handle_border_color = beautiful.border_color,
+    -- handle_border_width = 1,
     value = 0,
     maximum = 150,
     minimum = 0,
-    widget = widget.slider,
+    widget = slider,
 }
 
 local slider = widget{
