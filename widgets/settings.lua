@@ -33,7 +33,7 @@ widgets.panel = awful.popup{
     },
     ontop = true,
     visible = false,
-    hide_on_right_click = true,
+    hide_on_right_click = false,
 }
 
 local inputs = {}

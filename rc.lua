@@ -21,18 +21,6 @@ require("awful.hotkeys_popup.keys")
 _G.rrequire = require("rrequire")
 _G.ic = require("icecream")
 
--- config
-local default_config = require("default_config")
-local ok, config = pcall(require, "config")
-if not ok then
-	config = {}
-end
-for k, v in pairs(default_config) do
-	if config[k] == nil then
-		config[k] = v
-	end
-end
-
 -- Load Debian menu entries
 local debian = require("debian.menu")
 local has_fdo, freedesktop = pcall(require, "freedesktop")
@@ -40,7 +28,7 @@ local max_layout = require("max_layout")
 -- require("monkey.layout")
 
 -- animation
-local throttle = require("lib.throttle")
+-- local throttle = require("lib.throttle")
 local has_rubato, rubato = pcall(require, "lib.rubato")
 local dualbar = require("widgets.dualbar")
 local tile_layout, taglist, tasklist = nil, nil, nil
@@ -100,9 +88,14 @@ end
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
-local cs = require("c_hybrid")
 local theme = require("theme")
 beautiful.init(theme)
+-- beautiful.fg_primary = "#FF-0001"
+-- beautiful.bg_primary = "#FF0000"
+-- beautiful.font_size_px = 13
+-- beautiful.wibar_height = 32
+-- beautiful.border_normal = "#000000"
+-- beautiful.border_focus = "#000000"
 
 -- This is used later as the default terminal and editor to run.
 terminal = "x-terminal-emulator"
@@ -505,7 +498,7 @@ awful.key({ modkey }, "Left", awful.tag.viewprev, { description = "view previous
 awful.key({ modkey }, "Right", awful.tag.viewnext, { description = "view next", group = "tag" }),
 awful.key({ modkey, "Shift" }, "Tab", awful.tag.history.restore, { description = "go back", group = "tag" }),
 
-awful.key(config.focus_next_key[1], config.focus_next_key[2], function()
+awful.key({modkey}, "j", function()
 	awful.client.focus.byidx(1)
 end, { description = "focus next by index", group = "client" }),
 awful.key({ modkey }, "k", function()
@@ -544,7 +537,7 @@ end, { description = "go back", group = "client" }),
 
 -- Standard program
 awful.key({ modkey }, "Return", function()
-	awful.spawn.with_shell(settings.terminal, false)
+	awful.spawn.with_shell(settings.terminal)
 end, { description = "open a terminal", group = "launcher" }),
 awful.key({ modkey, "Shift" }, "r", awesome.restart, { description = "reload awesome", group = "awesome" }),
 awful.key({ modkey, "Shift" }, "q", awesome.quit, { description = "quit awesome", group = "awesome" }),
@@ -901,47 +894,10 @@ client.connect_signal("property::floating", function(c)
 end)
 
 
-local callback = throttle.delayed(0.03, function(t)
-	-- t = t or awful.tag.selected()
-	-- if t.layout.name == "max" then
-	--	rect_focus.disable()
-	-- elseif t.layout.name == "tile" and #t:clients() < 2 then
-	--	rect_focus.disable()
-	-- else
-	--	rect_focus.enable()
-	-- end
-	rect_focus.disable()
-end)
-
-callback()
-screen.connect_signal("tag::history::update", function(s)
-	callback()
-end)
-tag.connect_signal("property::layout", callback)
-tag.connect_signal("tagged", callback)
-tag.connect_signal("untagged", callback)
--- require("widgets.rect_focus").enable()
-
--- dump(gears.string.split(package.cpath, ";"))
--- local ltl = require("widgets.lazy_task_list")
--- pdump(awful.popup, {
---	placement = awful.placement.bottom_right,
---	visible = true,
---	ontop = true,
---	bg = "#ff0",
---	widget = ltl({ screen = awful.screen.focused() }),
--- })
-
-awesome.connect_signal("startup", function(...)
-	local home = os.getenv("HOME")
-	local search_path = home .. "/Pictures/"
-	local bg = awful.util.geticonpath("background", {"png", "jpg", "jpeg"}, {search_path})
-	gears.wallpaper.maximized(bg)
-end)
 
 
-require("lib.volume")
-pdump(require, "lib.form_widgets")
+-- require("lib.volume")
+-- pdump(require, "lib.form_widgets")
 if false then
 	pdump(require, "draft")
 end

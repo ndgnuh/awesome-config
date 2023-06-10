@@ -8,6 +8,7 @@ local awful = require("awful")
 local image = require("images")
 local capi = {awesome = awesome}
 local iconbox = require("widgets.iconbox")
+local volume = require("lib.volume")
 
 local function get_image_icon(status)
 

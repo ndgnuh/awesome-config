@@ -18,9 +18,10 @@ theme.border_normal = theme.bg_normal
 
 theme.master_width_factor = 0.55 -- learn from dwm guys
 theme.font_size = 11
-theme.font_size_px = theme.font_size * beautiful.xresources.get_dpi() / 72
 theme.font = "sans " .. theme.font_size
-theme.useless_gap = theme.font_size_px / 4
+theme.font_height = beautiful.get_font_height(theme.font)
+local em = theme.font_height
+theme.useless_gap = 0.25 * em
 theme.taglist_bg_focus = theme.bg_primary
 theme.taglist_bg_normal = theme.bg_normal
 theme.taglist_bg_occupied = theme.bg_focus
@@ -29,16 +30,11 @@ theme.taglist_fg_focus = theme.fg_primary
 theme.taglist_fg_occupied = theme.fg_focus
 theme.taglist_fg_empty = theme.bg_focus
 
-local em = beautiful.get_font_height(theme.font)
 
 -- wibar
 theme.wibar_height = math.ceil(2 * em)
 theme.wibar_width = theme.wibar_height
 theme.wibar_bg = C.background
-
--- custom widget
-theme.pill_margins = theme.wibar_width * 0.05
-theme.pill_bg = theme.primary
 
 -- menu
 -- beautiful.menu_submenu_icon 	The icon used for sub-menus.

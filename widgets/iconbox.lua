@@ -10,7 +10,7 @@ local gtable = require("gears.table")
 local iconbox = {mt = {}}
 
 function iconbox:set_children(children)
-	local fs = beautiful.get_font_height(beautiful.font)
+	local fs = beautiful.em
 	for _, child in ipairs(children) do
 		child.forced_width = fs
 		child.forced_height = fs
@@ -20,7 +20,7 @@ end
 
 function iconbox.mt.__call(image)
 	local ret = wibox.container.place()
-	gtable.crush(ret, iconbox, true)
+	-- gtable.crush(ret, iconbox, true)
 	return ret
 end
 

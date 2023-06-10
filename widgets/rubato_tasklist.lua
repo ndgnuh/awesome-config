@@ -55,7 +55,7 @@ end
 
 local function setup(s)
 	local max_width = 300
-	local margin = beautiful.font_size_px / 4
+	local margin = beautiful.font_height / 4
 	local ref = { max_width = max_width, orient = "horizontal" }
 	ref.tasklist = awful.widget.tasklist({
 		screen = s,
@@ -78,7 +78,7 @@ local function setup(s)
 				margins = 10,
 				{
 					layout = wibox.layout.fixed.horizontal,
-					spacing = margin,
+					spacing = beautiful.spacing,
 					{
 						id = "icon",
 						widget = awful.widget.clienticon,
@@ -113,7 +113,7 @@ local function setup(s)
 			point = { x = 0, y = 0 },
 			bg = beautiful.tasklist_bg_focus,
 			widget = pill,
-			margins = beautiful.font_size_px / 4 * 1.3,
+			margins = beautiful.font_height / 4 * 1.3,
 			wibox.widget.textbox(""),
 		},
 	})
