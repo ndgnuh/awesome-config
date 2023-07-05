@@ -1,10 +1,13 @@
 local shape = require("gears.shape")
 local beautiful = require("beautiful")
-local C = require("c_hybrid")
+-- local C = require("c_hybrid")
+-- local C = require("c_muezica_mono")
+local C = require("c_grandshell")
+local C = require("c_hybrid2")
 local theme = {colors = C}
 
 theme.primary = C.color2
-theme.bg_primary = C.color2
+theme.bg_primary = theme.primary
 theme.fg_primary = C.color0
 theme.bg_normal = C.background
 theme.fg_normal = C.foreground
@@ -37,8 +40,8 @@ theme.wibar_width = theme.wibar_height
 theme.wibar_bg = C.background
 
 -- menu
--- beautiful.menu_submenu_icon 	The icon used for sub-menus.
--- beautiful.menu_font 	The menu text font.
+-- beautiful.menu_submenu_icon	The icon used for sub-menus.
+-- beautiful.menu_font	The menu text font.
 theme.menu_height = 1.5 * em
 theme.menu_width = 12 * em
 theme.menu_border_color = theme.fg_primary
