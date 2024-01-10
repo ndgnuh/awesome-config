@@ -1,0 +1,11 @@
+{
+	"$schema": "https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json",
+	"workspace.library": [
+		"/usr/share/awesome/lib/"
+	],
+	"globals": [
+		"awesome",
+		"client",
+		"root"
+	]
+}
