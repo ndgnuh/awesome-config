@@ -7,6 +7,7 @@
 -- actions as possible.
 local awful = require("awful")
 local gears = require("gears")
+local beautiful = require("beautiful")
 local capi = { client = client, screen = screen } -- luacheck: ignore
 
 local m = {
@@ -35,7 +36,7 @@ end
 m.move_to_previous_tag = function()
     local client = capi.client.focus
     if not client then return end
-    local i, n = tag_metrics()
+    local i, _ = tag_metrics()
     if i <= 1 then return end
     client:move_to_tag(client.screen.tags[i - 1])
 end
@@ -105,6 +106,36 @@ m.setup = function()
         else
             awful.titlebar.hide(client)
         end
+    end)
+
+    -- Enable border for floating clients
+    capi.client.connect_signal("property::floating", function(c)
+        if c.floating then
+            c.border_width = beautiful.border_width
+        end
+    end)
+
+    -- No one maximize unless I said so
+    local no_maximize = function(c)
+        if c.maximized then
+            c.maximized = false
+            c.maximized_horizontal = false
+            c.maximized_vertical = false
+        end
+    end
+    capi.client.connect_signal("tagged", no_maximize)
+
+    -- Enable sloppy focus, focus follows mouse movement
+    capi.client.connect_signal("mouse::enter", function(c)
+        c:emit_signal("request::activate", "mouse_enter", { raise = false })
+    end)
+
+    -- Focus/defocus border color, why isn't awesome do this itself?
+    capi.client.connect_signal("focus", function(c)
+        c.border_color = beautiful.border_focus
+    end)
+    capi.client.connect_signal("unfocus", function(c)
+        c.border_color = beautiful.border_normal
     end)
 end
 

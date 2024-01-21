@@ -3,6 +3,8 @@
 local gfs = require("gears.filesystem")
 local gcolor = require("gears.color")
 local m = {
+    icecream = require("lib.icecream"),
+    rrequire = require("lib.rrequire"),
     widgets = require("lib.widgets"),
     workflow = require("lib.workflow"),
 }
