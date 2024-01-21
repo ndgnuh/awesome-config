@@ -16,6 +16,7 @@ local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup")
 local capi = {
     root = root,       -- luacheck: ignore
+    mouse = mouse,     -- luacheck: ignore
     awesome = awesome, -- luacheck: ignore
     client = client,   -- luacheck: ignore
     screen = screen,   -- luacheck: ignore
@@ -37,6 +38,9 @@ workflow.setup()
 _G.ic = lib.icecream
 _G.resource = lib.resource
 _G.icon = lib.icon
+beautiful.font = lib.resource("Montserrat")
+ic(beautiful.get_font("monospace"):get_family())
+ic(beautiful.get_font("monospace"):to_filename())
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -55,6 +59,7 @@ local settings = require("lib.settings")
 settings.load()
 settings.default("terminal", "xterm")
 settings.default("modkey", "Mod4")
+settings.default("launcher", "dmenu_run")
 
 -- Handle runtime errors after startup
 do
@@ -462,6 +467,36 @@ for i = 1, 9 do
     )
 end
 
+--- Implement the mod-drag set floating behaviour with mis-click tolerant
+-- Sometime holding the mod key with misclick will unintendedly float the client
+-- This is very annoying because it can happens multiple times and all the clients
+-- will float. We solve this by setting a drag timer, which floats the client only
+-- after some times.
+-- The time line goes something like this:
+-- Mod click first register ---- some time passed |--- the mouse still drags, float the windows
+--                                                |--- the mouse does not drag, do nothing
+local moddrag = { active = false, dragging = true }
+
+moddrag.trigger = function(c)
+    ic(mouse.is_left_mouse_button_pressed)
+    if not moddrag.active then
+        gears.timer.start_new(0.2, function()
+            if capi.mouse.is_left_mouse_button_pressed then
+                c.floating = true
+            end
+            moddrag.active = false
+            return false -- call once
+        end)
+        moddrag.active = true
+    end
+end
+
+
+
+local moddrag_start = function()
+end
+
+
 local clientbuttons = gears.table.join(
     awful.button({}, 1, function(c)
         c:emit_signal("request::activate", "mouse_click", { raise = true })
@@ -471,7 +506,7 @@ local clientbuttons = gears.table.join(
     end),
     awful.button({ settings.modkey }, 1, function(c)
         c:emit_signal("request::activate", "mouse_click", { raise = true })
-        c.floating = true
+        moddrag.trigger(c)
         awful.mouse.client.move(c)
     end),
     awful.button({ settings.modkey }, 3, function(c)
@@ -640,10 +675,3 @@ capi.client.connect_signal("request::titlebars", function(c)
         layout = wibox.layout.align.horizontal
     }
 end)
-
-
--- require("lib.volume")
--- pdump(require, "lib.form_widgets")
--- if false then
---     pdump(require, "draft2")
--- end

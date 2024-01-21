@@ -10,9 +10,13 @@ local wibox = require("wibox")
 local menu_item = function(widget_config)
     local buttons = widget_config.buttons
     local margins = widget_config.margins or 4
+    local tooltip = widget_config.tooltip
+    widget_config.tooltip = nil
     widget_config.buttons = nil
     widget_config.margins = nil
-    return {
+
+
+    local widget = {
         widget = lib.widgets.background,
         hover_bg = '#3498DB',
         buttons = buttons,
@@ -22,6 +26,19 @@ local menu_item = function(widget_config)
             widget_config,
         }
     }
+
+    if tooltip then
+        widget = wibox.widget(widget)
+        local tooltip_wb = awful.tooltip({
+            margins = beautiful.xresources.apply_dpi(4),
+            mode = "outside",
+            text = tooltip,
+            preferred_positions = { "top" },
+        })
+        tooltip_wb:add_to_object(widget)
+    end
+
+    return widget
 end
 
 --- Setup a wibar on a screen
@@ -46,11 +63,13 @@ local setup = function(args)
             margins = 4,
         },
         menu_item {
+            tooltip = "Open file manager",
             widget = wibox.widget.imagebox,
             image = lib.icon("assets/icons/folder.svg", "#F1C40F"),
             buttons = awful.button({}, 1, function() awful.spawn.raise_or_spawn("Thunar") end),
         },
         menu_item {
+            tooltip = "Open web browser",
             widget = wibox.widget.imagebox,
             image = lib.icon("assets/icons/globe.svg", "#3498DB"),
             buttons = awful.button({}, 1, function() awful.spawn.raise_or_spawn("firefox") end),

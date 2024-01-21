@@ -27,7 +27,7 @@ end
 
 -- [[ base settings ]]
 -- use color from https://materialui.co/flatuicolors
-theme.font = resource("assets/fonts/montserrat/Montserrat-Bold.ttf") .. " 11"
+theme.font = "sans 11"
 theme.bg_normal = "#2C3E50"
 theme.bg_focus = "#3498DB"
 theme.fg_normal = "#BDC3C7"
@@ -73,5 +73,26 @@ theme.notification_border_color  = "#8E44AD"
 theme.notification_shape = gshape.rounded_rect
 theme.notification_margin = font_height * 4.75
 theme.notification_max_width = font_height * 32
+
+-- [[ tooltip ]]
+theme.tooltip_bg = theme.bg_normal
+theme.tooltip_fg = theme.bg_focus
+theme.tooltip_border_width = apply_dpi(1)
+theme.tooltip_border_color = theme.tooltip_fg
+-- theme.tooltip_font = "sanssdad 12"
+-- theme.tooltip_shape = function(cr, w, h)
+--     cr:move_to(0, 0)
+--     cr:line_to(w, 0)
+--     cr:line_to(w, h * .8)
+--     cr:line_to(w, h * .8)
+--     cr:line_to(0, h * .8)
+--     cr:line_to(0, 0)
+--     cr:close_path()
+-- end
+-- theme.tooltip_shape = function(cr, w, h)
+--     local shape = gshape.transform(gshape.infobubble)
+--     shape = shape:translate(w/2, h/2):rotate(90):translate(-w/2, -h/2)
+--     shape(cr, w, h)
+-- end
 
 return theme

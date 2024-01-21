@@ -16,6 +16,12 @@ local background_name = "background" -- avoid background_role
 --- @param index table: the client index
 --- @param clients table: the list of clients
 local create_callback = function(taskitem, client, index, clients) -- luacheck: no unused args
+    -- Show full client name with tooltip
+    awful.tooltip {
+        markup = client.name,
+        mode = "outside",
+    }:add_to_object(taskitem)
+
     -- Setup high resolution icon
     local icon = taskitem:get_children_by_id(icon_name)[1]
     icon:set_client(client)
