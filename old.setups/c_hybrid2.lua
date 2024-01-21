@@ -6,8 +6,8 @@ color.background = "#000000"
 color.cursorColor = "#ffffff"
 
 -- black
-color.color0 = "#393939"
-color.color8 = "#474747"
+color.color0 = "#282a2e"
+color.color8 = "#373b41"
 
 -- red
 color.color1 = "#da4939"

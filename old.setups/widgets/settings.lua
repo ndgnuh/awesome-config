@@ -51,10 +51,15 @@ widgets.panel.widget = widget {
 }
 
 widgets.icon = widget{
-    widget = require("widgets.iconbox"),
+    widget = require("lib.widgets.background"),
+    hover_bg = "#616161",
     {
-        widget = widget.imagebox,
-        image = image("ics/settings.png")
+        widget = container.margin,
+        margins = 8,
+        {
+            widget = widget.imagebox,
+            image = resource("assets/icons/icons8-settings-96.png")
+        }
     }
 }
 

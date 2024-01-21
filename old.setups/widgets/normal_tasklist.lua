@@ -24,23 +24,21 @@ end)
 )
 
 local function setup (s)
-	local margin = beautiful.font_size_px / 4
+	local margin = 8
 	local mytasklist = awful.widget.tasklist({
 		screen = s,
 		filter = awful.widget.tasklist.filter.currenttags,
 		buttons = tasklist_buttons,
 		layout = {
-			layout = wibox.layout.fixed.horizontal,
+			layout = wibox.layout.flex.horizontal,
 			spacing = 10
 		},
 		widget_template = {
 			id = "background_role",
-			forced_width = math.min(s.geometry.width / 5, 320),
 			widget = pill,
 			padding = {left = 10, right = 10},
 			margins = margin * 1.3,
 			{
-				forced_width = math.min(s.geometry.width / 5, 320),
 				widget = wibox.layout.fixed.horizontal,
 				spacing = margin * 2,
 				expand = "inside",
