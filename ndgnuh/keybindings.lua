@@ -1,6 +1,6 @@
 local awful = require("awful")
 local gears = require("gears")
-local libclient = require("lib.client")
+local libclient = require("lib.client_api")
 local naughty = require("naughty")
 local ibus = require("lib.ibus")
 local ic = require("lib.icecream")

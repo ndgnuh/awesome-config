@@ -4,7 +4,7 @@ local awful = require("awful")
 local naughty = require("naughty")
 local beautiful = require("beautiful")
 
-local libclient = require("lib.client")
+local libclient = require("lib.client_api")
 local popup_maker = require("lib.popup_maker")
 local notifier = require("lib.notifier_widget")
 local overdrip = require("lib.overdrip")

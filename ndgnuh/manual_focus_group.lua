@@ -2,7 +2,7 @@ local gears = require("gears")
 local naughty = require("naughty")
 
 local ic = require("lib.icecream")
-local libclient = require("lib.client")
+local libclient = require("lib.client_api")
 
 local m = { previous_index = nil }
 

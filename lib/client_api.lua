@@ -1,7 +1,8 @@
 local awful = require("awful")
+local gears = require("gears")
 local ic = require("lib.icecream")
 
-local m = awful.client
+local m = {}
 local capi = {
 	awesome = awesome,
 	tag = tag,
@@ -19,6 +20,17 @@ m.normalize = function(c)
 	c.maximized = false
 	c.maximized_vertical = false
 	c.maximized_horizontal = false
+end
+
+---Normalize a client after toggling floating, for clients that ignore a plain `normalize`
+---@param c client The client to normalize
+m.force_normalize = function(c)
+	gears.timer.delayed_call(function()
+		c.floating = true
+		gears.timer.delayed_call(function()
+			m.normalize(c)
+		end)
+	end)
 end
 
 ---Move a client to a volatile tag
@@ -97,7 +109,7 @@ end
 ---Get all clients from all screens and tags
 ---@param filter function Predicate function that receives a `client` and returns `true` or `false` (optional).
 ---@return client[] clients List of all clients
-function awful.client.all_clients(filter)
+function m.all_clients(filter)
 	filter = filter or function()
 		return true
 	end
@@ -118,10 +130,10 @@ end
 --- Implement globaly focus history
 local client_stack = {}
 
-client.connect_signal("focus", function(c)
+capi.client.connect_signal("focus", function(c)
 	table.push_item_to_last(client_stack, c)
 end)
-client.connect_signal("unmanage", function(c)
+capi.client.connect_signal("unmanage", function(c)
 	local i = table.index_of(client_stack, c)
 	if i then
 		table.remove_at(client_stack, i)

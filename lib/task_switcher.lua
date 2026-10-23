@@ -78,8 +78,8 @@ function TaskSwitcher:start()
 					return
 				end
 
-				local libclient = require("libs.client")
-				libclient.global_focus(c)
+				local libclient = require("lib.client_api")
+				libclient.focus_globally(c)
 			end)
 		end,
 		start_callback = function()
