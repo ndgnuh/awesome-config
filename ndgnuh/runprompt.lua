@@ -10,18 +10,7 @@ local ic = require("lib.icecream")
 local resource = require("lib.resource")
 local find_executable = require("lib.find_executable")
 
-local ok, ez = pcall(require, "ez")
 local selected_color = resource.rgbf(0.3, 0.3, 0.32)
-
-if not ok then
-	naughty.notification({
-		urgency = "critical",
-		title = "Error loading libez",
-		message = "ez.so is not found, please compile it first:\n" .. tostring(ez),
-	})
-end
-
-assert(ok)
 
 -- arg is just a name
 local ctx = survival("ndgnuh-prompt")
@@ -183,7 +172,7 @@ m.reload_path_commands = function()
 end
 
 m.load_path_commands = function(clean)
-	m.commands = ez.list_executables()
+	m.commands = find_executable()
 end
 
 m.is_visible = function()
@@ -288,7 +277,7 @@ m.show = function(args)
 
 	-- run the prompts
 	local prompt = m.widgets.prompt_textbox
-	m.commands = ez.list_executables()
+	m.commands = find_executable()
 	m.set_keyword("")
 	awful.prompt.run({
 		prompt = "<b>Run: </b>",

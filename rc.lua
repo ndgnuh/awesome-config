@@ -54,6 +54,10 @@ naughty.connect_signal("request::display_error", function(message, startup)
 	})
 end)
 
+naughty.connect_signal("request::display", function(n)
+	naughty.layout.box({ notification = n })
+end)
+
 -- Show notification if we fell back due to X11-specific patterns in user config
 if awesome.x11_fallback_info then
 	gears.timer.delayed_call(function()
@@ -574,10 +578,6 @@ ruled.notification.connect_signal("request::rules", function()
 	--     rule       = { app_name = "Slack", title = "@you" },
 	--     properties = { urgency = "critical" },
 	-- }
-end)
-
-naughty.connect_signal("request::display", function(n)
-	naughty.layout.box({ notification = n })
 end)
 
 -- Sloppy focus (focus follows mouse)
