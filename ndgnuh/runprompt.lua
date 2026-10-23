@@ -8,6 +8,7 @@ local survival = require("libs.survival")
 local lgi = require("lgi")
 local ic = require("lib.icecream")
 local resource = require("lib.resource")
+local find_executable = require("lib.find_executable")
 
 local ok, ez = pcall(require, "ez")
 local selected_color = resource.rgbf(0.3, 0.3, 0.32)
@@ -264,7 +265,7 @@ m.show = function(args)
 	local is_debug = args and args.debug or false
 	m.wibox.ontop = true
 	m.wibox.visible = true
-	m.matched_commands = ez.find_executable()
+	m.matched_commands = find_executable()
 	m.rerender()
 	m.rerender_selection()
 
@@ -304,7 +305,7 @@ m.show = function(args)
 			awful.spawn.with_shell(command)
 		end,
 		changed_callback = function(input)
-			m.matched_commands = ez.find_executable(input)
+			m.matched_commands = find_executable(input)
 			m.rerender()
 		end,
 	})
