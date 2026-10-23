@@ -1,0 +1,11 @@
+{
+  "$schema": "https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json",
+  "runtime.version": "Lua 5.1",
+  "workspace.library": ["/usr/local/share/somewm/lua/"],
+  "hint": {
+    "enable": true
+  },
+  "diagnostics": {
+    "globals": ["awesome", "client", "root", "screen", "tag", "mouse"]
+  }
+}
