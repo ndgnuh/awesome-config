@@ -94,7 +94,7 @@ function m.stop(s)
 		if (not c) or (c and c == client.focus) then
 			return
 		else
-			libclient.focus_globally(c)
+			libclient.jumpto(c)
 		end
 	end)
 end

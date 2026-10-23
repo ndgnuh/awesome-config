@@ -65,7 +65,7 @@ function m.focus(c)
 
 	if next_client then
 		gears.timer.delayed_call(function()
-			libclient.focus_globally(next_client)
+			libclient.jumpto(next_client)
 		end)
 	end
 end

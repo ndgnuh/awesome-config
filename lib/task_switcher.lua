@@ -79,7 +79,7 @@ function TaskSwitcher:start()
 				end
 
 				local libclient = require("lib.client_api")
-				libclient.focus_globally(c)
+				libclient.jumpto(c)
 			end)
 		end,
 		start_callback = function()

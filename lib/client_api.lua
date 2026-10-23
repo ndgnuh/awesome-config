@@ -52,7 +52,7 @@ end
 
 ---Focus a client across tags and screens
 ---@param c client The client
-m.focus_globally = function(c)
+m.jumpto = function(c)
 	if c and c.valid then
 		--- Bizzare, some client does not have "screen" attribute
 		if c.screen then
@@ -152,7 +152,7 @@ function m.global_focus_previous()
 	-- get next to last previously focsued client
 	local c = client_stack[n - 1]
 	if c and c.valid then
-		m.focus_globally(c)
+		m.jumpto(c)
 	end
 end
 
