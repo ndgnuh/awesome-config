@@ -265,6 +265,14 @@ local keys = {
 	-- Switch client
 	awful.key({
 		modifiers = { modkey },
+		key = "t",
+		on_press = function()
+			require("lib.split").show()
+		end,
+		description = "Select a client and split screen",
+	}),
+	awful.key({
+		modifiers = { modkey },
 		key = "j",
 		on_press = function()
 			local ts = require("ndgnuh.task_switcher_somewm")
