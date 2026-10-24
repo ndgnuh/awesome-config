@@ -79,7 +79,8 @@ function m.confirm(s)
 		return
 	end
 	is_spliting_provider.state = true
-	c:move_to_tag(s.selected_tag)
+	local t = s.selected_tag
+	c:move_to_tag(t)
 end
 
 m.widget = widget_registry(function(s)
