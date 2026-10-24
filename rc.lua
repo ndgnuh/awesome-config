@@ -242,6 +242,7 @@ mymainmenu = awful.menu({
 			end,
 		},
 		require("lib.do_not_disturb").menuitem,
+		require("lib.reload_theme").menuitem,
 		{ "open terminal", terminal },
 	},
 })
