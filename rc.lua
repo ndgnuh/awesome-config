@@ -43,6 +43,7 @@ do
 	local config_dir = gears.filesystem.get_configuration_dir()
 	package.cpath = package.cpath .. ";" .. config_dir .. "?.so"
 end
+require("monkey_patch.require").patch()
 require("monkey_patch")
 
 -- Error handling
@@ -243,6 +244,7 @@ mymainmenu = awful.menu({
 		},
 		require("lib.do_not_disturb").menuitem,
 		require("lib.reload_theme").menuitem,
+		require("lib.split").menuitem,
 		{ "open terminal", terminal },
 	},
 })
@@ -262,8 +264,8 @@ menubar.utils.terminal = terminal
 -- to the layouts list so multiple chunks (defaults + user additions) can compose.
 tag.connect_signal("request::default_layouts", function()
 	awful.layout.append_default_layouts({
-		awful.layout.suit.max,
 		awful.layout.suit.tile,
+		awful.layout.suit.max,
 		awful.layout.suit.tile.left,
 		awful.layout.suit.tile.bottom,
 		awful.layout.suit.tile.top,
@@ -501,15 +503,15 @@ client.connect_signal("request::default_keybindings", function()
 			description = "move to screen",
 			group = "client",
 		}),
-		awful.key({
-			modifiers = { modkey },
-			key = "t",
-			on_press = function(c)
-				c.ontop = not c.ontop
-			end,
-			description = "toggle keep on top",
-			group = "client",
-		}),
+		-- awful.key({
+		-- 	modifiers = { modkey },
+		-- 	key = "t",
+		-- 	on_press = function(c)
+		-- 		c.ontop = not c.ontop
+		-- 	end,
+		-- 	description = "toggle keep on top",
+		-- 	group = "client",
+		-- }),
 		awful.key({
 			modifiers = { modkey },
 			key = ",",
@@ -583,6 +585,11 @@ ruled.notification.connect_signal("request::rules", function()
 	--     rule       = { app_name = "Slack", title = "@you" },
 	--     properties = { urgency = "critical" },
 	-- }
+end)
+
+---@param n naughty.notification The notification to display
+naughty.connect_signal("request::display", function(n)
+	naughty.layout.box({ notification = n })
 end)
 
 -- Sloppy focus (focus follows mouse)
