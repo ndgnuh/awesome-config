@@ -1,7 +1,6 @@
 ---Signal helpers that return a disconnect function instead of
 ---forcing the caller to keep a reference to the handler.
-local cm = ...
-local m = require(cm .. "constants")
+local m = require("lib.signals.constants")
 
 ---Wrap a disconnect call so it only runs once
 ---@param disconnect function

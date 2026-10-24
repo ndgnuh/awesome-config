@@ -3,15 +3,16 @@ local overdrip = require("lib.overdrip")
 local allclients = require("lib.allclients")
 
 local popup_registry = require("lib.popup_registry")
+local widget_registry = require("lib.widget_registry")
 local signals = require("lib.signals")
 
 local get_popup = popup_registry()
 
 local is_spliting_provider = overdrip.provider(false)
-local selected_index_provider = overdrip.provider(0)
 local gears = require("gears")
 local wibox = require("wibox")
 local awful = require("awful")
+local InkWell = require("lib.widgets.InkWell")
 
 local m = {}
 
@@ -28,6 +29,12 @@ local candidates_provider = overdrip.provider(function(ref)
 	return ret
 end)
 
+-- selected index, refresh when the list changes
+local selected_index_provider = overdrip.provider(function(ref)
+	ref.watch(candidates_provider)
+	return 0 -- refresh when the list change
+end)
+
 local selected_client_provider = overdrip.provider(function(ref)
 	local candidates = ref.watch(candidates_provider)
 	local i = ref.watch(selected_index_provider)
@@ -40,7 +47,8 @@ end)
 
 local function make_button(text, on_click)
 	return wibox.widget({
-		widget = wibox.container.background,
+		widget = InkWell,
+		forced_height = 48,
 		buttons = { awful.button({}, 1, on_click) },
 		{
 			widget = wibox.container.margin,
@@ -48,6 +56,7 @@ local function make_button(text, on_click)
 			{
 				widget = wibox.widget.textbox,
 				align = "center",
+				valign = "center",
 				text = text,
 			},
 		},
@@ -73,9 +82,11 @@ function m.confirm(s)
 	c:move_to_tag(s.selected_tag)
 end
 
-function m.widget(s)
+m.widget = widget_registry(function(s)
 	return overdrip.consumer_widget(function(ref)
 		local candidates = ref.watch(candidates_provider)
+		local c = ref.watch(selected_client_provider)
+
 		local close_button = make_button("Close", function()
 			m.hide(s)
 		end)
@@ -92,7 +103,6 @@ function m.widget(s)
 			})
 		end
 
-		local c = ref.watch(selected_client_provider)
 		local preview
 		if c and c.content then
 			preview = wibox.widget.imagebox(gears.surface(c.content))
@@ -103,9 +113,11 @@ function m.widget(s)
 		return wibox.widget({
 			layout = wibox.layout.fixed.vertical,
 			{
-				widget = wibox.container.constraint,
-				width = 640,
-				height = 360,
+				widget = wibox.container.place,
+				halign = "center",
+				valign = "center",
+				forced_width = 640,
+				forced_height = 360,
 				preview,
 			},
 			{
@@ -126,7 +138,7 @@ function m.widget(s)
 			},
 		})
 	end)
-end
+end)
 
 function m.show(s)
 	s = s or awful.screen.focused()
@@ -134,9 +146,15 @@ function m.show(s)
 	local popup = get_popup(s)
 	popup.widget = m.widget(s)
 	popup.visible = true
+	popup.ontop = true
 end
 
 m.is_spliting_provider = is_spliting_provider
 m.selected_index_provider = selected_index_provider
+
+m.menuitem = {
+	"Split screen",
+	m.show,
+}
 
 return m
