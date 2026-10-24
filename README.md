@@ -29,7 +29,7 @@ Input, idle and locking are handled by the compositor instead.
   destroyed when it empties. `Mod4+Shift+v` does this, and moving a window to
   another screen with `Mod4+o` does it too.
 - **Custom run prompt** (`Mod4+r`): a paged launcher. Its history is saved
-  with `libs/survival.lua`, and it needs the `ez` C module (see below).
+  with `lib/survival.lua`, and it needs the `ez` C module (see below).
 - **IBus integration**: switch input method with `Mod4+e` (English),
   `Mod4+v` (Bamboo, for Vietnamese) or `Mod4+a` (Anthy, for Japanese). The
   wibar shows the active engine. It is read through `ibus engine` as a
@@ -62,7 +62,6 @@ menu (right-click the desktop, then somewm, then hotkeys). In this config
 | `ndgnuh/widgets/` | Personal widgets, such as `BatteryIcon` |
 | `lib/` | Reusable helpers that are not tied to my setup (see below) |
 | `lib/widgets/` | Generic widgets: `ClientIcon`, `ClientTitle`, `InkWell` |
-| `libs/` | Older helpers: `survival` (serialize Lua values to the cache dir) and client utilities |
 | `monkey_patch/` | Extensions patched directly into `table`, `awesome` and `awful.client` |
 | `rules/` | Data tables used by the client rules, such as floating/sticky classes |
 | `ez.c` | Small Lua C module (`ls`, `map`, `range`, `apply`, `ic`, `nameof`) |
@@ -81,6 +80,7 @@ menu (right-click the desktop, then somewm, then hotkeys). In this config
   a widget model.
 - `resource.lua`: resolves paths inside the config dir, recolors icons, and
   provides color helpers (`hsl`, `rgbf`).
+- `survival.lua`: serializes Lua values to files in the cache dir.
 - `client.lua`: client utilities (`normalize`, `move_to_volatile`,
   `global_focus_previous`, `inspect`, …).
 

@@ -54,10 +54,6 @@ naughty.connect_signal("request::display_error", function(message, startup)
 	})
 end)
 
-naughty.connect_signal("request::display", function(n)
-	naughty.layout.box({ notification = n })
-end)
-
 -- Show notification if we fell back due to X11-specific patterns in user config
 if awesome.x11_fallback_info then
 	gears.timer.delayed_call(function()
@@ -125,6 +121,8 @@ end
 
 -- Lockscreen (must be after beautiful.init)
 require("lockscreen").init()
+require("somewm.inspector")
+local somewm = require("somewm")
 
 -- Defaults
 -- Change these to your preferred terminal and editor, or use xdg-terminal and xdg-editor if available.
@@ -235,6 +233,12 @@ mymainmenu = awful.menu({
 			"Change wallpaper",
 			function()
 				sp_wallpaper:pick_wallpaper()
+			end,
+		},
+		{
+			"Toggle inspector (SomeWM 2.1)",
+			function()
+				somewm.inspector.toggle()
 			end,
 		},
 		require("lib.do_not_disturb").menuitem,
