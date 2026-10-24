@@ -8,7 +8,7 @@ local libclient = require("lib.client_api")
 local popup_maker = require("lib.popup_maker")
 local notifier = require("lib.notifier_widget")
 local overdrip = require("lib.overdrip")
-local allclients = require("lib.allclients")
+local allclients = require("providers.clients")
 
 local m = {}
 local ic = require("lib.icecream")
@@ -19,7 +19,7 @@ local enabled_provider = overdrip.provider(false)
 local selection_index_provider = overdrip.provider(1)
 local selected_client_provider = overdrip.provider(function(ref)
 	local i = ref.watch(selection_index_provider)
-	local clients = ref.watch(allclients.provider)
+	local clients = ref.watch(allclients.clients_provider)
 	return clients[i]
 end)
 
@@ -46,7 +46,7 @@ local counter_widget = overdrip.consumer_widget(function(ref)
 	-- end
 
 	local i = ref.watch(selection_index_provider)
-	local clients = ref.watch(allclients.provider)
+	local clients = ref.watch(allclients.clients_provider)
 	local n = #clients
 	return wibox.widget.textbox("[" .. tostring(i) .. "/" .. tostring(n) .. "]")
 end)

@@ -36,13 +36,15 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 local sp_wallpaper = require("lib.secondary_wallpaper")
 
 local state = require("state")
-require("lib.allclients")
+require("providers.clients")
 
 --- Allow loading ".so" files from configuration direcetory
 do
 	local config_dir = gears.filesystem.get_configuration_dir()
 	package.cpath = package.cpath .. ";" .. config_dir .. "?.so"
 end
+
+ic = require("lib.icecream")
 require("monkey_patch.require").patch()
 require("monkey_patch")
 

@@ -1,6 +1,6 @@
 ---Providers for mosaic tiling
 local overdrip = require("lib.overdrip")
-local allclients = require("lib.allclients")
+local clients_providers = require("providers.clients")
 
 local popup_registry = require("lib.popup_registry")
 local widget_registry = require("lib.widget_registry")
@@ -18,11 +18,11 @@ local m = {}
 
 -- tiling clients other than the focused one
 local candidates_provider = overdrip.provider(function(ref)
-	local clients = ref.watch(allclients.provider)
-	local focused = ref.watch(allclients.focused_provider)
+	local clients = ref.watch(clients_providers.tiling_provider)
+	local focused = ref.watch(clients_providers.focused_provider)
 	local ret = {}
 	for _, c in ipairs(clients) do
-		if c.valid and c ~= focused and not c.floating then
+		if c ~= focused then
 			table.insert(ret, c)
 		end
 	end

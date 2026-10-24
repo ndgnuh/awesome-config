@@ -2,13 +2,13 @@ local wibox = require("wibox")
 local awful = require("awful")
 local beautiful = require("beautiful")
 
+local client_info = require.rel("client_info")
+
 local spawn_or_cycle = require("lib.spawn_or_cycle")
 -- local ibus = require("lib.ibus")
 -- local ibus = require("lib.ibus-spawn")
 local ic = require("lib.icecream")
 
-local ClientIcon = require("lib.widgets.ClientIcon")
-local ClientTitle = require("lib.widgets.ClientTitle")
 local BatteryIcon = require("ndgnuh.widgets.BatteryIcon")
 local IbusIcon = require("ndgnuh.ibus-spawn")
 
@@ -41,8 +41,8 @@ local wibar = function(s)
 				{
 					widget = wibox.layout.fixed.horizontal,
 					spacing = beautiful.gutter,
-					ClientIcon,
-					ClientTitle,
+					client_info.ClientIcon,
+					client_info.ClientTitle,
 				},
 				nil,
 				{ -- Right widgets
