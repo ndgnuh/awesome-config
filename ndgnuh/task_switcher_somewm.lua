@@ -5,7 +5,7 @@ local naughty = require("naughty")
 local beautiful = require("beautiful")
 
 local libclient = require("lib.client_api")
-local popup_maker = require("lib.popup_maker")
+local popup_registry = require("lib.popup_registry")
 local notifier = require("lib.notifier_widget")
 local overdrip = require("lib.overdrip")
 local allclients = require("providers.clients")
@@ -13,7 +13,7 @@ local allclients = require("providers.clients")
 local m = {}
 local ic = require("lib.icecream")
 
-local get_popup = popup_maker()
+local get_popup = popup_registry()
 
 local enabled_provider = overdrip.provider(false)
 local selection_index_provider = overdrip.provider(1)
