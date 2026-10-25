@@ -11,6 +11,8 @@ local icons = require("icons")
 local resource = require("lib.resource")
 local hsl = resource.hsl
 
+local signals = require("lib.signals")
+
 -- [[ Color settings ]]
 -- background color
 local bg_hue = 230
@@ -29,7 +31,7 @@ theme.icon_theme = "Vimix"
 -- SomeWM exclusive
 theme.shadow_enabled = true
 theme.shadow_radius = 6 -- Larger blur = softer
-theme.shadow_opacity = 0.3 -- More transparent
+theme.shadow_opacity = 0.8 -- More transparent
 theme.shadow_offset_x = 0.5 -- Spread further
 theme.shadow_offset_y = 0.5
 
@@ -66,10 +68,11 @@ theme.fg_normal = "#FEFCFF"
 theme.fg_focus = theme.primary
 theme.border_width = 0
 theme.border_normal = "#FFFFFF"
-theme.border_focus = "#FF0000"
+theme.border_focus = theme.primary
 
-theme.useless_gap = 0
-theme.gap_single_client = false
+theme.useless_gap = 10
+theme.gap_single_client = true
+
 theme.client_shape_bounding = gshape.rounded_rect
 theme.client_shape_clip = gshape.rounded_rect
 theme.shape_bounding = gshape.rounded_rect
@@ -79,14 +82,13 @@ theme.shape_input = gshape.rounded_rect
 local font_height = beautiful.get_font_height(theme.font)
 
 -- [[ wibar setup ]]
-theme.wibar_width = font_height * 1.5 + theme.gutter * 2
+theme.wibar_width = font_height * 1.5
 theme.wibar_height = theme.wibar_width
 theme.wibar_bg = resource.rgbf(0.15, 0.15, 0.16) .. "EE"
 theme.wibar_fg = theme.fg_normal
 theme.wibar_spacing = theme.gutter
 theme.wibar_border_width = 0
 theme.wibar_width = theme.wibar_width - theme.wibar_spacing
-theme.wibar_height = theme.wibar_width
 theme.wibar_border_color = theme.wibar_bg
 
 -- [[ taglist ]]
@@ -127,12 +129,20 @@ theme.os_icon = resource.icon("assets/icons/nix-os.svg")
 
 -- [[ Notification ]]
 theme.notification_font = resource.resource("assets/fonts/Montserrat/static/Montserrat-Italic.ttf 14")
-theme.notification_bg = "#9B59B6"
-theme.notification_fg = theme.fg_focus
-theme.notification_border_color = "#8E44AD"
-theme.notification_shape = gshape.rounded_rect
-theme.notification_margin = font_height * 4.75
-theme.notification_max_width = font_height * 32
+theme.notification_bg = theme.bg_normal .. alpha
+theme.notification_fg = theme.fg_normal
+theme.notification_border_width = 1
+theme.notification_border_color = theme.primary
+theme.notification_shape = function(cr, w, h)
+	gshape.rounded_rect(cr, w, h, theme.gutter)
+end
+theme.notification_margin = theme.gutter_large
+theme.notification_icon_size = apply_dpi(48)
+-- clay layout: box width, gap between boxes, offset from the screen edge
+theme.notification_width = apply_dpi(380)
+theme.notification_max_width = theme.notification_width
+theme.notification_spacing = theme.gutter
+theme.notification_padding = theme.useless_gap * 2
 
 -- [[ tooltip ]]
 theme.tooltip_bg = hsl(i_hue, 0.8, 0.7)
