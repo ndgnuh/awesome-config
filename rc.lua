@@ -369,7 +369,7 @@ local mytextclock = wibox.widget({
 
 -- Fires once per screen at startup AND on monitor hotplug. Restore saved tags
 -- if this connector was previously seen; otherwise create the default set.
-screen.primary.scale = 1.2
+screen.primary.scale = 1.25
 screen.connect_signal("request::desktop_decoration", function(s)
 	-- Restore saved tags if this output was previously removed
 	awful.tag({ 1 }, s, awful.layout.layouts[1])
@@ -392,20 +392,6 @@ screen.connect_signal("request::desktop_decoration", function(s)
 				})
 			end
 		end)
-	end
-	-- local wibar = awful.wibar({
-	-- 	position = "top",
-	-- 	screen = s,
-	-- 	widget = {
-	-- 		layout = wibox.layout.align.horizontal,
-	-- 		{
-	-- 			widget = wibox.layout.fixed.horizontal,
-	-- 		},
-	-- 	},
-	-- })
-
-	function get_primary_wibar()
-		return wibar
 	end
 end)
 
