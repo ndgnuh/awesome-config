@@ -24,6 +24,11 @@ local obj_dec = survival.deserialize(code)
 -- Serialize to file
 survival.serialize_file("output.lua", obj)
 local obj = survival.deserialize_file("output.lua")
+
+@usage -- Spawn a command once, the PID is cached so it survives WM restarts
+local survival = require("survival")
+survival.spawn.once("picom") -- does nothing if picom is still running
+local pid = survival.spawn.get_active_pid("picom") -- nil if not running
 --]]
 local gfs = require("gears.filesystem")
 local survival = {}
@@ -77,8 +82,8 @@ end
 --- Deserialize lua object from string
 --
 -- Warning: this function is not safe at all since it loads lua code from file.
--- @tparam string code : path to serialized lua file
--- @return The serialized object
+-- @tparam string code : serialized lua code
+-- @return The deserialized object
 survival.deserialize = function(code)
     return load(code)()
 end
@@ -122,7 +127,9 @@ end
 -- The target file will be `cache_dir/survival/{namespace}.lua`.
 -- @tparam string name : the name of the serialization namespace
 -- @treturn table : survival context
--- @field serialize : Serialize file with preset file path
+-- @field target_path : path to the serialized file
+-- @field serialize : Serialize object to `target_path`, takes `(object, indent)`
+-- @field deserialize : Deserialize object from `target_path`, takes `(default)`
 survival.context = function(name)
     local context = {}
     local cache_dir = gfs.get_cache_dir()
