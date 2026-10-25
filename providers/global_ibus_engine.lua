@@ -1,7 +1,7 @@
 ---Provider for the name of the current global IBus engine (e.g. "xkb:us::eng").
 ---The state is nil until ibus-daemon reports an engine.
 local overdrip = require("lib.overdrip")
-local ibus = require("lib.ibus_dbus")
+local ibus = require("lib.ibus")
 
 local m = {}
 

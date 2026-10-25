@@ -1,15 +1,66 @@
----@see https://lazka.github.io/pgi-docs/IBus-1.0/classes/Bus.html
----@see https://lazka.github.io/pgi-docs/IBus-1.0/classes/Engine.html
----@see https://lazka.github.io/pgi-docs/IBus-1.0/classes/EngineDesc.html
+--- IBus client talking to ibus-daemon's private D-Bus directly.
+---
+--- Unlike `attic/lib/ibus.lua`, this does not use `lgi.IBus.Bus`, which is a process-wide
+--- singleton that connects once, caches the bus file path and never recovers
+--- if that first connect fails (e.g. ibus-daemon starts after the compositor).
+---
+--- Here the address is read from ~/.config/ibus/bus, the connection is owned by
+--- this module and it reconnects whenever that directory changes or the
+--- connection drops.
+---
+--- Usage:
+---   local ibus = require("lib.ibus")
+---   ibus:init() -- safe to call before ibus-daemon is running
+---   ibus:connect_signal("ibus:global-engine-changed", function(_, engine_name)
+---       print("engine: " .. engine_name)
+---   end)
+---   ibus:set_engine("Bamboo")
+---   ibus:is_connected() -- true once connected to ibus-daemon
+---   ibus:current_global_engine() -- e.g. "xkb:us::eng", nil until known
+---
+--- Signals:
+---   ibus:connected
+---   ibus:disconnected
+---   ibus:global-engine-changed (engine_name)
+---
+--- IBus (1.5.32, there is no written spec of the D-Bus API, read the source):
+---@see https://github.com/ibus/ibus/blob/1.5.32/bus/ibusimpl.c org.freedesktop.IBus methods, properties and signals
+---@see https://github.com/ibus/ibus/blob/1.5.32/src/ibusshare.c bus file path and format (ibus_get_socket_path, ibus_get_address)
+---@see https://github.com/ibus/ibus/blob/1.5.32/src/ibusbus.c IBusBus, the singleton this module replaces
+---@see https://github.com/ibus/ibus/blob/1.5.32/src/ibusenginedesc.c IBusEngineDesc serialization (field order)
+---@see https://github.com/ibus/ibus/blob/1.5.32/src/ibusserializable.c IBusSerializable, the ('IBusEngineDesc', a{sv}, ...) wrapper
+--- D-Bus / GLib:
+---@see https://dbus.freedesktop.org/doc/dbus-specification.html D-Bus specification
+---@see https://docs.gtk.org/gio/class.DBusConnection.html GDBusConnection
+---@see https://docs.gtk.org/gio/class.FileMonitor.html GFileMonitor
+---@see https://docs.gtk.org/glib/gvariant-format-strings.html GVariant format strings
+--- Lua bindings:
+---@see https://github.com/lgi-devs/lgi/blob/master/docs/guide.md lgi guide
+---@see https://github.com/lgi-devs/lgi/blob/master/docs/variant.md lgi GVariant support
+---@see https://awesomewm.org/apidoc/utility_libraries/gears.object.html gears.object (signals)
 local awful = require("awful")
-local naughty = require("naughty")
 local gears = require("gears")
 local lgi = require("lgi")
-local IBus = lgi.require("IBus")
 local GLib = lgi.GLib
 local Gio = lgi.Gio
 
+local IBUS_SERVICE = "org.freedesktop.IBus"
+local IBUS_PATH = "/org/freedesktop/IBus"
+local IBUS_INTERFACE = "org.freedesktop.IBus"
+local CALL_TIMEOUT = 2000
+
+local bus_dir = GLib.build_filenamev({ GLib.get_user_config_dir(), "ibus", "bus" })
+
+---@class IBusDBus: gears.object
+---@field conn? any Gio.DBusConnection
+---@field address? string
+---@field engine? string
 local m = gears.object()
+
+--- Keep track of the engine for `current_global_engine`
+m:connect_signal("ibus:global-engine-changed", function(self, engine_name)
+	self.engine = engine_name
+end)
 
 --- Parse an ibus bus file, returns address and daemon pid
 local function read_bus_file(path)
@@ -30,94 +81,182 @@ local function is_alive(pid)
 	return pid and gears.filesystem.dir_readable("/proc/" .. pid)
 end
 
---- Find the address of a running ibus-daemon from ~/.config/ibus/bus.
---- The compositor's own env (WAYLAND_DISPLAY/DISPLAY) may not match the
---- display ibus-daemon was started with, so fall back to scanning all files.
-local function find_ibus_address()
-	local address, pid = read_bus_file(IBus.get_socket_path())
-	if address and is_alive(pid) then
-		return address
+--- Address of a running ibus-daemon. The bus file name depends on the display
+--- the daemon was started with, which may not match ours (e.g. a systemd
+--- started daemon writes `-unix-0`), so take the most recently written file
+--- whose daemon is still alive.
+local function find_address()
+	local env = os.getenv("IBUS_ADDRESS")
+	if env then
+		return env
 	end
 
-	local dir = GLib.build_filenamev({ GLib.get_user_config_dir(), "ibus", "bus" })
-	local enum = Gio.File.new_for_path(dir):enumerate_children("standard::name", 0)
+	local enum = Gio.File.new_for_path(bus_dir):enumerate_children("standard::name,time::modified", 0)
 	if not enum then
 		return nil
 	end
-	for info in
-		function()
-			return enum:next_file()
-		end
-	do
-		address, pid = read_bus_file(dir .. "/" .. info:get_name())
-		if address and is_alive(pid) then
-			enum:close()
-			return address
+	local best, best_mtime
+	for info in function() return enum:next_file() end do
+		local address, pid = read_bus_file(bus_dir .. "/" .. info:get_name())
+		local mtime = info:get_attribute_uint64("time::modified")
+		if address and is_alive(pid) and (not best_mtime or mtime > best_mtime) then
+			best, best_mtime = address, mtime
 		end
 	end
 	enum:close()
-	return nil
+	return best
+end
+
+--- Engine name from a serialized IBusEngineDesc:
+--- ('IBusEngineDesc', a{sv}, name, longname, ...), possibly boxed in variants
+local function engine_desc_name(desc)
+	while desc:get_type_string() == "v" do
+		desc = desc:get_variant()
+	end
+	return desc:get_child_value(2):get_string()
+end
+
+function m:_drop_connection()
+	local conn = self.conn
+	if not conn then
+		return
+	end
+	self.conn = nil
+	self.address = nil
+	if not conn:is_closed() then
+		conn:close()
+	end
+	self:emit_signal("ibus:disconnected")
+end
+
+function m:_on_connected(conn, address)
+	self.conn = conn
+	self.address = address
+
+	conn.on_closed = function(c)
+		if self.conn == c then
+			self:_drop_connection()
+			self:reconnect()
+		end
+	end
+
+	conn:signal_subscribe(
+		IBUS_SERVICE,
+		IBUS_INTERFACE,
+		"GlobalEngineChanged",
+		IBUS_PATH,
+		nil,
+		Gio.DBusSignalFlags.NONE,
+		function(_, _, _, _, _, params)
+			self:emit_signal("ibus:global-engine-changed", params:get_child_value(0):get_string())
+		end
+	)
+
+	self:emit_signal("ibus:connected")
+
+	--- Report the current engine
+	conn:call(
+		IBUS_SERVICE,
+		IBUS_PATH,
+		"org.freedesktop.DBus.Properties",
+		"Get",
+		GLib.Variant("(ss)", { IBUS_INTERFACE, "GlobalEngine" }),
+		GLib.VariantType("(v)"),
+		Gio.DBusCallFlags.NONE,
+		CALL_TIMEOUT,
+		nil,
+		function(c, res)
+			local result = c:call_finish(res)
+			if result and self.conn == c then
+				local desc = result:get_child_value(0):get_variant()
+				self:emit_signal("ibus:global-engine-changed", engine_desc_name(desc))
+			end
+		end
+	)
+end
+
+--- (Re)connect to the current ibus-daemon, if it changed or we are not connected
+function m:reconnect()
+	local address = find_address()
+	if not address or (self.conn and address == self.address) then
+		return
+	end
+	self:_drop_connection()
+
+	--- Ignore results of older attempts that finish after a newer one started
+	self.attempt = (self.attempt or 0) + 1
+	local attempt = self.attempt
+	Gio.DBusConnection.new_for_address(
+		address,
+		Gio.DBusConnectionFlags{ "AUTHENTICATION_CLIENT", "MESSAGE_BUS_CONNECTION" },
+		nil,
+		nil,
+		function(_, res)
+			local conn = Gio.DBusConnection.new_for_address_finish(res)
+			if not conn then
+				return
+			end
+			if attempt ~= self.attempt or self.conn then
+				conn:close()
+				return
+			end
+			self:_on_connected(conn, address)
+		end
+	)
 end
 
 function m:init()
 	--- Already initialized
-	if self.bus then
+	if self.monitor then
 		return
 	end
 
-	IBus.init()
-	local address = os.getenv("IBUS_ADDRESS") or find_ibus_address()
-	naughty.notification({
-		title = "IBus address",
-		message = address,
-	})
-	if not address then
-		naughty.notification({
-			title = "IBus",
-			message = "No running ibus-daemon found",
-		})
-		return
+	GLib.mkdir_with_parents(bus_dir, tonumber("700", 8))
+	self.monitor = Gio.File.new_for_path(bus_dir):monitor_directory(Gio.FileMonitorFlags.NONE)
+	--- ibus-daemon writes the bus file in several steps, coalesce the events
+	self.monitor.on_changed = function()
+		if not self.reconnect_timer then
+			self.reconnect_timer = gears.timer.start_new(0.5, function()
+				self.reconnect_timer = nil
+				self:reconnect()
+				return false
+			end)
+		end
 	end
 
-	--- IBus.Bus() reads the address from IBUS_ADDRESS, unset it afterward
-	--- so spawned clients don't inherit a stale address
-	local had_env = os.getenv("IBUS_ADDRESS") ~= nil
-	GLib.setenv("IBUS_ADDRESS", address, true)
-	local bus = IBus.Bus.new_async_client()
-	if not had_env then
-		GLib.unsetenv("IBUS_ADDRESS")
-	end
-	self.bus = bus
+	self:reconnect()
+end
 
-	local function on_connected(this)
-		naughty.notification({
-			title = "IBus",
-			message = "IBus connected",
-		})
-		this:set_watch_dbus_signal(true)
-		this:set_watch_ibus_signal(true)
-		local engine = this:get_global_engine()
-		self:emit_signal("ibus:global-engine-changed", engine.name)
-	end
-	bus.on_connected = on_connected
+function m:is_connected()
+	return self.conn ~= nil and not self.conn:is_closed()
+end
 
-	bus.on_global_engine_changed = function(_, engine_name)
-		self:emit_signal("ibus:global-engine-changed", engine_name)
-	end
-
-	--- IBus.Bus() connects synchronously in its constructor, so the
-	--- "connected" signal has already fired before the handler was attached
-	if bus:is_connected() then
-		on_connected(bus)
-	end
+--- Name of the current global engine, as last reported by ibus-daemon (or set
+--- by `set_engine` while disconnected). Does not block on D-Bus.
+---@return string|nil
+function m:current_global_engine()
+	return self.engine
 end
 
 function m:set_engine(engine_name)
-	m:init()
-	if self.bus and self.bus:is_connected() then
-		self.bus:set_global_engine(engine_name)
+	self:init()
+	if self:is_connected() then
+		self.conn:call(
+			IBUS_SERVICE,
+			IBUS_PATH,
+			IBUS_INTERFACE,
+			"SetGlobalEngine",
+			GLib.Variant("(s)", { engine_name }),
+			nil,
+			Gio.DBusCallFlags.NONE,
+			CALL_TIMEOUT,
+			nil,
+			function(c, res)
+				c:call_finish(res)
+			end
+		)
 	else
-		awful.spawn("ibus engine " .. engine_name)
+		awful.spawn({ "ibus", "engine", engine_name })
 		self:emit_signal("ibus:global-engine-changed", engine_name)
 	end
 end
