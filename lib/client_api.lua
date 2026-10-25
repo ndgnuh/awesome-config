@@ -170,6 +170,7 @@ function m.inspect(c)
 			class = c.class,
 			instance = c.instance,
 			pid = c.pid,
+			floating = c.floating,
 			-- icon_name = c.icon_name,
 			urgent = c.urgent,
 			size_hints = c.size_hints,
