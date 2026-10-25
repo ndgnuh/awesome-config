@@ -164,7 +164,7 @@ local keys = {
 
 	awful.key({
 		modifiers = { modkey },
-		key = "3",
+		key = "4",
 		on_press = spawn_or_cycle({
 			command = "inkscape",
 			class = { "inkscape", "org.inkscape.Inkscape" },
@@ -175,7 +175,7 @@ local keys = {
 
 	awful.key({
 		modifiers = { modkey },
-		key = "4",
+		key = "3",
 		on_press = spawn_or_cycle({ command = "Zalo", class = "zalo" }),
 		description = "Zalo",
 		group = "Application",

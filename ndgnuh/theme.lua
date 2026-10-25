@@ -66,12 +66,12 @@ theme.bg_focus = theme.bg_lightest
 theme.bg_focus = theme.bg_lighter
 theme.fg_normal = "#FEFCFF"
 theme.fg_focus = theme.primary
-theme.border_width = 0
-theme.border_normal = "#FFFFFF"
+theme.border_width = 2
+theme.border_normal = "#1d1f21"
 theme.border_focus = theme.primary
 
 theme.useless_gap = 10
-theme.gap_single_client = true
+theme.gap_single_client = false
 
 theme.client_shape_bounding = gshape.rounded_rect
 theme.client_shape_clip = gshape.rounded_rect

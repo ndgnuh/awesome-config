@@ -7,6 +7,9 @@
 -- differences (no xprop/xdotool/picom, xkb is compositor-side, etc.). The
 -- public Lua API is preserved; X11-specific tooling is what changes.
 
+-- Patch the `require` function to be more useful
+require("monkey_patch.require").patch()
+
 -- Debug: dump a full traceback for every Lua error. The debug::error signal
 -- is emitted from inside the pcall message handler, so the erroring stack is
 -- still live here and debug.traceback() can see it.
@@ -45,7 +48,6 @@ do
 end
 
 ic = require("lib.icecream")
-require("monkey_patch.require").patch()
 require("monkey_patch")
 require("providers.clients")
 
@@ -146,6 +148,8 @@ local survival = require("lib.survival")
 -- Export compositor env (WAYLAND_DISPLAY, ...) to the session bus for portals/activated services.
 awful.spawn("dbus-update-activation-environment --all")
 survival.spawn.once("nm-applet")
+survival.spawn.once("keepassxc --minimized")
+survival.spawn.once("Zalo --hidden")
 survival.spawn.once("blueman-applet") -- bluetooth tray
 survival.spawn.once("udiskie --tray") -- auto-mount removable drives
 
