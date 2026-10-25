@@ -1,6 +1,6 @@
 local awful = require("awful")
 local gears = require("gears")
-local libclient = require("lib.client_api")
+local client_api = require("lib.client_api")
 local naughty = require("naughty")
 local ibus = require("lib.ibus")
 local ic = require("lib.icecream")
@@ -66,7 +66,7 @@ local keys = {
 		modifiers = { modkey },
 		key = "i",
 		on_press = function()
-			libclient.inspect(client.focus)
+			client_api.inspect(client.focus)
 		end,
 	}),
 
@@ -121,7 +121,7 @@ local keys = {
 		modifiers = { modkey },
 		key = "Tab",
 		on_press = function()
-			libclient.global_focus_previous()
+			client_api.global_focus_previous()
 			if client.focus then
 				client.focus:raise()
 			end
@@ -479,8 +479,8 @@ awful.keyboard.append_client_keybindings({
 		modifiers = { modkey, "Shift" },
 		key = "v",
 		on_press = function(c)
-			libclient.move_to_volatile(c, awful.layout.suit.max)
-			libclient.normalize(c)
+			client_api.move_to_volatile(c, awful.layout.suit.max)
+			client_api.normalize(c)
 		end,
 	}),
 
