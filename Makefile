@@ -1,4 +1,4 @@
-.PHONY: docs check
+.PHONY: docs check trace
 PREFIX ?= "$(HOME)/.local/"
 
 draftfile ?= "draft.lua"
@@ -42,3 +42,7 @@ ez:
 check:
 	luajit tests/test_overdrip_re.lua
 	luajit tools/check_overdrip.lua
+
+# Print startup errors (with stack trace) of the running somewm instance
+trace:
+	@somewm-client eval 'return tostring(awesome.startup_errors)'
