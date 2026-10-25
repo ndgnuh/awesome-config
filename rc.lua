@@ -140,10 +140,11 @@ local modkey = "Mod4"
 require("ndgnuh.input_config")
 
 -- Autostart (idempotent across reloads).
-awful.spawn.once("ibus-daemon -rd --panel disable")
-awful.spawn.once("network-manager-applet")
-awful.spawn.once("blueman-applet") -- bluetooth tray
-awful.spawn.once("udiskie --tray") -- auto-mount removable drives
+local survival = require("lib.survival")
+survival.spawn.once("ibus-daemon -rd --panel disable")
+survival.spawn.once("network-manager-applet")
+survival.spawn.once("blueman-applet") -- bluetooth tray
+survival.spawn.once("udiskie --tray") -- auto-mount removable drives
 
 -- Init functional modules
 local ibus = require("lib.ibus")
