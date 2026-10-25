@@ -22,7 +22,22 @@
 ---   ibus:connected
 ---   ibus:disconnected
 ---   ibus:global-engine-changed (engine_name)
----@see https://github.com/ibus/ibus/blob/main/bus/ibusimpl.c
+---
+--- IBus (1.5.32, there is no written spec of the D-Bus API, read the source):
+---@see https://github.com/ibus/ibus/blob/1.5.32/bus/ibusimpl.c org.freedesktop.IBus methods, properties and signals
+---@see https://github.com/ibus/ibus/blob/1.5.32/src/ibusshare.c bus file path and format (ibus_get_socket_path, ibus_get_address)
+---@see https://github.com/ibus/ibus/blob/1.5.32/src/ibusbus.c IBusBus, the singleton this module replaces
+---@see https://github.com/ibus/ibus/blob/1.5.32/src/ibusenginedesc.c IBusEngineDesc serialization (field order)
+---@see https://github.com/ibus/ibus/blob/1.5.32/src/ibusserializable.c IBusSerializable, the ('IBusEngineDesc', a{sv}, ...) wrapper
+--- D-Bus / GLib:
+---@see https://dbus.freedesktop.org/doc/dbus-specification.html D-Bus specification
+---@see https://docs.gtk.org/gio/class.DBusConnection.html GDBusConnection
+---@see https://docs.gtk.org/gio/class.FileMonitor.html GFileMonitor
+---@see https://docs.gtk.org/glib/gvariant-format-strings.html GVariant format strings
+--- Lua bindings:
+---@see https://github.com/lgi-devs/lgi/blob/master/docs/guide.md lgi guide
+---@see https://github.com/lgi-devs/lgi/blob/master/docs/variant.md lgi GVariant support
+---@see https://awesomewm.org/apidoc/utility_libraries/gears.object.html gears.object (signals)
 local awful = require("awful")
 local gears = require("gears")
 local lgi = require("lgi")
