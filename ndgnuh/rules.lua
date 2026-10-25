@@ -2,6 +2,39 @@ local gears = require("gears")
 local ruled = require("ruled")
 local awful = require("awful")
 local apps = require("lib.apps")
+local beautiful = require("beautiful")
+
+do
+	local rule = function(c)
+		local actual_floating = c.floating and not c.fullscreen
+		if actual_floating then
+			c.shape = gears.shape.rounded_rect
+			c.above = true
+			c.titlebars_enabled = true
+			c.border_width = 2
+			c.border_color = "#ffffff"
+			c.shadow = {
+				enabled = true,
+				color = beautiful.primary or "#1d1f21",
+				radius = 10, -- blur radius
+				spread = 0, -- grow the shadow beyond the frame
+				offset_x = 1,
+				offset_y = 1,
+				corner_radius = 10,
+				opacity = 0.75, -- 0..1
+				clip_directional = false, -- true: clip the shadow on sides away from the offset
+			}
+		else
+			c.shape = gears.shape.rectangle
+			c.above = false
+			c.titlebars_enabled = false
+			c.border_width = 0
+			c.shadow = false
+		end
+	end
+	client.connect_signal("property::floating", rule)
+	client.connect_signal("property::fullscreen", rule)
+end
 
 ruled.client.connect_signal("request::rules", function()
 	-- @DOC_GLOBAL_RULE@
@@ -32,6 +65,7 @@ ruled.client.connect_signal("request::rules", function()
 				c.floating = true
 				c.sticky = false
 				c.above = true
+				c.shadow = true
 			end
 		end,
 	})
@@ -68,6 +102,7 @@ ruled.client.connect_signal("request::rules", function()
 		id = "dialogs",
 		rule_any = { type = { "dialog" } },
 		properties = {
+			above = true,
 			placement = awful.placement.no_offscreen + awful.placement.centered,
 		},
 	})
