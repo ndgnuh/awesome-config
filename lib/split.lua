@@ -18,8 +18,8 @@ local m = {}
 
 -- tiling clients other than the focused one
 local candidates_provider = overdrip.provider(function(ref)
-	local clients = ref.watch(clients_providers.tiling_provider)
-	local focused = ref.watch(clients_providers.focused_provider)
+	local clients = ref:watch(clients_providers.tiling_provider)
+	local focused = ref:watch(clients_providers.focused_provider)
 	local ret = {}
 	for _, c in ipairs(clients) do
 		if c ~= focused then
@@ -31,13 +31,13 @@ end)
 
 -- selected index, refresh when the list changes
 local selected_index_provider = overdrip.provider(function(ref)
-	ref.watch(candidates_provider)
+	ref:watch(candidates_provider)
 	return 0 -- refresh when the list change
 end)
 
 local selected_client_provider = overdrip.provider(function(ref)
-	local candidates = ref.watch(candidates_provider)
-	local i = ref.watch(selected_index_provider)
+	local candidates = ref:watch(candidates_provider)
+	local i = ref:watch(selected_index_provider)
 	local n = #candidates
 	if n == 0 then
 		return nil
@@ -64,7 +64,7 @@ local function make_button(text, on_click)
 end
 
 function m.select_delta(delta)
-	selected_index_provider.state = selected_index_provider.state + delta
+	selected_index_provider:set(selected_index_provider.state + delta)
 end
 
 function m.hide(s)
@@ -78,15 +78,15 @@ function m.confirm(s)
 	if not c then
 		return
 	end
-	is_spliting_provider.state = true
+	is_spliting_provider:set(true)
 	local t = s.selected_tag
 	c:move_to_tag(t)
 end
 
 m.widget = widget_registry(function(s)
 	return overdrip.consumer_widget(function(ref)
-		local candidates = ref.watch(candidates_provider)
-		local c = ref.watch(selected_client_provider)
+		local candidates = ref:watch(candidates_provider)
+		local c = ref:watch(selected_client_provider)
 
 		local close_button = make_button("Close", function()
 			m.hide(s)
@@ -143,7 +143,7 @@ end)
 
 function m.show(s)
 	s = s or awful.screen.focused()
-	selected_index_provider.state = 1
+	selected_index_provider:set(1)
 	local popup = get_popup(s)
 	popup.widget = m.widget(s)
 	popup.visible = true

@@ -37,9 +37,8 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 local sp_wallpaper = require("lib.secondary_wallpaper")
 
 local state = require("state")
-require("providers.clients")
 
---- Allow loading ".so" files from configuration direcetory
+--- Allow loading ".so" files from configuration directory
 do
 	local config_dir = gears.filesystem.get_configuration_dir()
 	package.cpath = package.cpath .. ";" .. config_dir .. "?.so"
@@ -48,6 +47,7 @@ end
 ic = require("lib.icecream")
 require("monkey_patch.require").patch()
 require("monkey_patch")
+require("providers.clients")
 
 -- Error handling
 naughty.connect_signal("request::display_error", function(message, startup)

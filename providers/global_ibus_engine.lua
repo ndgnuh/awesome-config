@@ -11,7 +11,7 @@ end)
 
 ibus:connect_signal("ibus:global-engine-changed", function(_, engine_name)
 	if m.global_ibus_engine_provider.state ~= engine_name then
-		m.global_ibus_engine_provider.state = engine_name
+		m.global_ibus_engine_provider:set(engine_name)
 	end
 end)
 

@@ -26,7 +26,7 @@ local function new()
 		forced_height = beautiful.wibar_width,
 		shape = gears.shape.rounded_rect,
 		overdrip.consumer_widget(function(ref)
-			local engine = ref.watch(engine_provider)
+			local engine = ref:watch(engine_provider)
 			-- engine is nil until ibus-daemon reports one
 			local format = engine and (m.engine_formats[engine] or engine) or "??"
 			return wibox.widget({

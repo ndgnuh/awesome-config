@@ -32,6 +32,10 @@ function Provider:set(state)
 	self.dirty = false
 end
 
+function Provider:get()
+	return self:flush()
+end
+
 --- Recompute and/or return the state of the provider
 function Provider:flush()
 	if not self.dirty then
@@ -97,5 +101,11 @@ function Provider.new(builder)
 
 	return provider
 end
+
+setmetatable(Provider, {
+	__call = function(_, builder)
+		return Provider.new(builder)
+	end,
+})
 
 return Provider

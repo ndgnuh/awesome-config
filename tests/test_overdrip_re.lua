@@ -32,6 +32,10 @@ package.preload["gears"] = function()
 	}
 end
 
+package.preload["wibox"] = function()
+	return { container = { place = function() return {} end } }
+end
+
 -- Fake the `awesome` global, only signals are needed.
 local signals = {}
 _G.awesome = {
@@ -72,7 +76,7 @@ _G.require = setmetatable({
 	end,
 })
 
-local Provider = require("lib.overdrip").Provider
+local Provider = require("lib.overdrip").provider
 
 -- Minimal test harness ------------------------------------------------------
 

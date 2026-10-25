@@ -1,4 +1,4 @@
-.PHONY: docs
+.PHONY: docs check
 PREFIX ?= "$(HOME)/.local/"
 
 draftfile ?= "draft.lua"
@@ -38,3 +38,7 @@ ez:
 		-FPIC -shared \
 		ez.c -o ez.so
 	lua eztest.lua
+
+check:
+	luajit tests/test_overdrip_re.lua
+	luajit tools/check_overdrip.lua
