@@ -1,5 +1,5 @@
 ---A state management library inspired by `riverpod.dart`.
----Just like riverpod, `overdrip` is just an annagram of `provider`
+---Just like riverpod, `overdrip` is just an anagram of `provider`
 ---The name is also kind of whimsy, therefore only (Awe)SomeWM could probably have use it.
 local gears = require("gears")
 local wibox = require("wibox")
@@ -90,7 +90,7 @@ function Provider:get(callback)
 end
 
 Provider = setmetatable(Provider, {
-	__calll = Provider.new,
+	__call = Provider.new,
 })
 
 function m.provider(builder)
