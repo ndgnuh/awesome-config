@@ -6,12 +6,12 @@ is the built other functionalities such as settings or layout preservation.
 -- Usage with context
 -- Create a context
 local survival = require("survival")
-local ctx = survival("settings") -- settings is just a name
+local ctx = survival.context("settings") -- settings is just a name
 
 -- load and save using the context
 local default_settings = { terminal = "sakura", modkey = "Mod4" }
-local settings = ctx.deserialize() or default_settings -- load
-ctx.serialize(settings) -- save
+local settings = ctx:deserialize(default_settings) -- load
+ctx:serialize(settings) -- save
 
 @usage -- Without context
 local survival = require("survival")
@@ -40,32 +40,36 @@ local survival = {}
 -- @tparam number indent : indentation
 -- @treturn string : the serialized object
 function survival._serialize(obj, lookup, level, indent)
-    if type(obj) == "string" then
-        return '"' .. obj .. '"'
-    elseif type(obj) == "number" or type(obj) == "boolean" or type(obj) == "nil" then
-        return tostring(obj)
-    elseif type(obj) ~= "table" then
-        return "nil"
-    end
+	if type(obj) == "string" then
+		return '"' .. obj .. '"'
+	elseif type(obj) == "number" or type(obj) == "boolean" or type(obj) == "nil" then
+		return tostring(obj)
+	elseif type(obj) ~= "table" then
+		return "nil"
+	end
 
-    if lookup[obj] == 1 then
-        return "nil"
-    end
+	if lookup[obj] == 1 then
+		return "nil"
+	end
 
-    lookup[obj] = 1
-    local next_level = level + 1
-    local obj_str = "{\n"
-    local thisindent = indent:rep(level)
-    local nextindent = indent:rep(next_level)
-    for k, v in pairs(obj) do
-        obj_str = (
-            obj_str .. nextindent ..
-            "[" .. survival._serialize(k, lookup, next_level, indent) .. "] = " ..
-            survival._serialize(v, lookup, next_level, indent) .. ",\n"
-        )
-    end
-    obj_str = obj_str .. thisindent .. "}"
-    return obj_str
+	lookup[obj] = 1
+	local next_level = level + 1
+	local obj_str = "{\n"
+	local thisindent = indent:rep(level)
+	local nextindent = indent:rep(next_level)
+	for k, v in pairs(obj) do
+		obj_str = (
+			obj_str
+			.. nextindent
+			.. "["
+			.. survival._serialize(k, lookup, next_level, indent)
+			.. "] = "
+			.. survival._serialize(v, lookup, next_level, indent)
+			.. ",\n"
+		)
+	end
+	obj_str = obj_str .. thisindent .. "}"
+	return obj_str
 end
 
 --- User API serialize function
@@ -73,10 +77,10 @@ end
 -- @tparam number indent : level of lua code indentation
 -- @treturn string: a valid lua code to load the serialized object
 survival.serialize = function(object, indent)
-    indent = indent or "\t"
-    local level = 0
-    local lookup = {}
-    return "return " .. survival._serialize(object, lookup, level, indent)
+	indent = indent or "\t"
+	local level = 0
+	local lookup = {}
+	return "return " .. survival._serialize(object, lookup, level, indent)
 end
 
 --- Deserialize lua object from string
@@ -85,7 +89,7 @@ end
 -- @tparam string code : serialized lua code
 -- @return The deserialized object
 survival.deserialize = function(code)
-    return load(code)()
+	return load(code)()
 end
 
 --- Serialize lua object to file
@@ -94,11 +98,11 @@ end
 -- @param object : any lua-native object
 -- @tparam number indent : indentation level for the serialized code
 survival.serialize_file = function(file, object, indent)
-    local fp = io.open(file, "w")
-    if fp ~= nil then
-        fp:write(survival.serialize(object, indent))
-        fp:close()
-    end
+	local fp = io.open(file, "w")
+	if fp ~= nil then
+		fp:write(survival.serialize(object, indent))
+		fp:close()
+	end
 end
 
 --- Deserialize lua object
@@ -109,36 +113,14 @@ end
 -- @param default : the value to be returned if the file can't be serialized
 -- @return The serialized object, if the file cannot be openned, return default
 survival.deserialize_file = function(file, default)
-    local fp = io.open(file)
-    if not fp then
-        return default
-    else
-        local obj = survival.deserialize(fp:read("*a"))
-        fp:close()
-        return obj
-    end
+	local fp = io.open(file)
+	if not fp then
+		return default
+	else
+		local obj = survival.deserialize(fp:read("*a"))
+		fp:close()
+		return obj
+	end
 end
 
-
---- Create new survival context.
---
--- This function returns a table with have serialize, deserialize functions.
--- that (de)serialize directly from and to the target file.
--- The target file will be `cache_dir/survival/{namespace}.lua`.
--- @tparam string name : the name of the serialization namespace
--- @treturn table : survival context
--- @field target_path : path to the serialized file
--- @field serialize : Serialize object to `target_path`, takes `(object, indent)`
--- @field deserialize : Deserialize object from `target_path`, takes `(default)`
-survival.context = function(name)
-    local context = {}
-    local cache_dir = gfs.get_cache_dir()
-    context.target_path = cache_dir .. "/survival/" .. name .. ".lua"
-    gfs.make_parent_directories(context.target_path)
-    context.serialize = function(...) return survival.serialize_file(context.target_path, ...) end
-    context.deserialize = function(default) return survival.deserialize_file(context.target_path, default) end
-    return context
-end
-
-
-return setmetatable(survival, { __call = function(self, name) return survival.context(name) end })
+return survival

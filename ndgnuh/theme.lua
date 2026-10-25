@@ -111,6 +111,7 @@ theme.progressbar_shape = gears.shape.rounded_rect
 local alpha = "AE"
 
 -- [[ Menu ]]
+theme.menu_font = "Barlow Sans Semi Condensed 10"
 theme.menu_width = font_height * 15
 theme.menu_height = font_height * 1.8
 theme.menu_submenu_icon = icons.arrow_forward
@@ -128,21 +129,21 @@ theme.awesome_icon = resource.icon("assets/icons/auto_awesome.svg", "#fff")
 theme.os_icon = resource.icon("assets/icons/nix-os.svg")
 
 -- [[ Notification ]]
-theme.notification_font = resource.resource("assets/fonts/Montserrat/static/Montserrat-Italic.ttf 14")
-theme.notification_bg = theme.bg_normal .. alpha
-theme.notification_fg = theme.fg_normal
-theme.notification_border_width = 1
-theme.notification_border_color = theme.primary
-theme.notification_shape = function(cr, w, h)
-	gshape.rounded_rect(cr, w, h, theme.gutter)
-end
-theme.notification_margin = theme.gutter_large
-theme.notification_icon_size = apply_dpi(48)
--- clay layout: box width, gap between boxes, offset from the screen edge
-theme.notification_width = apply_dpi(380)
-theme.notification_max_width = theme.notification_width
-theme.notification_spacing = theme.gutter
-theme.notification_padding = theme.useless_gap * 2
+theme.notification_font = resource.resource("Barlow Sans Semi Condensed 12")
+-- theme.notification_bg = theme.bg_normal .. alpha
+-- theme.notification_fg = theme.fg_normal
+-- theme.notification_border_width = 1
+-- theme.notification_border_color = theme.primary
+-- theme.notification_shape = function(cr, w, h)
+-- 	gshape.rounded_rect(cr, w, h, theme.gutter)
+-- end
+-- theme.notification_margin = theme.gutter_large
+-- theme.notification_icon_size = apply_dpi(48)
+-- -- clay layout: box width, gap between boxes, offset from the screen edge
+-- theme.notification_width = apply_dpi(380)
+-- theme.notification_max_width = theme.notification_width
+-- theme.notification_spacing = theme.gutter
+-- theme.notification_padding = theme.useless_gap * 2
 
 -- [[ tooltip ]]
 theme.tooltip_bg = hsl(i_hue, 0.8, 0.7)

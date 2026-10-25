@@ -66,7 +66,7 @@ function m.select_delta(s, delta)
 	s = s or awful.screen.focused()
 	m.show(s)
 	local i = selection_index_provider.state + delta
-	local clients = allclients.get()
+	local clients = allclients.all_clients.get()
 	if i > #clients then
 		i = 1
 	end

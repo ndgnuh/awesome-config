@@ -13,7 +13,7 @@ local find_executable = require("lib.find_executable")
 local selected_color = resource.rgbf(0.3, 0.3, 0.32)
 
 -- arg is just a name
-local ctx = survival("ndgnuh-prompt")
+local ctx = survival.context("ndgnuh-prompt")
 local m = {
 	widgets = {},
 	commands = {},
