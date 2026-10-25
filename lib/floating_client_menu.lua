@@ -3,6 +3,7 @@ local awful = require("awful")
 
 local resource = require("lib.resource")
 local ic = require("lib.icecream")
+local bamboo_mode_select = require("ndgnuh.bamboo_mode_select")
 
 local icon_roots = "./assets/icons/"
 local check_icon = resource.icon(icon_roots .. "checkbox_checked.png")
@@ -22,6 +23,7 @@ local items = gears.table.map(function(property)
 	local label = property.label
 	return { label, dummy_command, uncheck_icon }
 end, properties)
+items[#items + 1] = { "Input mode", dummy_command }
 items[#items + 1] = { "Cancel", dummy_command }
 
 local menu = awful.menu({ items = items })
@@ -58,6 +60,12 @@ update_and_show = function(c, save_coords, save_sel)
 
 		-- Bind icon to focused client
 		item.icon.image = c[key] and check_icon or uncheck_icon
+	end
+
+	-- Bind input mode menu to focused client
+	menu.items[#properties + 1].cmd = function()
+		bamboo_mode_select(c)
+		awful.spawn("ibus restart")
 	end
 
 	menu:update()
