@@ -11,7 +11,8 @@
 -- is emitted from inside the pcall message handler, so the erroring stack is
 -- still live here and debug.traceback() can see it.
 do
-	local log_path = (os.getenv("XDG_CACHE_HOME") or (os.getenv("HOME") .. "/.cache")) .. "/somewm-errors.log"
+	local cache_path = (os.getenv("XDG_CACHE_HOME") or (os.getenv("HOME") .. "/.cache"))
+	local log_path = cache_path .. "/somewm-errors.log"
 	awesome.connect_signal("debug::error", function(err)
 		local tb = debug.traceback(tostring(err), 2)
 		local f = io.open(log_path, "a")
@@ -141,8 +142,10 @@ require("ndgnuh.input_config")
 
 -- Autostart (idempotent across reloads).
 local survival = require("lib.survival")
-survival.spawn.once("ibus-daemon -rd --panel disable")
-survival.spawn.once("network-manager-applet")
+
+-- Export compositor env (WAYLAND_DISPLAY, ...) to the session bus for portals/activated services.
+awful.spawn("dbus-update-activation-environment --all")
+survival.spawn.once("nm-applet")
 survival.spawn.once("blueman-applet") -- bluetooth tray
 survival.spawn.once("udiskie --tray") -- auto-mount removable drives
 

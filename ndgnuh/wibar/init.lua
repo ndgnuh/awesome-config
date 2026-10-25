@@ -10,7 +10,7 @@ local spawn_or_cycle = require("lib.spawn_or_cycle")
 local ic = require("lib.icecream")
 
 local BatteryIcon = require("ndgnuh.widgets.BatteryIcon")
-local IbusIcon = require("ndgnuh.ibus-spawn")
+local IbusIcon = require.rel("ibus_icon")
 
 local text_clock_command = spawn_or_cycle({
 	command = "gnome-calendar",

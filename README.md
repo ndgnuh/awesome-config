@@ -61,7 +61,7 @@ menu (right-click the desktop, then somewm, then hotkeys). In this config
 | `ndgnuh/` | My personal setup: theme, wibar, keybindings, rules, run prompt, task switcher, IBus widget, input config |
 | `ndgnuh/widgets/` | Personal widgets, such as `BatteryIcon` |
 | `lib/` | Reusable helpers that are not tied to my setup (see below) |
-| `lib/widgets/` | Generic widgets: `ClientIcon`, `ClientTitle`, `InkWell` |
+| `lib/widgets/` | Generic widgets: `InkWell` |
 | `monkey_patch/` | Extensions patched directly into `table`, `awesome` and `awful.client` |
 | `rules/` | Data tables used by the client rules, such as floating/sticky classes |
 | `ez.c` | Small Lua C module (`ls`, `map`, `range`, `apply`, `ic`, `nameof`) |
@@ -71,11 +71,11 @@ menu (right-click the desktop, then somewm, then hotkeys). In this config
 ### Notable helper libraries in `lib/`
 
 - `overdrip.lua`: a small reactive state/provider library inspired by
-  Riverpod. `allclients.lua` uses it to publish the list of managed clients
-  to widgets.
+  Riverpod. `providers/clients.lua` uses it to publish client states (all,
+  focused, tiling clients, focused name/icon) to widgets.
 - `icecream.lua`: an `ic(...)` debug printer that shows variable names. It is
   also exposed as `gears.debug.ic`.
-- `popup_maker.lua`: creates one popup per screen, cached in a weak table.
+- `popup_registry.lua`: creates one popup per screen, cached in a weak table and cleared on screen removal.
 - `notifier_widget.lua`: a `gears.object` with auto property signals, used as
   a widget model.
 - `resource.lua`: resolves paths inside the config dir, recolors icons, and
