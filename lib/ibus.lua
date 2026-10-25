@@ -26,7 +26,7 @@ function m:init()
 	local bus = IBus.Bus()
 	self.bus = bus
 
-	bus.on_connected = function(this)
+	local function on_connected(this)
 		naughty.notification({
 			title = "IBus",
 			message = "IBus connected",
@@ -36,9 +36,16 @@ function m:init()
 		local engine = this:get_global_engine()
 		self:emit_signal("ibus:global-engine-changed", engine.name)
 	end
+	bus.on_connected = on_connected
 
 	bus.on_global_engine_changed = function(_, engine_name)
 		self:emit_signal("ibus:global-engine-changed", engine_name)
+	end
+
+	--- IBus.Bus() connects synchronously in its constructor, so the
+	--- "connected" signal has already fired before the handler was attached
+	if bus:is_connected() then
+		on_connected(bus)
 	end
 end
 
