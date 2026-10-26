@@ -1,27 +1,16 @@
 local awful = require("awful")
 local gears = require("gears")
 local client_api = require("lib.client_api")
-local naughty = require("naughty")
 local ibus = require("lib.ibus")
 local ic = require("lib.icecream")
 local client_menu = require("lib.floating_client_menu")
 local manual_focus_group = require("ndgnuh.manual_focus_group")
 local runprompt = require("ndgnuh.runprompt")
 
-local task_switcher = require("lib.task_switcher").get_instance()
 local current_tag
 
 -- Required for focus groups
 local spawn_or_cycle = require("lib.spawn_or_cycle")
-
----Returns a function that set ibus engine
----and send a notification
----@param engine string Name of the engine
-local function set_ibus_engine(engine)
-	return function()
-		ibus:set_engine(engine)
-	end
-end
 
 local function partial(f, x1, x2)
 	return function()
@@ -67,6 +56,13 @@ local keys = {
 		key = "i",
 		on_press = function()
 			client_api.inspect(client.focus)
+		end,
+	}),
+	awful.key({
+		modifiers = { modkey, "Shift" },
+		key = "i",
+		on_press = function()
+			somewm.inspector.toggle()
 		end,
 	}),
 
@@ -275,7 +271,7 @@ local keys = {
 		modifiers = { modkey },
 		key = "j",
 		on_press = function()
-			local ts = require("ndgnuh.task_switcher_somewm")
+			local ts = require("ndgnuh.task_switcher")
 			ts.select_next()
 		end,
 	}),
@@ -283,7 +279,7 @@ local keys = {
 		modifiers = { modkey },
 		key = "k",
 		on_press = function()
-			local ts = require("ndgnuh.task_switcher_somewm")
+			local ts = require("ndgnuh.task_switcher")
 			ts.select_previous()
 		end,
 	}),
@@ -463,6 +459,7 @@ local keys = {
 	}),
 }
 
+-- root._keys({})
 awful.keyboard.append_global_keybindings(keys)
 
 awful.keyboard.append_client_keybindings({

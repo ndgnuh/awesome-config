@@ -136,19 +136,22 @@ theme.notification_font = resource.resource("Barlow Sans Semi Condensed 12")
 theme.notification_position = "top_middle"
 -- theme.notification_bg = theme.bg_normal .. alpha
 -- theme.notification_fg = theme.fg_normal
--- theme.notification_border_width = 1
+theme.notification_border_width = 0
 -- theme.notification_border_color = theme.primary
--- theme.notification_shape = function(cr, w, h)
--- 	gshape.rounded_rect(cr, w, h, theme.gutter)
--- end
+theme.notification_shape = function(cr, w, h)
+	gshape.rounded_rect(cr, w, h, theme.gutter)
+end
+theme.notification_shadow = {
+	radius = theme.gutter,
+}
 -- theme.notification_margin = theme.gutter_large
--- theme.notification_icon_size = apply_dpi(48)
+theme.notification_icon_size = apply_dpi(96)
 -- -- clay layout: box width, gap between boxes, offset from the screen edge
 -- setting notification width make it shrink?
 -- theme.notification_width = apply_dpi(500)
-theme.notification_max_width = theme.notification_width
--- theme.notification_spacing = theme.gutter
--- theme.notification_padding = theme.useless_gap * 2
+theme.notification_width = apply_dpi(500)
+-- theme.notification_spacing = 10
+theme.notification_padding = 10
 
 -- [[ tooltip ]]
 theme.tooltip_bg = hsl(i_hue, 0.8, 0.7)
