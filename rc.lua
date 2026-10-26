@@ -57,6 +57,7 @@ naughty.connect_signal("request::display_error", function(message, startup)
 		urgency = "critical",
 		title = "Oops, an error happened" .. (startup and " during startup!" or "!"),
 		message = message,
+		timeout = 0,
 	})
 end)
 
@@ -527,6 +528,7 @@ require("ndgnuh.rules")
 
 -- Titlebars
 client.connect_signal("request::titlebars", function(c)
+	ic(c)
 	local buttons = {
 		awful.button({}, 1, function()
 			c:activate({ context = "titlebar", action = "mouse_move" })
@@ -563,25 +565,7 @@ end)
 -- Notifications
 -- Notification rules use the same append-via-signal pattern as client rules.
 -- Match on app_name/title/urgency/category, set bg/fg/timeout/ignore/etc.
-ruled.notification.connect_signal("request::rules", function()
-	ruled.notification.append_rule({
-		rule = {},
-		properties = {
-			screen = awful.screen.preferred,
-			implicit_timeout = 5,
-		},
-	})
-
-	-- Per-app routing example: mute one app, bump urgency for another.
-	-- ruled.notification.append_rule {
-	--     rule       = { app_name = "Spotify" },
-	--     properties = { ignore = true },
-	-- }
-	-- ruled.notification.append_rule {
-	--     rule       = { app_name = "Slack", title = "@you" },
-	--     properties = { urgency = "critical" },
-	-- }
-end)
+require("rules.notification")
 
 ---@param n naughty.notification The notification to display
 naughty.connect_signal("request::display", function(n)

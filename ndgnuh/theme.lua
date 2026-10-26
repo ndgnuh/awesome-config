@@ -11,6 +11,9 @@ local icons = require("icons")
 local resource = require("lib.resource")
 local hsl = resource.hsl
 
+local assets = require("assets")
+local icons = require("assets.icons")
+
 local signals = require("lib.signals")
 
 -- [[ Color settings ]]
@@ -25,7 +28,7 @@ local i_hue = 220 -- info color
 
 -- [[ base settings ]]
 -- use color from https://materialui.co/flatuicolors
-theme.font = "sans " .. math.floor(apply_dpi(7))
+theme.font = "Barlow Sans Semi Condensed " .. math.floor(apply_dpi(7))
 theme.icon_theme = "Vimix"
 
 -- SomeWM exclusive
@@ -122,14 +125,15 @@ theme.menu_bg_focus = theme.primary .. alpha
 theme.menu_fg_focus = theme.fg_normal
 
 -- [[ icons ]]
-theme.layout_tile = resource.icon("assets/icons/bento.svg", theme.fg_focus)
-theme.layout_max = resource.icon("assets/icons/fullscreen.svg", theme.fg_focus)
+theme.layout_tile = icons.bento
+theme.layout_max = icons.fullscreen
 theme.layout_floating = resource.icon("assets/icons/layers.svg", theme.fg_focus)
 theme.awesome_icon = resource.icon("assets/icons/auto_awesome.svg", "#fff")
 theme.os_icon = resource.icon("assets/icons/nix-os.svg")
 
 -- [[ Notification ]]
 theme.notification_font = resource.resource("Barlow Sans Semi Condensed 12")
+theme.notification_position = "top_middle"
 -- theme.notification_bg = theme.bg_normal .. alpha
 -- theme.notification_fg = theme.fg_normal
 -- theme.notification_border_width = 1
@@ -173,18 +177,18 @@ theme.tooltip_margin = apply_dpi(4)
 local noti_border = apply_dpi(2)
 local noti_margin = apply_dpi(16)
 
-theme.notification_shape = gears.shape.rectangle
-theme.notification_border_width = noti_border
-theme.notification_bg = theme.bg_lighter
-theme.notification_fg = theme.fg_focus
-theme.notification_border_color = theme.bg_darker
-theme.notification_margin = noti_margin
+-- theme.notification_shape = gears.shape.rectangle
+-- theme.notification_border_width = noti_border
+-- theme.notification_bg = theme.bg_lighter
+-- theme.notification_fg = theme.fg_focus
+-- theme.notification_border_color = theme.bg_darker
+-- theme.notification_margin = noti_margin
 
 -- normal preset
-naughty.config.defaults.border_width = noti_border
-naughty.config.defaults.border_color = theme.bg_darker
-naughty.config.defaults.margin = noti_margin
-naughty.config.defaults.title = "Notice"
+-- naughty.config.defaults.border_width = noti_border
+-- naughty.config.defaults.border_color = theme.bg_darker
+-- naughty.config.defaults.margin = noti_margin
+-- naughty.config.defaults.title = "Notice"
 
 -- critical preset, for errors
 naughty.config.presets.critical.title = "Critical"
