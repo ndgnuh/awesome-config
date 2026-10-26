@@ -207,7 +207,15 @@ local theme_menu = {
 	},
 }
 
-local menu_items = {
+local menu_animation = {
+	visible = {
+		duration = 0.15,
+		enter = { "grow", "scale_left" },
+		exit = { "grow", "scale_right" },
+	},
+}
+
+local awesome_menu = {
 	{
 		"hotkeys",
 		function()
@@ -239,7 +247,7 @@ local menu_items = {
 
 mymainmenu = awful.menu({
 	items = {
-		{ "somewm", menu_items, beautiful.awesome_icon },
+		{ "somewm", awesome_menu, beautiful.awesome_icon },
 
 		{
 			"Change wallpaper",
@@ -259,6 +267,8 @@ mymainmenu = awful.menu({
 		{ "open terminal", terminal },
 	},
 })
+
+mymainmenu.wibox.animation = menu_animation
 
 mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon, menu = mymainmenu })
 

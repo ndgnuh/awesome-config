@@ -76,11 +76,14 @@ theme.border_focus = theme.primary
 theme.useless_gap = 10
 theme.gap_single_client = false
 
-theme.client_shape_bounding = gshape.rounded_rect
-theme.client_shape_clip = gshape.rounded_rect
-theme.shape_bounding = gshape.rounded_rect
-theme.shape_clip = gshape.rounded_rect
-theme.shape_input = gshape.rounded_rect
+local function client_shape(cr, w, h)
+	gshape.rounded_rect(cr, w, h, apply_dpi(10))
+end
+-- theme.client_shape_bounding = client_shape
+-- theme.client_shape_clip = client_shape
+-- theme.shape_bounding = client_shape
+-- theme.shape_clip = gshape.rounded_rect
+-- theme.shape_input = gshape.rounded_rect
 
 local font_height = beautiful.get_font_height(theme.font)
 
@@ -222,5 +225,16 @@ theme.hotkeys_group_margin = apply_dpi(18)
 -- [[ tray ]]
 theme.bg_systray = theme.wibar_bg
 theme.systray_icon_spacing = theme.wibar_spacing
+
+-- [[ animation ]]
+local duration = 0.2
+theme.animation_tag_duration = duration
+theme.animation_tag = "slide_left"
+
+theme.animation_appear = "slide_up"
+theme.animation_disappear = "slide_up"
+theme.animation_appear_duration = duration
+theme.animation_disappear_duration = duration
+theme.animation_focus_duration = 0.15
 
 return theme

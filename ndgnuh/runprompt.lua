@@ -160,6 +160,15 @@ m.init = function()
 		border_color = theme.primary,
 	})
 
+	-- slide in from the left, slide out to the right
+	m.wibox.animation = {
+		visible = {
+			duration = 0.2,
+			enter = "slide_left",
+			exit = "slide_right",
+		},
+	}
+
 	m.load_path_commands()
 
 	m.initialized = true

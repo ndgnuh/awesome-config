@@ -6,6 +6,7 @@ local ic = require("lib.icecream")
 local client_menu = require("lib.floating_client_menu")
 local manual_focus_group = require("ndgnuh.manual_focus_group")
 local runprompt = require("ndgnuh.runprompt")
+local somewm = require("somewm")
 
 local current_tag
 
