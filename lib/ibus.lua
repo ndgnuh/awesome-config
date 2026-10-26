@@ -123,6 +123,10 @@ function m:_drop_connection()
 	end
 	self.conn = nil
 	self.address = nil
+	if self.subscription then
+		conn:signal_unsubscribe(self.subscription)
+		self.subscription = nil
+	end
 	if not conn:is_closed() then
 		conn:close()
 	end
@@ -140,7 +144,7 @@ function m:_on_connected(conn, address)
 		end
 	end
 
-	conn:signal_subscribe(
+	self.subscription = conn:signal_subscribe(
 		IBUS_SERVICE,
 		IBUS_INTERFACE,
 		"GlobalEngineChanged",
@@ -224,7 +228,25 @@ function m:init()
 		end
 	end
 
+	--- Release every GLib callback before a reload closes this Lua state
+	awesome.connect_signal("exit", function()
+		self:shutdown()
+	end)
+
 	self:reconnect()
+end
+
+function m:shutdown()
+	if self.reconnect_timer then
+		self.reconnect_timer:stop()
+		self.reconnect_timer = nil
+	end
+	if self.monitor then
+		self.monitor:cancel()
+		self.monitor = nil
+	end
+	self.attempt = (self.attempt or 0) + 1
+	self:_drop_connection()
 end
 
 function m:is_connected()

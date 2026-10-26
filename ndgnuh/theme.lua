@@ -144,8 +144,9 @@ theme.notification_position = "top_middle"
 -- theme.notification_margin = theme.gutter_large
 -- theme.notification_icon_size = apply_dpi(48)
 -- -- clay layout: box width, gap between boxes, offset from the screen edge
--- theme.notification_width = apply_dpi(380)
--- theme.notification_max_width = theme.notification_width
+-- setting notification width make it shrink?
+-- theme.notification_width = apply_dpi(500)
+theme.notification_max_width = theme.notification_width
 -- theme.notification_spacing = theme.gutter
 -- theme.notification_padding = theme.useless_gap * 2
 

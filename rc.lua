@@ -569,7 +569,46 @@ require("rules.notification")
 
 ---@param n naughty.notification The notification to display
 naughty.connect_signal("request::display", function(n)
-	naughty.layout.box({ notification = n })
+	naughty.layout.box({
+		notification = n,
+		animation = {
+			visible = {
+				duration = 0.2,
+				enter = { "slide_up", "fade" },
+				exit = { "slide_up", "fade" },
+			},
+		},
+		widget_template = {
+			{
+				{
+					{
+						{
+							naughty.widget.icon,
+							{
+								naughty.widget.title,
+								naughty.widget.message,
+								spacing = 4,
+								layout = wibox.layout.fixed.vertical,
+							},
+							fill_space = true,
+							spacing = 8,
+							layout = wibox.layout.fixed.horizontal,
+						},
+						naughty.list.actions,
+						spacing = 10,
+						layout = wibox.layout.fixed.vertical,
+					},
+					margins = beautiful.notification_margin,
+					widget = wibox.container.margin,
+				},
+				id = "background_role",
+				widget = naughty.container.background,
+			},
+			strategy = "max",
+			width = beautiful.notification_max_width or dpi(500),
+			widget = wibox.container.constraint,
+		},
+	})
 end)
 
 -- Sloppy focus (focus follows mouse)
