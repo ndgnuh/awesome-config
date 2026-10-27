@@ -209,7 +209,7 @@ local theme_menu = {
 
 local menu_animation = {
 	visible = {
-		duration = 0.15,
+		duration = 0.2,
 		enter = { "grow", "scale_left" },
 		exit = { "grow", "scale_right" },
 	},
