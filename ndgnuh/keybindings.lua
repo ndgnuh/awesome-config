@@ -173,7 +173,9 @@ local keys = {
 	awful.key({
 		modifiers = { modkey },
 		key = "3",
-		on_press = spawn_or_cycle({ command = "Zalo", class = "zalo" }),
+		on_press = spawn_or_cycle({
+			command = "Zalo",
+		}),
 		description = "Zalo",
 		group = "Application",
 	}),
