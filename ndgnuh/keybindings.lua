@@ -466,14 +466,6 @@ local keys = {
 awful.keyboard.append_global_keybindings(keys)
 
 awful.keyboard.append_client_keybindings({
-	awful.key({
-		modifiers = { modkey },
-		key = "c",
-		on_press = client_menu,
-		description = "Show client menu",
-		group = "Client",
-	}),
-
 	-- Move to volatile tag and normalize
 	awful.key({
 		modifiers = { modkey, "Shift" },
@@ -491,6 +483,16 @@ awful.keyboard.append_client_keybindings({
 			local menu = require("ndgnuh.client_menu")
 			menu.show_bamboo_menu()
 		end,
+	}),
+	awful.key({
+		modifiers = { modkey },
+		key = "c",
+		on_press = function()
+			local menu = require("ndgnuh.client_menu")
+			menu.show_property_menu()
+		end,
+		description = "Show client menu",
+		group = "Client",
 	}),
 
 	-- Minimize client

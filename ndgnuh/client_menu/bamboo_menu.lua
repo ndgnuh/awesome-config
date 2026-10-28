@@ -118,10 +118,11 @@ local focused_wmclass = overdrip.consumer_widget(function(ref)
 end)
 
 local function build_tile(icon, hotkey, title, action)
-	local place = function(w)
+	local place = function(w, forced_width)
 		return {
 			widget = wibox.container.place,
 			forced_height = 32,
+			forced_width = forced_width,
 			w,
 		}
 	end
@@ -137,8 +138,8 @@ local function build_tile(icon, hotkey, title, action)
 			{
 				widget = wibox.layout.fixed.horizontal,
 				spacing = 28,
-				place(wibox.widget.textbox(hotkey)),
-				place(wibox.widget.imagebox(icon)),
+				place(wibox.widget.textbox(hotkey), 32),
+				place(wibox.widget.imagebox(icon), 32),
 				place(wibox.widget.textbox(title)),
 			},
 		},
