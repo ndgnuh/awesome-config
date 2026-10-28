@@ -138,7 +138,7 @@ local function build_tile(icon, hotkey, title, action)
 			{
 				widget = wibox.layout.fixed.horizontal,
 				spacing = 28,
-				place(wibox.widget.textbox(hotkey), 32),
+				place(wibox.widget.textbox(hotkey:upper()), 32),
 				place(wibox.widget.imagebox(icon), 32),
 				place(wibox.widget.textbox(title)),
 			},
