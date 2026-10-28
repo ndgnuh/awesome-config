@@ -1,5 +1,5 @@
 local property_popup -- late binding
-local input_popup -- late binding
+local input_mode_popup -- late binding
 
 local wibox = require("wibox")
 local awful = require("awful")
@@ -11,21 +11,26 @@ function m.show(popup)
 end
 
 function m.hide(popup)
-	popup.visible = true
+	popup.visible = false
 end
 
 local function create_popup()
-	return awful.popup({
+	local p = awful.popup({
 		screen = screen.primary,
-		animation = {
-			duration = 0.2,
-			enter = "slide-left",
-			exit = "slide-right",
-		},
 		placement = awful.placement.centered,
 		widget = wibox.widget.textbox(""),
 		ontop = true,
+		visible = false,
+		animation = {
+			visible = {
+				duration = 0.2,
+				enter = { "fade", "slide_left" },
+				exit = { "fade", "slide_right" },
+			},
+		},
 	})
+
+	return p
 end
 
 m.get_property_popup = function()
@@ -36,12 +41,12 @@ m.get_property_popup = function()
 	return property_popup
 end
 
-m.get_input_popup = function()
-	if not input_popup then
-		input_popup = create_popup()
+m.get_input_mode_popup = function()
+	if not input_mode_popup then
+		input_mode_popup = create_popup()
 	end
 
-	return input_popup
+	return input_mode_popup
 end
 
 return m
