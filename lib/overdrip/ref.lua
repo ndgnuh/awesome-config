@@ -11,6 +11,7 @@ function Ref:read(dependency)
 end
 
 function Ref:watch(dependency)
+	assert(dependency ~= nil, "Dependency is null, maybe ref.watch is used instead of ref:watch?")
 	assert(self.element ~= dependency, "Cannot watch itself")
 	dependency:add_listener(self.element)
 	return dependency:flush()
