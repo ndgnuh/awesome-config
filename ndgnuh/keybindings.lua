@@ -484,6 +484,15 @@ awful.keyboard.append_client_keybindings({
 		end,
 	}),
 
+	awful.key({
+		modifiers = { modkey },
+		key = "z",
+		on_press = function(c)
+			local menu = require("ndgnuh.client_menu")
+			menu.show_bamboo_menu()
+		end,
+	}),
+
 	-- Minimize client
 	awful.key({
 		modifiers = { modkey },

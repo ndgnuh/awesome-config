@@ -64,8 +64,7 @@ update_and_show = function(c, save_coords, save_sel)
 
 	-- Bind input mode menu to focused client
 	menu.items[#properties + 1].cmd = function()
-		bamboo_mode_select(c)
-		awful.spawn("ibus restart")
+		require("ndgnuh.client_menu").show_bamboo_menu()
 	end
 
 	menu:update()
